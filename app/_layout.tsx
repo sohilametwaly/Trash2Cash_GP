@@ -22,6 +22,8 @@ const config = createTamagui(defaultConfig);
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [userRole, setUserRole] = useState("admin");
+  console.log("user role: " + userRole === "user");
+
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/Poppins-Regular.ttf"),
   });

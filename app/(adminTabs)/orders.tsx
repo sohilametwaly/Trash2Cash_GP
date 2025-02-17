@@ -15,6 +15,7 @@ const DUMMY_ORDERS = [
       { category: "Metal", weight: 2, pricePerKg: 12 },
       { category: "Cardboard", weight: 2, pricePerKg: 20 },
     ],
+    status: "Pending",
   },
   {
     user: "John Doe",
@@ -27,6 +28,7 @@ const DUMMY_ORDERS = [
       { category: "Metal", weight: 2, pricePerKg: 12 },
       { category: "Cardboard", weight: 2, pricePerKg: 20 },
     ],
+    status: "Delivered",
   },
   {
     user: "John Doe",
@@ -39,6 +41,7 @@ const DUMMY_ORDERS = [
       { category: "Metal", weight: 2, pricePerKg: 12 },
       { category: "Cardboard", weight: 2, pricePerKg: 20 },
     ],
+    status: "Pending",
   },
 ];
 
@@ -50,7 +53,11 @@ export default function OrdersScreen() {
       </YStack>
       <FlatList
         data={DUMMY_ORDERS}
-        renderItem={({ item }) => <HistoryCard order={item} />}
+        renderItem={({ item }) => (
+          <View>
+            <HistoryCard order={item} role="admin" />
+          </View>
+        )}
         keyExtractor={(item) => item.id}
       />
     </View>

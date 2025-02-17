@@ -9,6 +9,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Package } from "lucide-react-native";
 
 export default function TabLayout() {
+  console.log("admin tab layout");
+
   return (
     <View style={{ flex: 1 }}>
       <Tabs
@@ -45,9 +47,9 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: "Upload",
+            title: "Add",
             tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="camera" />
+              <Ionicons size={28} color={color} name="add" />
             ),
           }}
         />

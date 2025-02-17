@@ -11,6 +11,7 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "components/HistoryCard.jsx"
+    "components/HistoryCard.jsx",
+    "components/SelectInput.jsx"
   ]
 }

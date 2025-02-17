@@ -47,7 +47,7 @@ export default function HistoryScreen() {
       </YStack>
       <FlatList
         data={DUMMY_ORDERS}
-        renderItem={({ item }) => <HistoryCard order={item} />}
+        renderItem={({ item }) => <HistoryCard order={item} role={"user"} />}
         keyExtractor={(item) => item.id}
       />
     </View>
