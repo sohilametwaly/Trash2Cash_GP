@@ -12,6 +12,7 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "components/HistoryCard.jsx",
-    "components/SelectInput.jsx"
+    "components/SelectInput.jsx",
+    "app/(userTabs)/bin.jsx"
   ]
 }

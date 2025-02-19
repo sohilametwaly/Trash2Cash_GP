@@ -9,7 +9,7 @@ import { SelectItem } from "./SelectInput";
 export default function HistoryCard({ order, role }) {
   return (
     <YStack $sm={{ flexDirection: "column" }}>
-      <Card elevate size="$4" bordered width={360} scale={0.93}>
+      <Card size="$4" bordered width={360} scale={0.93}>
         <Card.Header style={role == "admin" ? styles.header : ""}>
           <Paragraph style={styles.date}>Pickup date: {order.date}</Paragraph>
           {role == "admin" && (

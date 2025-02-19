@@ -8,7 +8,6 @@ import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
-  console.log("user tab layout");
   return (
     <View style={{ flex: 1 }}>
       <Tabs

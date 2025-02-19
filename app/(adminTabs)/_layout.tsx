@@ -9,8 +9,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Package } from "lucide-react-native";
 
 export default function TabLayout() {
-  console.log("admin tab layout");
-
   return (
     <View style={{ flex: 1 }}>
       <Tabs

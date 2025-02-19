@@ -1,12 +1,9 @@
 import { useState } from "react";
-import { Check, ChevronDown, ChevronUp } from "@tamagui/lucide-icons";
+import { Check, ChevronDown, ChevronUp } from "lucide-react-native";
 
 import { Adapt, Select, Sheet, YStack, getFontSize } from "tamagui";
-import { LinearGradient } from "tamagui/linear-gradient";
 export function SelectItem(props) {
   const [val, setVal] = useState(props.state.toLowerCase());
-  console.log("Parent:", React.useContext(SomeContext));
-
   return (
     <Select
       value={val}
@@ -17,9 +14,17 @@ export function SelectItem(props) {
       <Select.Trigger
         width={110}
         iconAfter={ChevronDown}
+        color={"white"}
         backgroundColor={val == "pending" ? "#FBBB00" : "#28B446"}
+        padding={2}
+        justifyContent="center"
       >
-        <Select.Value placeholder="Order Status" />
+        <Select.Value
+          placeholder="Order Status"
+          color={"white"}
+          fontWeight={"500"}
+          fontSize={15}
+        />
       </Select.Trigger>
 
       <Adapt platform="touch">
@@ -29,7 +34,7 @@ export function SelectItem(props) {
           dismissOnSnapToBottom
           animation="medium"
         >
-          <Sheet.Frame>
+          <Sheet.Frame maxHeight={200} bottom={-3} position="absolute">
             <Sheet.ScrollView>
               <Adapt.Contents />
             </Sheet.ScrollView>
@@ -54,13 +59,6 @@ export function SelectItem(props) {
           <YStack zIndex={10}>
             <ChevronUp size={20} />
           </YStack>
-          <LinearGradient
-            start={[0, 0]}
-            end={[0, 1]}
-            fullscreen
-            colors={["$background", "transparent"]}
-            borderRadius="$4"
-          />
         </Select.ScrollUpButton>
 
         <Select.Viewport minWidth={100}>
@@ -108,13 +106,6 @@ export function SelectItem(props) {
           <YStack zIndex={10}>
             <ChevronDown size={20} />
           </YStack>
-          <LinearGradient
-            start={[0, 0]}
-            end={[0, 1]}
-            fullscreen
-            colors={["transparent", "$background"]}
-            borderRadius="$4"
-          />
         </Select.ScrollDownButton>
       </Select.Content>
     </Select>
