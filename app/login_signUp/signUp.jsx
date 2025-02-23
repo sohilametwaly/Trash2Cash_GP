@@ -108,13 +108,13 @@ export default function SignUpScreen() {
       <View style={styles.socialContainer}>
         <TouchableOpacity style={styles.socialButton}>
           <Image
-            source={require("./assets/facebook_ic.png")}
+            source={require("@/assets/images/facebook_ic.png")}
             style={styles.socialIcon}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
           <Image
-            source={require("./assets/google_ic.png")}
+            source={require("@/assets/images/google_ic.png")}
             style={styles.socialIcon}
           />
         </TouchableOpacity>
