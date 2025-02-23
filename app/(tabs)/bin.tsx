@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
   },
   listItem: {
     borderRadius: 8,
-    // borderWidth: 1,
     paddingVertical: 8,
     paddingHorizontal: 16,
     display: "flex",
