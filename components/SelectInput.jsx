@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check, ChevronDown, ChevronUp } from "lucide-react-native";
 
 import { Adapt, Select, Sheet, YStack, getFontSize } from "tamagui";
+import { StyleSheet } from "react-native";
 export function SelectItem(props) {
   const [val, setVal] = useState(props.state.toLowerCase());
   return (
@@ -12,12 +13,9 @@ export function SelectItem(props) {
       {...props}
     >
       <Select.Trigger
-        width={110}
         iconAfter={ChevronDown}
-        color={"white"}
         backgroundColor={val == "pending" ? "#FBBB00" : "#28B446"}
-        padding={2}
-        justifyContent="center"
+        style={styles.allOrdersStyle}
       >
         <Select.Value
           placeholder="Order Status"
@@ -111,3 +109,12 @@ export function SelectItem(props) {
     </Select>
   );
 }
+
+const styles = StyleSheet.create({
+  allOrdersStyle: {
+    width: 110,
+    color: "white",
+    padding: 2,
+    justifyContent: "center",
+  },
+});

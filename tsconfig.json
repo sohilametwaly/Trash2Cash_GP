@@ -13,6 +13,8 @@
     "expo-env.d.ts",
     "components/HistoryCard.jsx",
     "components/SelectInput.jsx",
-    "app/(userTabs)/bin.jsx"
+    "app/(tabs)/bin.jsx",
+    "components/dateTimePicker.jsx",
+    "components/pickupSheet.jsx"
   ]
 }

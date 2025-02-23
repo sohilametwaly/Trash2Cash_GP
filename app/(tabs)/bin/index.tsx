@@ -2,6 +2,7 @@ import { FlatList, Text, View, StyleSheet } from "react-native";
 import OrderCard from "@/components/OrderCard";
 import { Button, H2, YStack } from "tamagui";
 import { Colors } from "@/constants/Colors";
+import { router } from "expo-router";
 
 const DUMMY_BIN_ITEMS = [
   {
@@ -30,7 +31,7 @@ export default function BinScreen() {
     0
   );
   return (
-    <View>
+    <View style={styles.container}>
       <YStack alignSelf="center">
         <H2 style={styles.header}>Bin</H2>
       </YStack>
@@ -52,6 +53,11 @@ export default function BinScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    marginTop: 45,
+  },
   header: {
     color: Colors.header,
     marginBottom: 10,

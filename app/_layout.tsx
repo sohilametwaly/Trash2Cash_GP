@@ -40,12 +40,8 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <TamaguiProvider config={config}>
         <Stack>
-          <Stack.Screen name="(userTabs)" options={{ headerShown: false }} />
-          {/* {userRole === "user" ? (
-            <Stack.Screen name="(userTabs)" options={{ headerShown: false }} />
-          ) : (
-            <Stack.Screen name="(adminTabs)" options={{ headerShown: false }} />
-          )} */}
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
