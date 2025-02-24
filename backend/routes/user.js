@@ -5,7 +5,7 @@ import { validateUser } from "../middleware/validation.js";
 
 const router = Router();
 
-router.post("/signin", signIn);
+router.post("/signin", registerValidator, signIn);
 
 router.post("/signup", registerValidator, signUp);
 

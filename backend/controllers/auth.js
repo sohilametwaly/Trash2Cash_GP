@@ -9,8 +9,10 @@ export const signIn = async (req, res) => {
   try {
     const validationRes = validationResult(req);
     if (validationRes.length > 0) {
-      return res.status(400).json({ message: validationRe });
+      return res.status(400).json({ message: validationRes });
     }
+    console.log(email, password);
+    console.log(validationRes);
 
     const user = await User.findOne({ email });
 
@@ -26,7 +28,9 @@ export const signIn = async (req, res) => {
 
     const token = generateToken(user._id);
 
-    res.status(200).json({ message: "Logged in successfully", token });
+    res
+      .status(200)
+      .json({ message: "Logged in successfully", token, role: user.role });
   } catch (error) {
     console.error("sign in ", error);
     res.status(500).json({ message: "Server error." });
@@ -62,7 +66,7 @@ export const signUp = async (req, res) => {
     await newUser.save();
 
     const token = generateToken(newUser._id);
-    res.status(200).json({ token });
+    res.status(200).json({ token, role: newUser.role });
   } catch (error) {
     console.error("sign up ", error);
     res.status(500).json({ message: "Server error." });
