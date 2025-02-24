@@ -59,7 +59,12 @@ export default function SignUpScreen() {
 
       await saveToken(response.data.token);
 
-      router.replace("./(tabs)");
+      if (response.data.role === "admin") {
+        router.replace("./(adminTabs)");
+      } else if (response.data.role === "user") {
+        router.replace("./(tabs)");
+      } else {
+      }
     }
   };
 

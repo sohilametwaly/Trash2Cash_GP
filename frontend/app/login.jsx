@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,20 +14,37 @@ import { saveToken } from "../utils/tokenHandlers";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const emailRef = useRef();
-  const passRef = useRef();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    const response = await axios.post(
-      "http://192.168.1.104:3000/api/user/signin",
-      {
-        email: emailRef.current.value,
-        password: passRef.current.value,
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://192.168.1.104:3000/api/user/signin",
+        {
+          email,
+          password,
+        }
+      );
+
+      await saveToken(response.data.token);
+
+      if (response.data.role === "admin") {
+        router.replace("./(adminTabs)");
+      } else if (response.data.role === "user") {
+        router.replace("./(tabs)");
       }
-    );
-    await saveToken(response.data.token);
-    router.replace("./(tabs)");
+    } catch (error) {
+      console.error("Login failed:", error.response?.data || error.message);
+      alert("Login failed. Please check your credentials.");
+    }
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
@@ -39,7 +56,9 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Enter your Email"
-          ref={emailRef}
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail} // ✅ Update state
         />
       </View>
 
@@ -50,13 +69,14 @@ export default function LoginScreen() {
           style={styles.input}
           placeholder="Enter your Password"
           secureTextEntry
-          ref={passRef}
+          value={password}
+          onChangeText={setPassword} // ✅ Update state
         />
       </View>
 
-      <Text style={styles.forgetPasswordLink}>Forget Password ?</Text>
+      <Text style={styles.forgetPasswordLink}>Forget Password?</Text>
 
-      {/* Sign Up Button */}
+      {/* Login Button */}
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
@@ -91,7 +111,7 @@ export default function LoginScreen() {
           gap: 5,
         }}
       >
-        <Text style={styles.footerText}> Don't have an account?</Text>
+        <Text style={styles.footerText}>Don't have an account?</Text>
         <TouchableOpacity onPress={() => router.replace("./signUp")}>
           <Text style={styles.loginLink}> Sign up now!</Text>
         </TouchableOpacity>

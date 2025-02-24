@@ -45,7 +45,7 @@ export default function BinScreen() {
         />
       </View>
       <Text style={styles.totalPrice}>{totalPrice} EGP</Text>
-      <Button style={styles.btn} onPress={() => router.push("/bin/checkout")}>
+      <Button style={styles.btn} onPress={() => router.push("/checkout")}>
         Checkout
       </Button>
     </View>

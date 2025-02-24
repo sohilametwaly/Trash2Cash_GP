@@ -45,9 +45,9 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: "Upload",
+            title: "Add",
             tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="camera" />
+              <Ionicons size={28} color={color} name="add" />
             ),
           }}
         />
