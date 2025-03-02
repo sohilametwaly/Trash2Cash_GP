@@ -4,7 +4,7 @@ import { MoveLeft, Truck } from "lucide-react-native";
 import { Button, H2 } from "tamagui";
 import { Colors } from "@/constants/Colors";
 import OrderCard from "@/components/OrderCard";
-import { PickupSheet } from "@/components/pickupSheet";
+// import { PickupSheet } from "@/components/pickupSheet";
 
 const DUMMY_BIN_ITEMS = [
   {
@@ -60,7 +60,7 @@ export default function CheckoutScreen() {
         />
       </View>
       <Text style={styles.totalPrice}>{totalPrice} EGP</Text>
-      <PickupSheet />
+      {/* <PickupSheet /> */}
     </View>
   );
 }

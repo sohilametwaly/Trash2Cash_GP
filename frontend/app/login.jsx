@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,13 +9,30 @@ import {
   Image,
 } from "react-native";
 import { Separator } from "tamagui";
-import axios from "axios";
-import { saveToken } from "../utils/tokenHandlers";
-
+import { useAuth } from "../store/context.tsx";
 export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { authUser, checkAuth, login, isLoggingIn } = useAuth();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  useEffect(() => {
+    if (authUser) {
+      navigateBasedOnRole(authUser.role);
+    }
+  }, [authUser]);
+
+  const navigateBasedOnRole = (role) => {
+    if (role === "admin") {
+      router.replace("./(adminTabs)");
+    } else if (role === "user") {
+      router.replace("./(tabs)");
+    }
+  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -24,21 +41,22 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post(
-        "http://192.168.1.104:3000/api/user/signin",
-        {
-          email,
-          password,
-        }
-      );
+      // const response = await axios.post(
+      //   "http://192.168.52.246:3000/api/user/signin",
+      //   {
+      //     email,
+      //     password,
+      //   }
+      // );
 
-      await saveToken(response.data.token);
+      // await saveToken(response.data.token);
 
-      if (response.data.role === "admin") {
-        router.replace("./(adminTabs)");
-      } else if (response.data.role === "user") {
-        router.replace("./(tabs)");
-      }
+      // if (response.data.role === "admin") {
+      //   router.replace("./(adminTabs)");
+      // } else if (response.data.role === "user") {
+      //   router.replace("./(tabs)");
+      // }
+      await login({ email, password });
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
       alert("Login failed. Please check your credentials.");

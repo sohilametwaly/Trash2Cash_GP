@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { Separator } from "tamagui";
 import { saveToken } from "../utils/tokenHandlers";
+import { useAuth } from "../store/context";
 
 export default function SignUpScreen() {
   const router = useRouter();
@@ -22,8 +23,28 @@ export default function SignUpScreen() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
+  const { checkAuth, authUser, signUp, isSigningUp } = useAuth();
+
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
+  };
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  useEffect(() => {
+    if (authUser) {
+      navigateBasedOnRole(authUser.role);
+    }
+  }, [authUser]);
+
+  const navigateBasedOnRole = (role) => {
+    if (role === "admin") {
+      router.replace("./(adminTabs)");
+    } else if (role === "user") {
+      router.replace("./(tabs)");
+    }
   };
 
   const validateForm = () => {
@@ -48,23 +69,30 @@ export default function SignUpScreen() {
 
   const handleSignUp = async () => {
     if (validateForm()) {
-      const response = await axios.post(
-        "http://192.168.1.104:3000/api/user/signup",
-        {
-          email,
-          password,
-          name: username,
-        }
-      );
-
-      await saveToken(response.data.token);
-
-      if (response.data.role === "admin") {
-        router.replace("./(adminTabs)");
-      } else if (response.data.role === "user") {
-        router.replace("./(tabs)");
-      } else {
-      }
+      // const response = await axios.post(
+      //   "http://192.168.52.246:3000/api/user/signup",
+      //   {
+      //     email,
+      //     password,
+      //     name: username,
+      //   }
+      // );
+      // await saveToken(response.data.token);
+      // if (response.data.role === "admin") {
+      //   router.replace("./(adminTabs)");
+      // } else if (response.data.role === "user") {
+      //   router.replace("./(tabs)");
+      // } else {
+      // }
+      // if (authUser.role === "admin") {
+      //   router.replace("./(adminTabs)");
+      // } else if (authUser.role === "user") {
+      //   router.replace("./(tabs)");
+      // }
+      try {
+        await signUp({ email, password, name: username });
+        await checkAuth();
+      } catch (error) {}
     }
   };
 

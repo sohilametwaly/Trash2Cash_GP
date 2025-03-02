@@ -1,15 +1,29 @@
-import { Tabs } from "expo-router";
-import React from "react";
+import { Tabs, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { Platform, View } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-
+import { useAuth } from "@/store/context";
 export default function TabLayout() {
   console.log("user");
+  const { authUser } = useAuth();
+  const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    if (authUser === undefined) return;
+    setIsReady(true);
 
+    if (authUser && authUser.role === "admin") {
+      router.replace("/(adminTabs)");
+    }
+  }, [authUser]);
+
+  if (!isReady) {
+    return null;
+  }
   return (
     <View style={{ flex: 1 }}>
       <Tabs

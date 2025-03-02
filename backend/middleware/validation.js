@@ -9,7 +9,7 @@ export const validateUser = async (req, res, next) => {
   try {
     const verify = jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (!verify) {
-      return res.status(401).json({ msg: "Not aithorized" });
+      return res.status(401).json({ msg: "Not authorized" });
     }
 
     const user = await User.findById(verify.userId).select("-password");

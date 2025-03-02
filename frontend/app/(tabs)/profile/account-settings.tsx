@@ -2,16 +2,17 @@ import Container from "@/components/Container";
 import Header from "@/components/Header";
 import { Save } from "lucide-react-native";
 import { Button, Input, Label, YStack } from "tamagui";
-
+import { useAuth } from "@/store/context";
 export default function account() {
+  const { authUser } = useAuth();
   return (
     <Container>
       <YStack marginBottom={40}>
         <Header title="Account Settings" />
         <Label>Full Name</Label>
-        <Input value="Bashar Mohamed Bakr" disabled />
+        <Input value={authUser?.name} disabled />
         <Label>Email</Label>
-        <Input value="bashar.eg6645@gmail.com" disabled />
+        <Input value={authUser?.email} disabled />
         <Label>Old Password</Label>
         <Input placeholder="Enter Your Old Password" />
         <Label>New Password</Label>
