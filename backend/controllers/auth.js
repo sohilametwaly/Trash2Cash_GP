@@ -8,8 +8,8 @@ export const signIn = async (req, res) => {
   const { email, password } = req.body;
   try {
     const validationRes = validationResult(req);
-    if (validationRes.length > 0) {
-      return res.status(400).json({ message: validationRes });
+     if (validationRes.errors.length > 0) {
+      return res.status(400).json({ message: validationRes.errors });
     }
 
     const user = await User.findOne({ email });
@@ -39,8 +39,8 @@ export const signUp = async (req, res) => {
   const { name, email, password, isCompany } = req.body;
   try {
     const validationRes = validationResult(req);
-    if (validationRes.length > 0) {
-      return res.status(400).json({ message: validationRes });
+    if (validationRes.errors.length > 0) {
+      return res.status(400).json({ message: validationRes.errors });
     }
 
     const user = await User.findOne({ email });
