@@ -31,6 +31,8 @@ export default function LoginScreen() {
       router.replace("./(adminTabs)");
     } else if (role === "user") {
       router.replace("./(tabs)");
+    } else if (role === "company") {
+      router.replace("./(companyTabs)");
     }
   };
 

@@ -11,8 +11,6 @@ export const signIn = async (req, res) => {
     if (validationRes.length > 0) {
       return res.status(400).json({ message: validationRes });
     }
-    console.log(email, password);
-    console.log(validationRes);
 
     const user = await User.findOne({ email });
 

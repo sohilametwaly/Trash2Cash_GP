@@ -6,25 +6,28 @@ import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Package, Store } from "lucide-react-native";
+import { Package, Plus, Store, User, Users } from "lucide-react-native";
 import { useAuth } from "@/store/context";
 
 export default function TabLayout() {
   const { authUser } = useAuth();
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
-  useEffect(() => {
-    if (authUser === undefined) return; // Wait for auth state to load
-    setIsReady(true);
+  // useEffect(() => {
+  //   if (authUser === undefined) return;
+  //   setIsReady(true);
 
-    if (authUser && authUser.role === "user") {
-      router.replace("/(tabs)"); // Use absolute path, not "./(tabs)"
-    }
-  }, [authUser]);
+  //   if (authUser && authUser.role === "user") {
+  //     router.replace("/(tabs)");
+  //   }
+  //   if (authUser && authUser.role === "company") {
+  //     router.replace("./(companyTabs)");
+  //   }
+  // }, [authUser]);
 
-  if (!isReady) {
-    return null; // Prevent rendering until auth state is available
-  }
+  // if (!isReady) {
+  //   return null;
+  // }
   return (
     <View style={{ flex: 1 }}>
       <Tabs
@@ -46,7 +49,7 @@ export default function TabLayout() {
           name="orders"
           options={{
             title: "Orders",
-            tabBarIcon: ({ color }) => <Package color={color} size={28} />,
+            tabBarIcon: ({ color }) => <Package color={color} size={24} />,
           }}
         />
         <Tabs.Screen
@@ -54,16 +57,7 @@ export default function TabLayout() {
           options={{
             title: "Bin",
             tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="trash-bin" />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "Add",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="add" />
+              <Ionicons size={24} color={color} name="trash-bin" />
             ),
           }}
         />
@@ -72,17 +66,15 @@ export default function TabLayout() {
           options={{
             title: "Wallet",
             tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="wallet" />
+              <Ionicons size={24} color={color} name="wallet" />
             ),
           }}
         />
         <Tabs.Screen
-          name="profile"
+          name="index"
           options={{
-            title: "Profile",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="person" />
-            ),
+            title: "Add",
+            tabBarIcon: ({ color }) => <Plus size={24} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -90,6 +82,20 @@ export default function TabLayout() {
           options={{
             title: "Shop",
             tabBarIcon: ({ color }) => <Store size={24} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="users"
+          options={{
+            title: "Users",
+            tabBarIcon: ({ color }) => <Users size={24} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: "Profile",
+            tabBarIcon: ({ color }) => <User size={24} color={color} />,
           }}
         />
       </Tabs>

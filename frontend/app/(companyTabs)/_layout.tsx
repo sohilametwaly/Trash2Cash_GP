@@ -7,8 +7,9 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/store/context";
-export default function TabLayout() {
-  console.log("user");
+import { Package, Plus, Store, User, Wallet } from "lucide-react-native";
+export default function CompanyTabLayout() {
+  console.log("Company");
   const { authUser } = useAuth();
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
@@ -19,8 +20,8 @@ export default function TabLayout() {
     if (authUser && authUser.role === "admin") {
       router.replace("/(adminTabs)");
     }
-    if (authUser && authUser.role === "company") {
-      router.replace("./(companyTabs)");
+    if (authUser && authUser.role === "user") {
+      router.replace("/(tabs)");
     }
   }, [authUser]);
 
@@ -45,12 +46,10 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="history"
+          name="orders"
           options={{
-            title: "History",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="time" />
-            ),
+            title: "Orders",
+            tabBarIcon: ({ color }) => <Package color={color} size={25} />,
           }}
         />
         <Tabs.Screen
@@ -58,35 +57,36 @@ export default function TabLayout() {
           options={{
             title: "Bin",
             tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="trash-bin" />
+              <Ionicons size={25} color={color} name="trash-bin" />
             ),
           }}
         />
         <Tabs.Screen
           name="index"
           options={{
-            title: "Upload",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="camera" />
-            ),
+            title: "Add",
+            tabBarIcon: ({ color }) => <Plus size={25} color={color} />,
           }}
         />
         <Tabs.Screen
           name="wallet"
           options={{
             title: "Wallet",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="wallet" />
-            ),
+            tabBarIcon: ({ color }) => <Wallet size={25} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="shop"
+          options={{
+            title: "Shop",
+            tabBarIcon: ({ color }) => <Store size={25} color={color} />,
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
             title: "Profile",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={28} color={color} name="person" />
-            ),
+            tabBarIcon: ({ color }) => <User size={25} color={color} />,
           }}
         />
       </Tabs>
