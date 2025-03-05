@@ -90,7 +90,7 @@ export default function SignUpScreen() {
       //   router.replace("./(tabs)");
       // }
       try {
-        await signUp({ email, password, name: username });
+        await signUp({ email, password, name: username, isCompany: isChecked });
         await checkAuth();
       } catch (error) {}
     }

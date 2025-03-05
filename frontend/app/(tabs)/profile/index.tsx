@@ -26,7 +26,11 @@ export default function ProfileScreen() {
         color="black"
         onPress={() => router.push("/profile/change-address")}
       />
-      <Btn title="FAQs" color="black" />
+      <Btn
+        title="FAQs"
+        color="black"
+        onPress={() => router.push("/profile/FAQs")}
+      />
       <Btn title="Logout" color="red" onPress={async () => await logout()} />
     </Container>
   );
