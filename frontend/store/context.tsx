@@ -4,7 +4,7 @@ import Toast from "react-native-toast-message";
 
 import { getToken, saveToken, removeToken } from "../utils/tokenHandlers";
 
-const BASE_URL = "http://192.168.1.7:3000/api/user";
+const BASE_URL = "http://192.168.1.104:3000/api/user";
 
 interface LoginData {
   email: string;

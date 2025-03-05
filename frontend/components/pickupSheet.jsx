@@ -2,12 +2,12 @@ import { Truck } from "lucide-react-native";
 import { useState } from "react";
 import { Sheet } from "@tamagui/sheet";
 import React from "react";
-import { Button, Label } from "tamagui";
+import { Button, Label, Text } from "tamagui"; // Import Text from tamagui
 import { Colors } from "@/constants/Colors";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import DateTimePicker from "./dateTimePicker";
 import LocationPicker from "./locationPicker";
-import { MapPin, Search, X } from "lucide-react-native";
+import { MapPin, Search } from "lucide-react-native";
 
 export const PickupSheet = () => {
   const [position, setPosition] = React.useState(0);
@@ -40,7 +40,7 @@ export const PickupSheet = () => {
         alignSelf="center"
         onPress={() => setOpen((prev) => !prev)}
       >
-        Request a Pickup
+        <Text>Request a Pickup</Text>
       </Button>
 
       <Sheet
@@ -50,7 +50,7 @@ export const PickupSheet = () => {
         dismissOnSnapToBottom
         position={position}
         onPositionChange={setPosition}
-        zIndex={99_999} // Sheet's zIndex
+        zIndex={99_999}
         animation="medium"
       >
         <Sheet.Overlay
@@ -65,12 +65,12 @@ export const PickupSheet = () => {
           padding="$5"
           alignItems="center"
           gap="$5"
-          maxHeight={250}
-          justifyContent="space-between "
+          maxHeight={300}
+          justifyContent="space-between"
           position="absolute"
-          bottom={0}
+          paddingBottom={70}
+          bottom={-50}
         >
-          {" "}
           <View style={styles.sheetContainer}>
             <View style={styles.datePickerContainer}>
               <Label htmlFor="date-time-picker" style={styles.dateLabel}>
@@ -83,14 +83,16 @@ export const PickupSheet = () => {
             <View>
               {!selectedLocation ? (
                 <Button
-                  icon={() => <Search size={20} color={Colors.header} />}
-                  iconAfter={() => <MapPin size={20} color={Colors.header} />}
+                  icon={() => <Search size={25} color={Colors.header} />}
+                  iconAfter={() => <MapPin size={25} color={Colors.header} />}
                   style={styles.locationBtn}
                   onPress={() => {
                     setIsLocationPickerOpen(true);
                   }}
                 >
-                  Pick a location
+                  <Text style={{ fontSize: 18, color: Colors.header }}>
+                    Pick a location
+                  </Text>
                 </Button>
               ) : (
                 <Button
@@ -102,7 +104,13 @@ export const PickupSheet = () => {
                     setIsLocationPickerOpen(true);
                   }}
                 >
-                  {stringLocation}
+                  <Text
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={{ width: "80%" }}
+                  >
+                    {stringLocation}
+                  </Text>
                 </Button>
               )}
             </View>
@@ -111,7 +119,7 @@ export const PickupSheet = () => {
               onPress={() => setOpen((prev) => !prev)}
               style={styles.sumbitBtn}
             >
-              <Text style={styles.btnText}> Submit</Text>
+              <Text style={styles.btnText}>Submit</Text>
             </Button>
           </View>
         </Sheet.Frame>
@@ -149,5 +157,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     width: "100%",
+  },
+  locationBtn: {
+    width: "100%",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
   },
 });
