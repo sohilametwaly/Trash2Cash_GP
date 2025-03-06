@@ -100,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (error: any) {
       console.error("Login error:", error.response?.data || error);
       Toast.show({
-        text1: error.response?.data?.message || "Failed to login",
+        text1: "Failed to login",
         type: "error",
       });
       // toast.error();

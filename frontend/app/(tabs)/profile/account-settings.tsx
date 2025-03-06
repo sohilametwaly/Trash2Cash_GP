@@ -8,7 +8,7 @@ export default function account() {
   return (
     <Container>
       <YStack marginBottom={40}>
-        <Header title="Account Settings" />
+        {/* <Header title="Account Settings" /> */}
         <Label>Full Name</Label>
         <Input value={authUser?.name} disabled />
         <Label>Email</Label>

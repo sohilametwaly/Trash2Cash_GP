@@ -10,6 +10,7 @@ import {
   Wine,
 } from "lucide-react-native";
 import Header from "@/components/Header";
+import Logo from "@/components/Logo";
 
 type ItemType = {
   id: string;
@@ -45,8 +46,8 @@ export default function ShopScreen() {
   return (
     <View style={styles.container}>
       {/* <Text style={styles.header}>Shop Management</Text> */}
-      <Header title="Shop Management" />
-
+      {/* <Header title="Shop Management" /> */}
+      <Logo />
       {materials.map((item) => {
         return <ShopItem key={item.id} item={item} />;
       })}
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 20,
-    backgroundColor: "#F7F8FA",
+    backgroundColor: "#FDFDFD",
   },
   header: {
     fontSize: 28,

@@ -8,7 +8,6 @@ import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/store/context";
 export default function TabLayout() {
-  console.log("user");
   const { authUser } = useAuth();
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);

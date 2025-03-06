@@ -7,6 +7,7 @@ import { Button, Dialog, Image, Unspaced, View, XStack } from "tamagui";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/store/context";
+import Logo from "@/components/Logo";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -14,7 +15,8 @@ export default function ProfileScreen() {
 
   return (
     <Container>
-      <Header title="Profile" />
+      {/* <Header title="Profile" /> */}
+      <Logo />
       <DialogInstance />
       <Btn
         title="Account Settings"

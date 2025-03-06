@@ -1,3 +1,4 @@
+import Logo from "@/components/Logo";
 import { Edit, Edit3, X } from "lucide-react-native";
 import { Button, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "tamagui";
@@ -22,7 +23,8 @@ const users: User[] = [
 export default function UsersScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Users</Text>
+      {/* <Text style={styles.header}>Users</Text> */}
+      <Logo />
       {users.map((user) => {
         return (
           <View key={user.name} style={[styles.listItem, styles.shadowBox]}>
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 20,
-    backgroundColor: "white",
+    backgroundColor: "#FDFDFD",
   },
   header: {
     fontSize: 32,
