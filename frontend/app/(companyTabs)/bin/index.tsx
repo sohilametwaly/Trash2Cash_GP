@@ -3,6 +3,7 @@ import OrderCard from "@/components/OrderCard";
 import { Button, H2, YStack } from "tamagui";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
+import Logo from "@/components/Logo";
 
 const DUMMY_BIN_ITEMS = [
   {
@@ -33,7 +34,7 @@ export default function BinScreen() {
   return (
     <View style={styles.container}>
       <YStack alignSelf="center">
-        <H2 style={styles.header}>Bin</H2>
+        <Logo />
       </YStack>
       <View>
         <FlatList
@@ -45,7 +46,7 @@ export default function BinScreen() {
         />
       </View>
       <Text style={styles.totalPrice}>{totalPrice} EGP</Text>
-      <Button style={styles.btn} onPress={() => router.push("/checkout")}>
+      <Button style={styles.btn} onPress={() => router.push("/bin/checkout")}>
         Checkout
       </Button>
     </View>
@@ -56,7 +57,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    marginTop: 45,
+    marginTop: 35,
+    backgroundColor: "#F7F8FA",
   },
   header: {
     color: Colors.header,

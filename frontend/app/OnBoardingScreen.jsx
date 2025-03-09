@@ -18,7 +18,7 @@ const slides = [
         Scan and classify
       </Text>
     ),
-    image: require("../assets/images/Screenshot 2025-03-05 160030.png"),
+    image: require("../assets/images/Screenshot_2025-03-05_160030-removebg-preview.png"),
     icon: (
       <Image
         style={{ width: 200, height: 220 }}
@@ -56,7 +56,7 @@ const slides = [
         </Text>
       </View>
     ),
-    image: require("../assets/images/Screenshot 2025-03-05 160030.png"),
+    image: require("../assets/images/Screenshot_2025-03-05_160030-removebg-preview.png"),
     backgroundColor: "#FDFDFD",
     icon: (
       <Image
@@ -93,7 +93,7 @@ const slides = [
         </Text>
       </View>
     ),
-    image: require("../assets/images/Screenshot 2025-03-05 160030.png"),
+    image: require("../assets/images/Screenshot_2025-03-05_160030-removebg-preview.png"),
     backgroundColor: "#FDFDFD",
     icon: (
       <Image
