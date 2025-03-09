@@ -6,17 +6,13 @@ import { useRouter } from "expo-router";
 import { Button, Dialog, Image, Unspaced, View, XStack } from "tamagui";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { useAuth } from "@/store/context";
-import Logo from "@/components/Logo";
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { logout } = useAuth();
 
   return (
     <Container>
-      {/* <Header title="Profile" /> */}
-      <Logo />
+      <Header title="Profile" />
       <DialogInstance />
       <Btn
         title="Account Settings"
@@ -28,12 +24,8 @@ export default function ProfileScreen() {
         color="black"
         onPress={() => router.push("/profile/change-address")}
       />
-      <Btn
-        title="FAQs"
-        color="black"
-        onPress={() => router.push("/profile/FAQs")}
-      />
-      <Btn title="Logout" color="red" onPress={async () => await logout()} />
+      <Btn title="FAQs" color="black" />
+      <Btn title="Logout" color="red" />
     </Container>
   );
 }

@@ -1,4 +1,5 @@
 import HistoryCard from "@/components/HistoryCard";
+import Logo from "@/components/Logo";
 import { Colors } from "@/constants/Colors";
 import { FlatList, StyleSheet, View } from "react-native";
 import { H2, YStack } from "tamagui";
@@ -43,11 +44,12 @@ export default function HistoryScreen() {
   return (
     <View style={styles.container}>
       <YStack alignSelf="center">
-        <H2 style={styles.header}>History</H2>
+        <Logo />
+        {/* <H2 style={styles.header}>History</H2> */}
       </YStack>
       <FlatList
         data={DUMMY_ORDERS}
-        renderItem={({ item }) => <HistoryCard order={item} />}
+        renderItem={({ item }) => <HistoryCard order={item} role={"user"} />}
         keyExtractor={(item) => item.id}
       />
     </View>
@@ -60,6 +62,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 35,
     justifyContent: "center",
+    backgroundColor: "#FDFDFD",
   },
   header: {
     color: Colors.header,

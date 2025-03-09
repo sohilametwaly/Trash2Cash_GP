@@ -45,7 +45,6 @@ const DateTimePickerComponent = () => {
 
   return (
     <View style={styles.container}>
-      {/* Date Picker Button */}
       <TouchableOpacity
         onPress={() => setShowDatePicker(true)}
         style={styles.button}
@@ -54,7 +53,6 @@ const DateTimePickerComponent = () => {
         <Text style={styles.buttonText}>{format(date, "MMM d, yyyy")}</Text>
       </TouchableOpacity>
 
-      {/* Time Picker Button */}
       <TouchableOpacity
         onPress={() => setShowTimePicker(true)}
         style={styles.button}
@@ -70,7 +68,6 @@ const DateTimePickerComponent = () => {
           mode="date"
           display={Platform.OS === "ios" ? "spinner" : "default"}
           onChange={handleDateChange}
-          accentColor={Colors.header}
         />
       )}
 
@@ -81,8 +78,6 @@ const DateTimePickerComponent = () => {
           mode="time"
           display={Platform.OS === "ios" ? "spinner" : "default"}
           onChange={handleTimeChange}
-          accentColor={Colors.header}
-          backgroundColor={Colors.header}
         />
       )}
     </View>

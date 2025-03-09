@@ -4,7 +4,9 @@ import Toast from "react-native-toast-message";
 
 import { getToken, saveToken, removeToken } from "../utils/tokenHandlers";
 
+
 const BASE_URL = "http://192.168.1.12:3000/api/user";
+
 
 interface LoginData {
   email: string;
@@ -100,10 +102,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch (error: any) {
       console.error("Login error:", error.response?.data || error);
        
-    const errorMessage = error.response?.data?.message[0]?.msg || "Failed to login";
       Toast.show({
-        // text1: error.response?.data?.message || "Failed to login",
-        text1: errorMessage,
+         text1: error.response?.data?.message || "Failed to login",
+  
         type: "error",
       });
       // toast.error();

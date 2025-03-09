@@ -1,3 +1,4 @@
+import Logo from "@/components/Logo";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -14,8 +15,8 @@ export default function AddScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Add</Text>
-
+      {/* <Text style={styles.heading}>Add</Text> */}
+      <Logo />
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Category</Text>
         <TextInput
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-
+    backgroundColor: "#FDFDFD",
     marginTop: "17%",
     paddingHorizontal: "5%",
   },
