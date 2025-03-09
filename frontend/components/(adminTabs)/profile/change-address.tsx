@@ -53,7 +53,7 @@ export default function ChangeAddressScreen() {
 
   return (
     <View style={styles.container}>
-      {/* <Header title="Change Address" /> */}
+      <Header title="Change Address" />
 
       {loading ? (
         <ActivityIndicator size="large" color="#2B4B40" />

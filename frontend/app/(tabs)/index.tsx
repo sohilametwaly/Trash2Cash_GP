@@ -5,7 +5,11 @@ import { Text } from "react-native";
 import { Camera, Trash2, Upload, X } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "tamagui";
+import Logo from "@/components/Logo";
+import { useAuth } from "@/store/context";
+import { Colors } from "@/constants/Colors";
 export default function CameraScreen() {
+  const { authUser } = useAuth();
   const [image, setImage] = useState("");
 
   const openCamera = async () => {
@@ -48,7 +52,22 @@ export default function CameraScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Upload Image</Text>
+      <View
+        style={{
+          alignItems: "center",
+          gap: 7,
+        }}
+      >
+        <Logo />
+        <Text style={{ fontSize: 27 }}>
+          Welcome,{" "}
+          <Text style={{ color: Colors.header, fontWeight: "600" }}>
+            {authUser?.name}
+          </Text>
+        </Text>
+      </View>
+
+      {/* <Text style={styles.header}>Upload Image</Text> */}
       <TouchableOpacity style={styles.imageInput} onPress={openCamera}>
         {image ? (
           <View style={styles.imageWrapper}>
@@ -96,7 +115,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 20,
-    backgroundColor: "#F7F8FA", // Light background for contrast
+    backgroundColor: "#FDFDFD", // Light background for contrast
   },
   header: {
     fontSize: 28,

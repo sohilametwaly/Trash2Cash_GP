@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingTop: 45,
+    backgroundColor: "#FDFDFD",
   },
   header: {
     color: Colors.header,
