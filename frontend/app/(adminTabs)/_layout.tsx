@@ -6,7 +6,7 @@ import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Package, Plus, Store, User, Users } from "lucide-react-native";
+import { Package, Plus, Store, User, Users ,ShoppingCart} from "lucide-react-native";
 import { useAuth } from "@/store/context";
 
 export default function TabLayout() {
@@ -52,6 +52,13 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <Package color={color} size={24} />,
           }}
         />
+         <Tabs.Screen
+                  name="admin_store"
+                  options={{
+                    title: "Store",
+                    tabBarIcon: ({ color }) => <ShoppingCart size={25} color={color} />,
+                  }}
+                />
         <Tabs.Screen
           name="bin"
           options={{

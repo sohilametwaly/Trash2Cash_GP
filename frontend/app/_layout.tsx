@@ -77,6 +77,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { createTamagui, TamaguiProvider, View } from "tamagui";
 import { defaultConfig } from "@tamagui/config/v4";
 import { AuthProvider, useAuth } from "../store/context"; // Import useAuth
+import AdminStore from "./(adminTabs)/admin_store"; 
 
 const config = createTamagui(defaultConfig);
 
@@ -119,6 +120,7 @@ function AppContent() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <TamaguiProvider config={config}>
         <Slot />
+   
         <StatusBar style="auto" />
         <Toast />
       </TamaguiProvider>

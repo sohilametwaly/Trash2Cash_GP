@@ -4,17 +4,13 @@ import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
 
 import { Anvil, Book, Milk, Package, Wine } from "lucide-react-native";
-import { SelectItem } from "./SelectInput";
 
-export default function HistoryCard({ order, role }) {
+export default function HistoryCard({ order }) {
   return (
     <YStack $sm={{ flexDirection: "column" }}>
-      <Card size="$4" bordered width={360} scale={0.93}>
-        <Card.Header style={role == "admin" ? styles.header : ""}>
+      <Card elevate size="$4" bordered width={360} scale={0.93}>
+        <Card.Header>
           <Paragraph style={styles.date}>Pickup date: {order.date}</Paragraph>
-          {role == "admin" && (
-            <Paragraph style={styles.date}>{order.user}</Paragraph>
-          )}
         </Card.Header>
         {order.items.map((item) => {
           return (
@@ -29,38 +25,19 @@ export default function HistoryCard({ order, role }) {
         <Card.Footer padded>
           <View
             style={{
-              flex: 1,
-              justifyContent: "space-between",
-              flexDirection: "row",
               alignItems: "center",
+              textAlign: "center",
+              flexDirection: "row",
+              gap: 7,
+              justifyContent: "center",
+              height: 30,
             }}
           >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                textAlign: "center",
-                gap: 7,
-              }}
-            >
-              <Text style={{ color: Colors.black50opacity, fontSize: 18 }}>
-                Total Price:
-              </Text>
-              <View style={styles.price}>
-                <Text style={styles.priceText}>{order.total} EGP</Text>
-              </View>
-            </View>
-            <View>
-              {role == "admin" && (
-                <SelectItem
-                  id={order.id}
-                  label="Status"
-                  state={order.status}
-                  items={[{ name: "Pending" }, { name: "Delivered" }]}
-                />
-              )}
+            <Text style={{ color: Colors.black50opacity, fontSize: 18 }}>
+              Total Price:
+            </Text>
+            <View style={styles.price}>
+              <Text style={styles.priceText}>{order.total} EGP</Text>
             </View>
           </View>
         </Card.Footer>
@@ -117,11 +94,6 @@ function CardRow({ category, weight, pricePerKg }) {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
   date: {
     color: Colors.black50opacity,
     alignSelf: "center",

@@ -7,7 +7,7 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/store/context";
-import { Package, Plus, Store, User, Wallet } from "lucide-react-native";
+import {ShoppingCart, Package, Plus, Store, User, Wallet } from "lucide-react-native";
 export default function CompanyTabLayout() {
   console.log("Company");
   const { authUser } = useAuth();
@@ -50,6 +50,14 @@ export default function CompanyTabLayout() {
           options={{
             title: "Orders",
             tabBarIcon: ({ color }) => <Package color={color} size={25} />,
+          }}
+        />
+        {/* store tab */}
+         <Tabs.Screen
+          name="company_store"
+          options={{
+            title: "Store",
+            tabBarIcon: ({ color }) => <ShoppingCart size={25} color={color} />,
           }}
         />
         <Tabs.Screen
