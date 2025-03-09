@@ -58,7 +58,11 @@ export default function HistoryCard({ order, role }) {
                   id={order.id}
                   label="Status"
                   state={order.status}
-                  items={[{ name: "Pending" }, { name: "Delivered" }]}
+                  items={[
+                    { name: "Pending" },
+                    { name: "Delivered" },
+                    { name: "Cancelled" },
+                  ]}
                 />
               )}
             </View>
@@ -135,7 +139,7 @@ const styles = StyleSheet.create({
   priceText: {
     color: "white",
     fontWeight: "500",
-    fontSize: 11,
+    fontSize: 14,
     textAlign: "center",
   },
   categoryContainer: {

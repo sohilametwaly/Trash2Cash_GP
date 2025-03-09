@@ -8,11 +8,11 @@ export default function account() {
   return (
     <Container>
       <YStack marginBottom={40}>
-        <Header title="Account Settings" />
+        {/* <Header title="Account Settings" /> */}
         <Label>Full Name</Label>
-        <Input value={authUser.name} disabled />
+        <Input value={authUser?.name} disabled />
         <Label>Email</Label>
-        <Input value={authUser.email} disabled />
+        <Input value={authUser?.email} disabled />
         <Label>Old Password</Label>
         <Input placeholder="Enter Your Old Password" />
         <Label>New Password</Label>

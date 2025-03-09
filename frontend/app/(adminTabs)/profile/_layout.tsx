@@ -15,6 +15,7 @@ export default function ProfileStackLayout() {
         name="change-address"
         options={{ title: "Change Address" }}
       />
+      <Stack.Screen name="FAQs" options={{ title: "FAQs" }} />
     </Stack>
   );
 }

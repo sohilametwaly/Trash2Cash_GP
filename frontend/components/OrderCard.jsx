@@ -55,7 +55,7 @@ export default function OrderCard({ inCheckout, order }) {
       padded
       size="$4"
       bordered
-      width={360}
+      width={350}
       scale={0.93}
       flexDirection="row"
       justifyContent="space-between"

@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.sohilametwaly.Trash2Cash_GP"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +38,20 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "94a8dcf7-c5a7-48d1-a6d2-83edda610a5e"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/94a8dcf7-c5a7-48d1-a6d2-83edda610a5e"
     }
   }
 }
