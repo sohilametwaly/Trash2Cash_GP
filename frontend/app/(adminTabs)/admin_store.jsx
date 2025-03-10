@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Button } from "tamagui";
-import { Plus, Minus, Milk, Anvil, Wine, Book, Package } from "lucide-react-native";
-
+import { Plus, Minus, Milk, Anvil, Wine, Book, Package ,ShoppingCart} from "lucide-react-native";
+import Logo from "@/components/Logo";
 const companies = [
   {
     id: "1",
@@ -52,7 +52,7 @@ export default function AdminStore() {
       company.items.map((item) => Math.max(item.quantity, 100))
     )
   );
-  
+
   const [icons, setIcons] = useState(
     companies.map((company) =>
       company.items.map((item) => <Milk color="black" />)
@@ -64,6 +64,8 @@ export default function AdminStore() {
       company.items.map(() => false)
     )
   );
+
+  const [cartCount, setCartCount] = useState(0); 
 
   useEffect(() => {
     const updatedIcons = companies.map((company) =>
@@ -108,93 +110,127 @@ export default function AdminStore() {
   const toggleCart = (companyIndex, itemIndex) => {
     setCart((prevCart) => {
       const updatedCart = [...prevCart];
+      const currentItemInCart = updatedCart[companyIndex][itemIndex];
+
+      if (currentItemInCart) {
+       
+        setCartCount((prevCount) => Math.max(prevCount - 1, 0));
+      } else {
+        
+        setCartCount((prevCount) => prevCount + 1);
+      }
+
       updatedCart[companyIndex][itemIndex] = !updatedCart[companyIndex][itemIndex];
       return updatedCart;
     });
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Store</Text>
+    <View style={styles.screen}>
+      <ScrollView >
+      <View style={styles.cartContainer}>
+        <ShoppingCart color="black" size={30} />
+        {cartCount > 0 && (<View style={styles.cartBadge}>
+            <Text style={styles.cartBadgeText}>{cartCount}</Text>
+          </View>
+        )}
+      </View>
+        <Logo />
+        {companies.map((company, companyIndex) => (
+          <View style={styles.companyContainer} key={company.id}>
+            <Text style={styles.companyName}>{company.name}</Text>
 
-      {companies.map((company, companyIndex) => (
-        <View style={styles.companyContainer} key={company.id}>
-          <Text style={styles.companyName}>{company.name}</Text>
-
-          {company.items.map((item, itemIndex) => (
-            <View style={styles.card} key={item.name}>
-              <View style={styles.itemRow}>
-                {icons[companyIndex][itemIndex]}
-                <Text style={styles.itemName}>{item.name}</Text>
-                <Text style={styles.price}>{item.price}</Text>
-                <Text style={styles.weight}>{item.weight}</Text>
-              </View>
-
-              <View style={styles.quantityContainer}>
-                <Button
-                  circular
-                  size={"$2"}
-                  icon={Plus}
-                  borderColor="$color"
-                  borderWidth={1.5}
-                  backgroundColor="transparent"
-                  pressStyle={{ opacity: 0.5 }}
-                  color={"black"}
-                  onPress={() => increaseWeight(companyIndex, itemIndex)}
-                />
-
-                <View style={styles.weightContainer}>
-                  <Text>{quantities[companyIndex][itemIndex]} KG</Text>
+            {company.items.map((item, itemIndex) => (
+              <View style={[styles.card,styles.shadowBox]} key={item.name}>
+                <View style={styles.itemRow}>
+                  {icons[companyIndex][itemIndex]}
+                  <Text style={styles.itemName}>{item.name}</Text>
+                  <Text style={styles.price}>{item.price}</Text>
+                  <Text style={styles.weight}>{item.weight}</Text>
                 </View>
 
-                <Button
-                  circular
-                  size={"$2"}
-                  icon={Minus}
-                  borderColor="$color"
-                  borderWidth={1.5}
-                  backgroundColor="transparent"
-                  pressStyle={{ opacity: 0.5 }}
-                  color={"black"}
-                  onPress={() => decreaseWeight(companyIndex, itemIndex)}
-                />
-
-                <TouchableOpacity
-                  style={[
-                    styles.addButton,
-                    cart[companyIndex][itemIndex] ? styles.cancelButton : null,
-                  ]}
-                  onPress={() => toggleCart(companyIndex, itemIndex)}
-                >
-                  <Text style={styles.addButtonText}>
-                    {cart[companyIndex][itemIndex] ? "Cancle" : "Add to cart"}
-                  </Text>
-                  <FontAwesome5
-                    name={cart[companyIndex][itemIndex] ? "times" : "shopping-cart"}
-                    size={16}
-                    color="white"
+                <View style={styles.quantityContainer}>
+                  <Button
+                    circular
+                    size={"$2"}
+                    icon={Plus}
+                    borderColor="$color"
+                    borderWidth={1.5}
+                    backgroundColor="transparent"
+                    pressStyle={{ opacity: 0.5 }}
+                    color={"black"}
+                    onPress={() => increaseWeight(companyIndex, itemIndex)}
                   />
-                </TouchableOpacity>
+
+                  <View style={styles.weightContainer}>
+                    <Text>{quantities[companyIndex][itemIndex]} KG</Text>
+                  </View>
+
+                  <Button
+                    circular
+                    size={"$2"}
+                    icon={Minus}
+                    borderColor="$color"
+                    borderWidth={1.5}
+                    backgroundColor="transparent"
+                    pressStyle={{ opacity: 0.5 }}
+                    color={"black"}
+                    onPress={() => decreaseWeight(companyIndex, itemIndex)}
+                  />
+
+                  <TouchableOpacity
+                    style={[styles.addButton, cart[companyIndex][itemIndex] ? styles.cancelButton : null]}
+                    onPress={() => toggleCart(companyIndex, itemIndex)}
+                  >
+                    <Text style={styles.addButtonText}>
+                      {cart[companyIndex][itemIndex] ? "Cancel" : "Add to cart"}
+                    </Text>
+                    <FontAwesome5
+                      name={cart[companyIndex][itemIndex] ? "times" : "shopping-cart"}
+                      size={16}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          ))}
-        </View>
-      ))}
-    </ScrollView>
+            ))}
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#FDFDFD",
+   
+
   },
-  header: {
-    fontSize: 40,
-    color: "#2B4B40",
-    textAlign: "center",
-    marginBottom: 20,
-    marginTop: 20,
+  
+  cartContainer: {
+    position: "absolute",
+    top: 40,
+    right: 20,
+    zIndex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  cartBadge: {
+    position: "absolute",
+    top: -15,
+    right:0 ,
+    backgroundColor: "#E74C3C",
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  cartBadgeText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
   },
   companyContainer: {
     marginBottom: "10%",
@@ -209,11 +245,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     padding: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 9,
+   
     marginBottom: 10,
+  },
+  shadowBox: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    elevation: 4,
   },
   itemRow: {
     flexDirection: "row",

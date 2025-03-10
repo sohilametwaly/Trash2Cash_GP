@@ -16,7 +16,7 @@ import { createTamagui, TamaguiProvider, View } from "tamagui";
 import { defaultConfig } from "@tamagui/config/v4";
 import { AuthProvider, useAuth } from "../store/context";
 import * as secureStore from "expo-secure-store";
-import OnboardingScreen from "./OnBoardingScreen";
+// import OnboardingScreen from "./OnBoardingScreen";
 
 const config = createTamagui(defaultConfig);
 

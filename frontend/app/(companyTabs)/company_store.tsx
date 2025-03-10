@@ -16,8 +16,9 @@ import {
   Wine,
   Book,
   Package,
+  ShoppingCart
 } from "lucide-react-native";
-
+import Logo from "@/components/Logo";
 type Company = {
   id: string;
   name: string;
@@ -88,7 +89,7 @@ export default function CompanyStore() {
   const [cart, setCart] = useState<boolean[][]>(
     companies.map((company) => company.items.map(() => false))
   );
-
+  const [cartCount, setCartCount] = useState(0); 
   useEffect(() => {
     const updatedIcons = companies.map((company) =>
       company.items.map((item) => {
@@ -132,20 +133,35 @@ export default function CompanyStore() {
   const toggleCart = (companyIndex: number, itemIndex: number) => {
     setCart((prevCart) => {
       const updatedCart = [...prevCart];
-      updatedCart[companyIndex][itemIndex] =
-        !updatedCart[companyIndex][itemIndex];
+      const currentItemInCart = updatedCart[companyIndex][itemIndex];
+
+      if (currentItemInCart) {
+       
+        setCartCount((prevCount) => Math.max(prevCount - 1, 0));
+      } else {
+        
+        setCartCount((prevCount) => prevCount + 1);
+      }
+
+      updatedCart[companyIndex][itemIndex] = !updatedCart[companyIndex][itemIndex];
       return updatedCart;
     });
   };
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Store</Text>
-
+       <View style={styles.cartContainer}>
+              <ShoppingCart color="black" size={30} />
+              {cartCount > 0 && (<View style={styles.cartBadge}>
+                  <Text style={styles.cartBadgeText}>{cartCount}</Text>
+                </View>
+              )}
+        </View>
+      <Logo/>
       {companies.map((company, companyIndex) => (
         <View style={styles.companyContainer} key={company.id}>
           {company.items.map((item, itemIndex) => (
-            <View style={styles.card} key={item.name}>
+            <View style={[styles.card, styles.shadowBox]} key={item.name}>
               <View style={styles.itemRow}>
                 {icons[companyIndex][itemIndex]}
                 <Text style={styles.itemName}>{item.name}</Text>
@@ -211,6 +227,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor:"#FDFDFD"
   },
   header: {
     fontSize: 40,
@@ -226,11 +243,15 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     padding: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 9,
+    
     marginBottom: 10,
+  },
+  shadowBox: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    elevation: 4,
   },
   itemRow: {
     flexDirection: "row",
@@ -280,5 +301,27 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "500",
     marginRight: 8,
+  },
+  cartContainer: {
+    position: "absolute",
+    top: 40,
+    right: 20,
+    zIndex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  cartBadge: {
+    position: "absolute",
+    top: -15,
+    right:0 ,
+    backgroundColor: "#E74C3C",
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  cartBadgeText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 12,
   },
 });
