@@ -35,7 +35,6 @@ export default function BinScreen() {
     <View style={styles.container}>
       <YStack alignSelf="center">
         <Logo />
-        {/* <H2 style={styles.header}>Bin</H2> */}
       </YStack>
       <View>
         <FlatList
@@ -58,8 +57,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    marginTop: 45,
-    backgroundColor: "#FDFDFD",
+    marginTop: 35,
+    backgroundColor: "#F7F8FA",
   },
   header: {
     color: Colors.header,

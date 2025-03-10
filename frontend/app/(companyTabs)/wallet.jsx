@@ -3,12 +3,14 @@ import { Text, View, StyleSheet, Image } from "react-native";
 import { H2, YStack, Button } from "tamagui";
 import { CardInfoSheet } from "@/components/cardInfoSheet";
 import { useAuth } from "@/store/context";
+import Logo from "@/components/Logo";
 export default function WalletScreen() {
   const { authUser } = useAuth();
   return (
     <View style={styles.container}>
       <YStack alignSelf="center">
-        <H2 style={styles.header}>Wallet</H2>
+        {/* <H2 style={styles.header}>Wallet</H2> */}
+        <Logo />
       </YStack>
       <View style={styles.visaContainer}>
         <Text style={styles.visaText}>1234 **** **** ****</Text>
@@ -28,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 45,
+    paddingTop: 35,
   },
   header: {
     color: Colors.header,

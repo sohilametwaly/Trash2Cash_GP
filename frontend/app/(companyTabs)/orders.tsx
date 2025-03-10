@@ -2,6 +2,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { H2, YStack } from "tamagui";
 import HistoryCard from "@/components/HistoryCard";
+import Logo from "@/components/Logo";
 
 const DUMMY_ORDERS = [
   {
@@ -46,11 +47,12 @@ export default function OrdersScreen() {
   return (
     <View style={styles.container}>
       <YStack alignSelf="center">
-        <H2 style={styles.header}>All Orders</H2>
+        {/* <H2 style={styles.header}>All Orders</H2> */}
+        <Logo />
       </YStack>
       <FlatList
         data={DUMMY_ORDERS}
-        renderItem={({ item }) => <HistoryCard order={item} />}
+        renderItem={({ item }) => <HistoryCard order={item} role={"user"} />}
         keyExtractor={(item) => item.id}
       />
     </View>

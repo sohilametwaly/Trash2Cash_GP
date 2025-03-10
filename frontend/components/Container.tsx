@@ -7,8 +7,8 @@ export default function Container({ children }: { children: React.ReactNode }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 35,
     paddingHorizontal: 20,
-    backgroundColor: "#FDFDFD",
+    backgroundColor: "#F7F8FA",
   },
 });

@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, ChevronDown, ChevronUp } from "lucide-react-native";
 
 import { Adapt, Select, Sheet, YStack, getFontSize } from "tamagui";
 import { StyleSheet } from "react-native";
 export function SelectItem(props) {
   const [val, setVal] = useState(props.state.toLowerCase());
+  const [color, setColor] = useState("red");
+
+  useEffect(() => {
+    switch (val) {
+      case "pending":
+        setColor("#FBBB00");
+        break;
+      case "cancelled":
+        setColor("#A52A2A");
+        break;
+      case "delivered":
+        setColor("#28B446");
+        break;
+    }
+  }, [val]);
   return (
     <Select
       value={val}
@@ -13,8 +28,8 @@ export function SelectItem(props) {
       {...props}
     >
       <Select.Trigger
-        iconAfter={ChevronDown}
-        backgroundColor={val == "pending" ? "#FBBB00" : "#28B446"}
+        iconAfter={() => <ChevronDown color={"white"} size={17} />}
+        backgroundColor={color}
         style={styles.allOrdersStyle}
       >
         <Select.Value
@@ -89,7 +104,10 @@ export function SelectItem(props) {
               width={"$4"}
               pointerEvents="none"
             >
-              <ChevronDown size={getFontSize(props.size ?? "$true")} />
+              <ChevronDown
+                size={getFontSize(props.size ?? "$true")}
+                color={"white"}
+              />
             </YStack>
           )}
         </Select.Viewport>
@@ -102,7 +120,7 @@ export function SelectItem(props) {
           height="$3"
         >
           <YStack zIndex={10}>
-            <ChevronDown size={20} />
+            <ChevronDown size={20} color={"white"} />
           </YStack>
         </Select.ScrollDownButton>
       </Select.Content>

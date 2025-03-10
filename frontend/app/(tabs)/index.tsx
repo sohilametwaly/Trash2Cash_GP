@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { Button, View } from "tamagui";
+import { Button, View, YStack } from "tamagui";
 import { Text } from "react-native";
 import { Camera, Trash2, Upload, X } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -8,6 +8,7 @@ import { Image } from "tamagui";
 import Logo from "@/components/Logo";
 import { useAuth } from "@/store/context";
 import { Colors } from "@/constants/Colors";
+import Container from "@/components/Container";
 export default function CameraScreen() {
   const { authUser } = useAuth();
   const [image, setImage] = useState("");
@@ -51,14 +52,16 @@ export default function CameraScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <Container>
+      <YStack alignSelf="center">
+        <Logo />
+      </YStack>
       <View
         style={{
           alignItems: "center",
           gap: 7,
         }}
       >
-        <Logo />
         <Text style={{ fontSize: 27 }}>
           Welcome,{" "}
           <Text style={{ color: Colors.header, fontWeight: "600" }}>
@@ -106,7 +109,7 @@ export default function CameraScreen() {
           Add to Bin
         </Button>
       </View>
-    </View>
+    </Container>
   );
 }
 
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 20,
-    backgroundColor: "#FDFDFD", // Light background for contrast
+    backgroundColor: "#F7F8FA", // Light background for contrast
   },
   header: {
     fontSize: 28,

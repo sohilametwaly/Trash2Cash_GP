@@ -16,6 +16,7 @@ const DUMMY_ORDERS = [
       { category: "Metal", weight: 2, pricePerKg: 12 },
       { category: "Cardboard", weight: 2, pricePerKg: 20 },
     ],
+    status: "Pending",
   },
   {
     user: "John Doe",
@@ -28,6 +29,7 @@ const DUMMY_ORDERS = [
       { category: "Metal", weight: 2, pricePerKg: 12 },
       { category: "Cardboard", weight: 2, pricePerKg: 20 },
     ],
+    status: "Delivered",
   },
   {
     user: "John Doe",
@@ -40,6 +42,7 @@ const DUMMY_ORDERS = [
       { category: "Metal", weight: 2, pricePerKg: 12 },
       { category: "Cardboard", weight: 2, pricePerKg: 20 },
     ],
+    status: "Cancelled",
   },
 ];
 
@@ -65,7 +68,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 35,
     justifyContent: "center",
-    backgroundColor: "#FDFDFD",
+    backgroundColor: "#F7F8FA",
   },
   header: {
     color: Colors.header,

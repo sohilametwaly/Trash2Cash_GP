@@ -6,28 +6,35 @@ import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Package, Plus, Store, User, Users ,ShoppingCart} from "lucide-react-native";
+import {
+  ChartPie,
+  Package,
+  Plus,
+  Store,
+  User,
+  Users,
+} from "lucide-react-native";
 import { useAuth } from "@/store/context";
 
 export default function TabLayout() {
   const { authUser } = useAuth();
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
-  // useEffect(() => {
-  //   if (authUser === undefined) return;
-  //   setIsReady(true);
+  useEffect(() => {
+    if (authUser === undefined) return;
+    setIsReady(true);
 
-  //   if (authUser && authUser.role === "user") {
-  //     router.replace("/(tabs)");
-  //   }
-  //   if (authUser && authUser.role === "company") {
-  //     router.replace("./(companyTabs)");
-  //   }
-  // }, [authUser]);
+    if (authUser && authUser.role === "user") {
+      router.replace("/(tabs)");
+    }
+    if (authUser && authUser.role === "company") {
+      router.replace("./(companyTabs)");
+    }
+  }, [authUser]);
 
-  // if (!isReady) {
-  //   return null;
-  // }
+  if (!isReady) {
+    return null;
+  }
   return (
     <View style={{ flex: 1 }}>
       <Tabs
@@ -52,13 +59,6 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <Package color={color} size={24} />,
           }}
         />
-         <Tabs.Screen
-                  name="admin_store"
-                  options={{
-                    title: "Store",
-                    tabBarIcon: ({ color }) => <ShoppingCart size={25} color={color} />,
-                  }}
-                />
         <Tabs.Screen
           name="bin"
           options={{
@@ -96,6 +96,13 @@ export default function TabLayout() {
           options={{
             title: "Users",
             tabBarIcon: ({ color }) => <Users size={24} color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="dashboard"
+          options={{
+            title: "Dashboard",
+            tabBarIcon: ({ color }) => <ChartPie size={24} color={color} />,
           }}
         />
         <Tabs.Screen
