@@ -1,7 +1,7 @@
 import Container from "@/components/Container";
 import Header from "@/components/Header";
 import { ArrowRight, Camera, Edit2, Upload, X } from "lucide-react-native";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { Button, Dialog, Image, Unspaced, View, XStack } from "tamagui";
 import React, { useState } from "react";
@@ -14,27 +14,44 @@ export default function ProfileScreen() {
   const { logout } = useAuth();
 
   return (
-    <Container>
-      {/* <Header title="Profile" /> */}
-      <Logo />
-      <DialogInstance />
-      <Btn
-        title="Account Settings"
-        color="black"
-        onPress={() => router.push("/profile/account-settings")}
-      />
-      <Btn
-        title="Change Address"
-        color="black"
-        onPress={() => router.push("/profile/change-address")}
-      />
-      <Btn
-        title="FAQs"
-        color="black"
-        onPress={() => router.push("/profile/FAQs")}
-      />
-      <Btn title="Logout" color="red" onPress={async () => await logout()} />
-    </Container>
+    <ScrollView>
+      <Container>
+        {/* <Header title="Profile" /> */}
+        <Logo />
+        <DialogInstance />
+        <Btn
+          title="Account Settings"
+          color="black"
+          onPress={() => router.push("/profile/account-settings")}
+        />
+        <Btn
+          title="Change Address"
+          color="black"
+          onPress={() => router.push("/profile/change-address")}
+        />
+        <Btn
+          title="Dashboard"
+          color="black"
+          onPress={() => router.push("/profile/dashboard")}
+        />
+        <Btn
+          title="Orders"
+          color="black"
+          onPress={() => router.push("/profile/orders")}
+        />
+        <Btn
+          title="Inventory"
+          color="black"
+          onPress={() => router.push("/profile/shop")}
+        />
+        <Btn
+          title="FAQs"
+          color="black"
+          onPress={() => router.push("/profile/FAQs")}
+        />
+        <Btn title="Logout" color="red" onPress={async () => await logout()} />
+      </Container>
+    </ScrollView>
   );
 }
 

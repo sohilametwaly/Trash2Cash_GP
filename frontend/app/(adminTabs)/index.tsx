@@ -23,6 +23,7 @@ export default function AddScreen() {
           style={styles.input}
           value={category}
           onChangeText={setCategory}
+          placeholder="Plastic"
         />
 
         <View style={styles.row}>
@@ -32,15 +33,17 @@ export default function AddScreen() {
               style={styles.input}
               value={weight}
               onChangeText={setWeight}
+              placeholder="2.5"
             />
           </View>
 
           <View style={styles.column}>
-            <Text style={styles.label}>Price</Text>
+            <Text style={styles.label}>Price / KG</Text>
             <TextInput
               style={styles.input}
               value={price}
               onChangeText={setPrice}
+              placeholder="7"
             />
           </View>
         </View>
@@ -71,8 +74,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   inputContainer: {
-    backgroundColor: "#D9D9D9",
+    backgroundColor: "white",
     padding: 20,
+
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+
+    elevation: 2,
 
     borderRadius: 10,
     width: "100%",
