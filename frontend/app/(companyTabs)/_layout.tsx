@@ -52,27 +52,19 @@ export default function CompanyTabLayout() {
           }),
         }}
       >
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="orders"
           options={{
             title: "Orders",
             tabBarIcon: ({ color }) => <Package color={color} size={25} />,
           }}
-        />
+        /> */}
+
         <Tabs.Screen
-          name="bin"
+          name="company_store"
           options={{
-            title: "Bin",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={25} color={color} name="trash-bin" />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "Add",
-            tabBarIcon: ({ color }) => <Plus size={25} color={color} />,
+            title: "Store",
+            tabBarIcon: ({ color }) => <Store size={24} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -83,17 +75,34 @@ export default function CompanyTabLayout() {
           }}
         />
         <Tabs.Screen
+          name="index"
+          options={{
+            title: "Add",
+            tabBarIcon: ({ color }) => <Plus size={25} color={color} />,
+          }}
+        />
+        {/* <Tabs.Screen
           name="shop"
           options={{
             title: "Shop",
             tabBarIcon: ({ color }) => <Store size={25} color={color} />,
           }}
-        />
-        <Tabs.Screen
+        /> */}
+        {/* <Tabs.Screen
           name="dashboard"
           options={{
             title: "Dashboard",
             tabBarIcon: ({ color }) => <ChartPie size={24} color={color} />,
+          }}
+        /> */}
+
+        <Tabs.Screen
+          name="bin"
+          options={{
+            title: "Bin",
+            tabBarIcon: ({ color }) => (
+              <Ionicons size={25} color={color} name="trash-bin" />
+            ),
           }}
         />
         <Tabs.Screen

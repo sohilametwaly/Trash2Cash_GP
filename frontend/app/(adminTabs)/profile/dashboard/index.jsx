@@ -48,8 +48,14 @@ const data = [
 ];
 import { PieChart } from "react-native-chart-kit";
 import Container from "@/components/Container";
-import { ScrollView, Text, View } from "tamagui";
-import { Building, TrendingDown, TrendingUp, User } from "lucide-react-native";
+import { Button, ScrollView, Text, View } from "tamagui";
+import {
+  Building,
+  TrendingDown,
+  TrendingUp,
+  User,
+  Users,
+} from "lucide-react-native";
 import { StyleSheet } from "react-native";
 import Logo from "@/components/Logo";
 const DashboardScreen = () => {

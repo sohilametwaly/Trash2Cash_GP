@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Button } from "tamagui";
-import { Plus, Minus, Milk, Anvil, Wine, Book, Package ,ShoppingCart} from "lucide-react-native";
+import {
+  Plus,
+  Minus,
+  Milk,
+  Anvil,
+  Wine,
+  Book,
+  Package,
+  ShoppingCart,
+} from "lucide-react-native";
 import Logo from "@/components/Logo";
 const companies = [
   {
@@ -60,12 +75,10 @@ export default function AdminStore() {
   );
 
   const [cart, setCart] = useState(
-    companies.map((company) =>
-      company.items.map(() => false)
-    )
+    companies.map((company) => company.items.map(() => false))
   );
 
-  const [cartCount, setCartCount] = useState(0); 
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const updatedIcons = companies.map((company) =>
@@ -113,35 +126,35 @@ export default function AdminStore() {
       const currentItemInCart = updatedCart[companyIndex][itemIndex];
 
       if (currentItemInCart) {
-       
         setCartCount((prevCount) => Math.max(prevCount - 1, 0));
       } else {
-        
         setCartCount((prevCount) => prevCount + 1);
       }
 
-      updatedCart[companyIndex][itemIndex] = !updatedCart[companyIndex][itemIndex];
+      updatedCart[companyIndex][itemIndex] =
+        !updatedCart[companyIndex][itemIndex];
       return updatedCart;
     });
   };
 
   return (
-    <View style={styles.screen}>
-      <ScrollView >
-      <View style={styles.cartContainer}>
-        <ShoppingCart color="black" size={30} />
-        {cartCount > 0 && (<View style={styles.cartBadge}>
-            <Text style={styles.cartBadgeText}>{cartCount}</Text>
-          </View>
-        )}
-      </View>
+    <ScrollView>
+      <View style={styles.screen}>
+        <View style={styles.cartContainer}>
+          <ShoppingCart color="black" size={30} />
+          {cartCount > 0 && (
+            <View style={styles.cartBadge}>
+              <Text style={styles.cartBadgeText}>{cartCount}</Text>
+            </View>
+          )}
+        </View>
         <Logo />
         {companies.map((company, companyIndex) => (
           <View style={styles.companyContainer} key={company.id}>
             <Text style={styles.companyName}>{company.name}</Text>
 
             {company.items.map((item, itemIndex) => (
-              <View style={[styles.card,styles.shadowBox]} key={item.name}>
+              <View style={[styles.card, styles.shadowBox]} key={item.name}>
                 <View style={styles.itemRow}>
                   {icons[companyIndex][itemIndex]}
                   <Text style={styles.itemName}>{item.name}</Text>
@@ -179,14 +192,23 @@ export default function AdminStore() {
                   />
 
                   <TouchableOpacity
-                    style={[styles.addButton, cart[companyIndex][itemIndex] ? styles.cancelButton : null]}
+                    style={[
+                      styles.addButton,
+                      cart[companyIndex][itemIndex]
+                        ? styles.cancelButton
+                        : null,
+                    ]}
                     onPress={() => toggleCart(companyIndex, itemIndex)}
                   >
                     <Text style={styles.addButtonText}>
                       {cart[companyIndex][itemIndex] ? "Cancel" : "Add to cart"}
                     </Text>
                     <FontAwesome5
-                      name={cart[companyIndex][itemIndex] ? "times" : "shopping-cart"}
+                      name={
+                        cart[companyIndex][itemIndex]
+                          ? "times"
+                          : "shopping-cart"
+                      }
                       size={16}
                       color="white"
                     />
@@ -196,8 +218,8 @@ export default function AdminStore() {
             ))}
           </View>
         ))}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -206,10 +228,8 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#FDFDFD",
-   
-
   },
-  
+
   cartContainer: {
     position: "absolute",
     top: 40,
@@ -221,7 +241,7 @@ const styles = StyleSheet.create({
   cartBadge: {
     position: "absolute",
     top: -15,
-    right:0 ,
+    right: 0,
     backgroundColor: "#E74C3C",
     borderRadius: 10,
     paddingHorizontal: 6,
@@ -245,7 +265,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     padding: 16,
-   
+
     marginBottom: 10,
   },
   shadowBox: {

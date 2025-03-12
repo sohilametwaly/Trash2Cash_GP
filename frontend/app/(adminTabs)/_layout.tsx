@@ -53,19 +53,10 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="orders"
+          name="admin_store"
           options={{
-            title: "Orders",
-            tabBarIcon: ({ color }) => <Package color={color} size={24} />,
-          }}
-        />
-        <Tabs.Screen
-          name="bin"
-          options={{
-            title: "Bin",
-            tabBarIcon: ({ color }) => (
-              <Ionicons size={24} color={color} name="trash-bin" />
-            ),
+            title: "Store",
+            tabBarIcon: ({ color }) => <Store size={24} color={color} />,
           }}
         />
         <Tabs.Screen
@@ -84,25 +75,14 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <Plus size={24} color={color} />,
           }}
         />
+
         <Tabs.Screen
-          name="shop"
+          name="bin"
           options={{
-            title: "Shop",
-            tabBarIcon: ({ color }) => <Store size={24} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="users"
-          options={{
-            title: "Users",
-            tabBarIcon: ({ color }) => <Users size={24} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="dashboard"
-          options={{
-            title: "Dashboard",
-            tabBarIcon: ({ color }) => <ChartPie size={24} color={color} />,
+            title: "Bin",
+            tabBarIcon: ({ color }) => (
+              <Ionicons size={24} color={color} name="trash-bin" />
+            ),
           }}
         />
         <Tabs.Screen
