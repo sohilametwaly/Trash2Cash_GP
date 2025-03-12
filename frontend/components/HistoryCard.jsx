@@ -1,4 +1,4 @@
-import { Card, Paragraph, YStack, XStack } from "tamagui";
+import { Card, Paragraph, YStack, XStack, Button } from "tamagui";
 import { StyleSheet, View, Text } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { Anvil, Book, Milk, Package, Wine } from "lucide-react-native";
 import { SelectItem } from "./SelectInput";
 
-export default function HistoryCard({ order, role }) {
+export default function HistoryCard({ order, role, pending }) {
   return (
     <YStack $sm={{ flexDirection: "column" }}>
       <Card size="$4" bordered width={360} scale={0.93}>
@@ -26,7 +26,7 @@ export default function HistoryCard({ order, role }) {
             />
           );
         })}
-        <Card.Footer padded>
+        <Card.Footer padded flexDirection="column" gap={7}>
           <View
             style={{
               flex: 1,
@@ -52,6 +52,7 @@ export default function HistoryCard({ order, role }) {
                 <Text style={styles.priceText}>{order.total} EGP</Text>
               </View>
             </View>
+
             <View>
               {role == "admin" && (
                 <SelectItem
@@ -67,6 +68,16 @@ export default function HistoryCard({ order, role }) {
               )}
             </View>
           </View>
+          {pending && (
+            <Button
+              backgroundColor={"#A52A2A"}
+              color={"white"}
+              fontSize={17}
+              width={100}
+            >
+              Cancel your backup
+            </Button>
+          )}
         </Card.Footer>
       </Card>
     </YStack>

@@ -38,6 +38,7 @@
     "expo-status-bar": "~2.0.1",
     "expo-symbols": "~0.2.2",
     "expo-system-ui": "~4.0.8",
+    "expo-updates": "~0.27.1",
     "expo-web-browser": "~14.0.2",
     "lucide": "^0.475.0",
     "lucide-react": "^0.475.0",
@@ -46,8 +47,8 @@
     "react-dom": "18.3.1",
     "react-hot-toast": "^2.5.2",
     "react-native": "0.76.7",
-    "react-native-chart-kit": "^6.12.0",
     "react-native-app-intro-slider": "^4.0.4",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-date-picker": "^5.0.10",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-maps": "^1.20.1",
@@ -60,8 +61,7 @@
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
     "tamagui": "^1.124.18",
-    "zustand": "^5.0.3",
-    "expo-updates": "~0.27.1"
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
