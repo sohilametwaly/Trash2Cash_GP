@@ -22,10 +22,12 @@ interface AuthContextType {
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isCheckingAuth: boolean;
+  isChangingImg: boolean;
   checkAuth: () => Promise<void>;
   signUp: (data: NewUser) => Promise<void>;
   login: (data: LoginData) => Promise<void>;
   logout: () => Promise<void>;
+  changeProfileImg: (profileImg: FormData) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,6 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isChangingImg, setIsChangingImg] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -101,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.error("Login error:", error.response?.data || error);
 
       Toast.show({
-        text1: error.response?.data?.message || "Failed to login",
+        text1: "Failed to login",
 
         type: "error",
       });
@@ -126,17 +129,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const changeProfileImg = async (profileImg: FormData) => {
+    setIsChangingImg(true);
+    try {
+      const token = await getToken();
+      const res = await axios.post(`${BASE_URL}/profileImg`, profileImg, {
+        headers: {
+          token: token,
+        },
+      });
+      console.log("here");
+
+      Toast.show({
+        type: "success",
+        text1: "Image uploaded Successfully!",
+      });
+      console.log("hereeee");
+    } catch (err) {
+      console.log("error in change profile context ", err);
+    } finally {
+      setIsChangingImg(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         authUser,
         isSigningUp,
         isLoggingIn,
+        isChangingImg,
         isCheckingAuth,
         checkAuth,
         signUp,
         login,
         logout,
+        changeProfileImg,
       }}
     >
       {children}

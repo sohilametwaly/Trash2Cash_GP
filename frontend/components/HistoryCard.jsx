@@ -9,7 +9,20 @@ import { SelectItem } from "./SelectInput";
 export default function HistoryCard({ order, role, pending }) {
   return (
     <YStack $sm={{ flexDirection: "column" }}>
-      <Card size="$4" bordered width={360} scale={0.93}>
+      <Card
+        size="$4"
+        bordered
+        width={360}
+        scale={0.93}
+        backgroundColor={"white"}
+        style={{
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 4,
+          elevation: 5,
+        }}
+      >
         <Card.Header style={role == "admin" ? styles.header : ""}>
           <Paragraph style={styles.date}>Pickup date: {order.date}</Paragraph>
           {role == "admin" && (
@@ -70,12 +83,13 @@ export default function HistoryCard({ order, role, pending }) {
           </View>
           {pending && (
             <Button
-              backgroundColor={"#A52A2A"}
+              backgroundColor={"#C83939"}
               color={"white"}
               fontSize={17}
-              width={100}
+              width={90}
+              alignSelf="flex-end"
             >
-              Cancel your backup
+              Cancel
             </Button>
           )}
         </Card.Footer>
@@ -142,15 +156,14 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   price: {
-    backgroundColor: Colors.header,
-    padding: 6,
-    borderRadius: 8,
+    padding: 2,
+    alignItems: "center",
     alignSelf: "center",
   },
   priceText: {
-    color: "white",
+    color: Colors.header,
     fontWeight: "500",
-    fontSize: 14,
+    fontSize: 16,
     textAlign: "center",
   },
   categoryContainer: {

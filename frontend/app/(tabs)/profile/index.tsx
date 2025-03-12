@@ -7,34 +7,34 @@ import { Button, Dialog, Image, Unspaced, View, XStack } from "tamagui";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/store/context";
-import Logo from "@/components/Logo";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { logout } = useAuth();
 
   return (
-    <Container>
-      {/* <Header title="Profile" /> */}
-      <Logo />
+    <>
+      <Header />
       <DialogInstance />
-      <Btn
-        title="Account Settings"
-        color="black"
-        onPress={() => router.push("/profile/account-settings")}
-      />
-      <Btn
-        title="Change Address"
-        color="black"
-        onPress={() => router.push("/profile/change-address")}
-      />
-      <Btn
-        title="FAQs"
-        color="black"
-        onPress={() => router.push("/profile/FAQs")}
-      />
-      <Btn title="Logout" color="red" onPress={async () => await logout()} />
-    </Container>
+      <Container>
+        <Btn
+          title="Account Settings"
+          color="black"
+          onPress={() => router.push("/profile/account-settings")}
+        />
+        <Btn
+          title="Change Address"
+          color="black"
+          onPress={() => router.push("/profile/change-address")}
+        />
+        <Btn
+          title="FAQs"
+          color="black"
+          onPress={() => router.push("/profile/FAQs")}
+        />
+        <Btn title="Logout" color="red" onPress={async () => await logout()} />
+      </Container>
+    </>
   );
 }
 
@@ -56,57 +56,71 @@ const Btn = ({
 };
 
 function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
+  const { changeProfileImg } = useAuth();
   const [image, setImage] = useState(
     require("../../../assets/images/Default_pfp.jpg")
   );
 
-  const openCamera = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== "granted") {
-      alert("Permission to access camera is required!");
+  const handleImagePick = async (source: "camera" | "gallery") => {
+    let permissionResult;
+    if (source === "camera") {
+      permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    } else {
+      permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+    }
+
+    if (permissionResult.status !== "granted") {
+      alert(`Permission to access ${source} is required!`);
       return;
     }
 
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    let result;
+    if (source === "camera") {
+      result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    }
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      const blob = await uriToBlob(image);
+
+      const formData = new FormData();
+      formData.append("file", blob, "profile.jpg");
+      formData.append("upload_preset", "trash2cash");
+
+      await changeProfileImg(formData);
     }
   };
 
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("Permission to access Media is required!");
-      return;
-    }
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
+  const uriToBlob = async (uri: string): Promise<Blob> => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
   };
+
   return (
     <Dialog modal>
-      <Dialog.Trigger asChild>
+      <Dialog.Trigger backgroundColor={"white"}>
         <TouchableOpacity style={styles.imageInput}>
           {image ? (
             <View style={styles.imageWrapper}>
               <Image source={{ uri: image }} style={styles.imagePreview} />
-              <TouchableOpacity style={styles.removeButton}>
-                <Edit2 size={20} color="white" />
-              </TouchableOpacity>
+              <Dialog.Trigger asChild>
+                <TouchableOpacity style={styles.removeButton}>
+                  <Edit2 size={20} color="white" />
+                </TouchableOpacity>
+              </Dialog.Trigger>
             </View>
           ) : (
             <Camera size={30} color={"#E0E0E0"} />
@@ -148,7 +162,10 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
 
           <XStack alignSelf="flex-end" gap="$4">
             <Dialog.Close displayWhenAdapted asChild>
-              <Button iconAfter={<Upload />} onPress={pickImage}>
+              <Button
+                iconAfter={<Upload />}
+                onPress={() => handleImagePick("gallery")}
+              >
                 Upload
               </Button>
             </Dialog.Close>
@@ -157,7 +174,7 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
                 iconAfter={<Camera />}
                 backgroundColor={"#2B4B40"}
                 color={"white"}
-                onPress={openCamera}
+                onPress={() => handleImagePick("camera")}
               >
                 Open Camera
               </Button>
@@ -206,11 +223,13 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     marginBottom: 20,
     marginHorizontal: "auto",
+    backgroundColor: "white",
   },
   imagePreview: {
     width: "100%",
     height: "100%",
     borderRadius: 75,
+    backgroundColor: "white",
   },
   imageWrapper: {
     position: "relative",

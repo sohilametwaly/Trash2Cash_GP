@@ -1,13 +1,51 @@
-import { CreditCard } from "lucide-react-native";
+import { CaseUpper, CreditCard } from "lucide-react-native";
 import { Sheet } from "@tamagui/sheet";
-import React, { memo } from "react";
-import { Button, H2, Input, Label, Paragraph, XStack, YStack } from "tamagui";
-import { View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Button, H2, Input, Label, XStack } from "tamagui";
+import { View, Keyboard, KeyboardAvoidingView } from "react-native";
 import { Colors } from "@/constants/Colors";
 
 export const CardInfoSheet = () => {
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
+  const [cardHolderName, setCardHolderName] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => setKeyboardVisible(true)
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const handleNameChange = (input) => {
+    const lettersOnly = input.replace(/[^a-zA-Z]/g, "");
+    setCardHolderName(lettersOnly.toUpperCase());
+  };
+
+  const handleDateChange = (input) => {
+    const numbersOnly = input.replace(/[^0-9]/g, "");
+
+    if (numbersOnly.length > 4) return;
+
+    let formattedDate = numbersOnly;
+
+    if (numbersOnly.length > 2) {
+      formattedDate = numbersOnly.slice(0, 2) + "/" + numbersOnly.slice(2);
+    }
+
+    setExpiryDate(formattedDate);
+  };
 
   return (
     <>
@@ -37,24 +75,25 @@ export const CardInfoSheet = () => {
           backgroundColor="$shadow6"
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
+          position="absolute"
         />
 
-        <Sheet.Handle position="relative" top={260} />
+        <Sheet.Handle position="relative" top={keyboardVisible ? 50 : 190} />
         <Sheet.Frame
           padding="$4"
           alignItems="center"
           gap="$5"
-          maxHeight={350}
+          maxHeight={430}
           position="absolute"
           bottom={-70}
         >
-          <View style={{ alignItems: "center", gap: 5 }}>
+          <View style={{ alignItems: "center", gap: 7 }}>
             <H2 color={Colors.header} paddingBottom={10}>
               Card info
             </H2>
             <XStack
               borderWidth={1}
-              borderColor="$borderColor"
+              borderColor="black"
               borderRadius="$4"
               padding="$2"
               alignItems="center"
@@ -68,6 +107,26 @@ export const CardInfoSheet = () => {
                 borderWidth={0}
                 keyboardType="numeric"
                 maxLength={16}
+              />
+            </XStack>
+            <XStack
+              borderWidth={1}
+              borderColor="black"
+              borderRadius="$4"
+              padding="$2"
+              alignItems="center"
+              width={"100%"}
+              backgroundColor={"#F2F2F2"}
+            >
+              <CaseUpper size={20} color="black" />
+              <Input
+                placeholder="Card Holder Name"
+                flex={1}
+                borderWidth={0}
+                keyboardType="text"
+                autoCapitalize="characters"
+                value={cardHolderName}
+                onChangeText={handleNameChange}
               />
             </XStack>
             <View
@@ -87,11 +146,23 @@ export const CardInfoSheet = () => {
                 >
                   Expiry
                 </Label>
-                <Input
-                  placeholder="DD/MM"
-                  keyboardType="numeric"
-                  maxLength={4}
-                />
+                <XStack
+                  borderWidth={1}
+                  borderColor="black"
+                  borderRadius="$4"
+                  alignItems="center"
+                  width={"90%"}
+                  backgroundColor={"#F2F2F2"}
+                >
+                  <Input
+                    placeholder="DD/MM"
+                    keyboardType="numeric"
+                    maxLength={5}
+                    value={expiryDate}
+                    onChangeText={handleDateChange}
+                    width={"100%"}
+                  />
+                </XStack>
               </View>
               <View style={{ width: "50%" }}>
                 <Label
@@ -104,7 +175,7 @@ export const CardInfoSheet = () => {
                 </Label>
                 <XStack
                   borderWidth={1}
-                  borderColor="$borderColor"
+                  borderColor="black"
                   borderRadius="$4"
                   alignItems="center"
                   paddingHorizontal={5}

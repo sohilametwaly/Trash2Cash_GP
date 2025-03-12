@@ -60,15 +60,14 @@ export const PickupSheet = () => {
           exitStyle={{ opacity: 0 }}
         />
 
-        <Sheet.Handle position="relative" top={290} />
+        <Sheet.Handle position="relative" top={370} />
         <Sheet.Frame
           padding="$5"
           alignItems="center"
           gap="$5"
-          maxHeight={300}
+          maxHeight={220}
           justifyContent="space-between"
           position="absolute"
-          paddingBottom={70}
           bottom={-50}
         >
           <View style={styles.sheetContainer}>
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
   sheetContainer: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
   },
   datePickerContainer: {
     flexDirection: "row",

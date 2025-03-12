@@ -48,7 +48,7 @@ const faq: { question: string; answer: string }[] = [
 const FAQsComponent = () => {
   return (
     <Container>
-      <View style={{ marginBottom: 16 }}>
+      <View style={{ marginBottom: 16, marginTop: 15 }}>
         <FlatList
           data={faq}
           keyExtractor={(item) => item.question}

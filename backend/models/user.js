@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
       expiary: { type: Number, maxlength: 4, minlength: 4 },
     },
   },
+  img: { type: String, default: "" },
 });
 
 export const User = mongoose.model("User", userSchema);

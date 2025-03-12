@@ -59,6 +59,14 @@ export default function OrderCard({ inCheckout, order }) {
       scale={0.93}
       flexDirection="row"
       justifyContent="space-between"
+      backgroundColor={"white"}
+      style={{
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
+      }}
     >
       <View style={styles.categoryContainer}>
         <Text style={styles.categoryText}>{icon}</Text>

@@ -1,27 +1,25 @@
 import { Colors } from "@/constants/Colors";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { H2, YStack, Button } from "tamagui";
 import { CardInfoSheet } from "@/components/cardInfoSheet";
-import Logo from "@/components/Logo";
+import Header from "@/components/Header";
 
 export default function WalletScreen() {
   return (
-    <View style={styles.container}>
-      <YStack alignSelf="center">
-        <Logo />
-        {/* <H2 style={styles.header}>Wallet</H2> */}
-      </YStack>
-      <View style={styles.visaContainer}>
-        <Text style={styles.visaText}>1234 **** **** ****</Text>
-        <Text style={styles.visaText}>John Doe</Text>
-        <Image
-          source={require("../../assets/images/visa.png")}
-          style={{ alignSelf: "flex-end" }}
-        />
+    <>
+      <Header />
+      <View style={styles.container}>
+        <View style={styles.visaContainer}>
+          <Text style={styles.visaText}>1234 **** **** ****</Text>
+          <Text style={styles.visaText}>John Doe</Text>
+          <Image
+            source={require("../../assets/images/visa.png")}
+            style={{ alignSelf: "flex-end" }}
+          />
+        </View>
+        <Text style={styles.balanceText}>Balance: 85 EGP</Text>
+        <CardInfoSheet />
       </View>
-      <Text style={styles.balanceText}>Balance: 85 EGP</Text>
-      <CardInfoSheet />
-    </View>
+    </>
   );
 }
 
@@ -29,8 +27,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 35,
-    backgroundColor: "#F7F8FA",
+    // paddingTop: 35,
+    backgroundColor: "white",
   },
   header: {
     color: Colors.header,
