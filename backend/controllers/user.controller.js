@@ -3,6 +3,7 @@ import { User } from "../models/user.js";
 
 export const changeProfileImg = async (req, res) => {
   try {
+    console.log("profile image backend test");
     const { profileImg } = req.body;
     const user = await User.findById(req.user._id).select("-password");
 
@@ -11,7 +12,7 @@ export const changeProfileImg = async (req, res) => {
         user.img.split("/").pop().split(".")[0]
       );
     }
-    console.log(profileImg);
+    // console.log(profileImg);
 
     const response = await cloudinary.uploader.upload(profileImg);
     user.img = response.secure_url;

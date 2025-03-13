@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/store/context";
 import Logo from "@/components/Logo";
+import * as FileSystem from "expo-file-system";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -15,9 +16,10 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView>
-      <Header />
-      <DialogInstance />
       <Container>
+        {/* <Header title="Profile" /> */}
+        <Logo />
+        <DialogInstance />
         <Btn
           title="Account Settings"
           color="black"
@@ -72,71 +74,81 @@ const Btn = ({
 };
 
 function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
-  const { changeProfileImg } = useAuth();
+  const { changeProfileImg, authUser } = useAuth();
   const [image, setImage] = useState(
     require("../../../assets/images/Default_pfp.jpg")
   );
 
-  const handleImagePick = async (source: "camera" | "gallery") => {
-    let permissionResult;
-    if (source === "camera") {
-      permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-    } else {
-      permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-    }
-
-    if (permissionResult.status !== "granted") {
-      alert(`Permission to access ${source} is required!`);
+  const openCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access camera is required!");
       return;
     }
 
-    let result;
-    if (source === "camera") {
-      result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    } else {
-      result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images"],
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    }
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      const blob = await uriToBlob(image);
+      const imageUri = result.assets[0].uri;
+      const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
 
-      const formData = new FormData();
-      formData.append("file", blob, "profile.jpg");
-      formData.append("upload_preset", "trash2cash");
+      const payload = {
+        profileImg: `data:image/jpeg;base64,${base64Image}`,
+      };
 
-      await changeProfileImg(formData);
+      await changeProfileImg(payload);
     }
   };
 
-  const uriToBlob = async (uri: string): Promise<Blob> => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  };
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access Media is required!");
+      return;
+    }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      const imageUri = result.assets[0].uri;
+      const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const payload = {
+        profileImg: `data:image/jpeg;base64,${base64Image}`,
+      };
+
+      await changeProfileImg(payload);
+    }
+  };
   return (
     <Dialog modal>
-      <Dialog.Trigger backgroundColor={"white"}>
+      <Dialog.Trigger asChild>
         <TouchableOpacity style={styles.imageInput}>
           {image ? (
             <View style={styles.imageWrapper}>
-              <Image source={{ uri: image }} style={styles.imagePreview} />
-              <Dialog.Trigger asChild>
-                <TouchableOpacity style={styles.removeButton}>
-                  <Edit2 size={20} color="white" />
-                </TouchableOpacity>
-              </Dialog.Trigger>
+              <Image
+                source={{ uri: authUser?.img ? authUser.img : image }}
+                style={styles.imagePreview}
+              />
+              <TouchableOpacity style={styles.removeButton}>
+                <Edit2 size={20} color="white" />
+              </TouchableOpacity>
             </View>
           ) : (
             <Camera size={30} color={"#E0E0E0"} />
@@ -178,10 +190,7 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
 
           <XStack alignSelf="flex-end" gap="$4">
             <Dialog.Close displayWhenAdapted asChild>
-              <Button
-                iconAfter={<Upload />}
-                onPress={() => handleImagePick("gallery")}
-              >
+              <Button iconAfter={<Upload />} onPress={pickImage}>
                 Upload
               </Button>
             </Dialog.Close>
@@ -190,7 +199,7 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
                 iconAfter={<Camera />}
                 backgroundColor={"#2B4B40"}
                 color={"white"}
-                onPress={() => handleImagePick("camera")}
+                onPress={openCamera}
               >
                 Open Camera
               </Button>
