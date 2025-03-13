@@ -4,6 +4,7 @@ import { Button, H2, YStack } from "tamagui";
 import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import Logo from "@/components/Logo";
+import Header from "@/components/Header";
 
 const DUMMY_BIN_ITEMS = [
   {
@@ -32,24 +33,24 @@ export default function BinScreen() {
     0
   );
   return (
-    <View style={styles.container}>
-      <YStack alignSelf="center">
-        <Logo />
-      </YStack>
-      <View>
-        <FlatList
-          data={DUMMY_BIN_ITEMS}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <OrderCard order={item} inCheckout={false} />
-          )}
-        />
+    <>
+      <Header />
+      <View style={styles.container}>
+        <View>
+          <FlatList
+            data={DUMMY_BIN_ITEMS}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <OrderCard order={item} inCheckout={false} />
+            )}
+          />
+        </View>
+        <Text style={styles.totalPrice}>{totalPrice} EGP</Text>
+        <Button style={styles.btn} onPress={() => router.push("/bin/checkout")}>
+          Checkout
+        </Button>
       </View>
-      <Text style={styles.totalPrice}>{totalPrice} EGP</Text>
-      <Button style={styles.btn} onPress={() => router.push("/bin/checkout")}>
-        Checkout
-      </Button>
-    </View>
+    </>
   );
 }
 
@@ -57,8 +58,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    marginTop: 35,
-    backgroundColor: "#F7F8FA",
+    backgroundColor: "white",
+    paddingTop: 10,
   },
   header: {
     color: Colors.header,
