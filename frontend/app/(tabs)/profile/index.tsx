@@ -107,13 +107,6 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
       await changeProfileImg(payload);
     }
   };
-
-  const uriToBlob = async (uri: string): Promise<Blob> => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  };
-
   return (
     <Dialog modal>
       <Dialog.Trigger backgroundColor={"white"}>

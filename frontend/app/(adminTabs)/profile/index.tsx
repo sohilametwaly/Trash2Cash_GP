@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/store/context";
 import Logo from "@/components/Logo";
+import * as FileSystem from "expo-file-system";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -73,6 +74,7 @@ const Btn = ({
 };
 
 function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
+  const { changeProfileImg, authUser } = useAuth();
   const [image, setImage] = useState(
     require("../../../assets/images/Default_pfp.jpg")
   );
@@ -112,6 +114,16 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      const imageUri = result.assets[0].uri;
+      const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const payload = {
+        profileImg: `data:image/jpeg;base64,${base64Image}`,
+      };
+
+      await changeProfileImg(payload);
     }
   };
   return (
@@ -120,7 +132,10 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
         <TouchableOpacity style={styles.imageInput}>
           {image ? (
             <View style={styles.imageWrapper}>
-              <Image source={{ uri: image }} style={styles.imagePreview} />
+              <Image
+                source={{ uri: authUser?.img ? authUser.img : image }}
+                style={styles.imagePreview}
+              />
               <TouchableOpacity style={styles.removeButton}>
                 <Edit2 size={20} color="white" />
               </TouchableOpacity>
