@@ -1,6 +1,8 @@
 import Logo from "@/components/Logo";
-import { Edit, Edit3, X } from "lucide-react-native";
-import { Button, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Colors } from "@/constants/Colors";
+import { useLocalSearchParams } from "expo-router";
+import { Edit3, X } from "lucide-react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "tamagui";
 
 type UserType = "User" | "Company";
@@ -21,11 +23,13 @@ const users: User[] = [
 ];
 
 export default function UsersScreen() {
+  const { type } = useLocalSearchParams();
+  const filteredUsers = users.filter((user) => user.type == type);
+
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.header}>Users</Text> */}
       <Logo />
-      {users.map((user) => {
+      {filteredUsers.map((user) => {
         return (
           <View key={user.name} style={[styles.listItem, styles.shadowBox]}>
             <Text style={styles.title}>{user.name}</Text>
@@ -52,9 +56,8 @@ export default function UsersScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 35,
     paddingHorizontal: 20,
-    backgroundColor: "#F7F8FA",
+    backgroundColor: "white",
   },
   header: {
     fontSize: 32,
@@ -63,7 +66,8 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   title: {
-    fontSize: 13,
+    fontSize: 17,
+    color: Colors.header,
   },
   listItem: {
     borderRadius: 8,

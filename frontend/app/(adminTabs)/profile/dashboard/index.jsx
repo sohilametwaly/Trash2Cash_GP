@@ -48,42 +48,47 @@ const data = [
 ];
 import { PieChart } from "react-native-chart-kit";
 import Container from "@/components/Container";
-import { Button, ScrollView, Text, View } from "tamagui";
+import { ScrollView, Text, View } from "tamagui";
 import {
+  ArrowRight,
   Building,
   TrendingDown,
   TrendingUp,
   User,
-  Users,
 } from "lucide-react-native";
 import { StyleSheet } from "react-native";
-import Logo from "@/components/Logo";
+import { Colors } from "@/constants/Colors";
+import { useRouter } from "expo-router";
+
 const DashboardScreen = () => {
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <Container>
-        <Logo />
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Overview</Text>
           <StatCard
             icon={<User color={"black"} size={48} />}
             title={"Regular Users"}
             value={"115"}
+            navigateToUsers={true}
           />
           <StatCard
             icon={<Building color={"black"} size={48} />}
             title={"Companies"}
             value={"30"}
+            navigateToUsers={true}
           />
           <StatCard
             icon={<TrendingUp color={"green"} size={48} />}
             title={"Income"}
             value={"2113 EGP"}
+            navigateToUsers={false}
           />
           <StatCard
             icon={<TrendingDown color={"red"} size={48} />}
             title={"Expense"}
             value={"1520 EGP"}
+            navigateToUsers={false}
           />
         </View>
         <View style={styles.section}>
@@ -103,14 +108,31 @@ const DashboardScreen = () => {
   );
 };
 
-const StatCard = ({ icon, title, value }) => {
+const StatCard = ({ icon, title, value, navigateToUsers }) => {
+  const router = useRouter();
+  const handleNavigateToUsers = () => {
+    router.push(
+      `/profile/dashboard/users?type=${
+        title == "Regular Users" ? "User" : "Company"
+      }`
+    );
+  };
   return (
     <View style={styles.Card}>
-      {icon}
-      <View style={styles.details}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.value}>{value}</Text>
+      <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
+        {icon}
+        <View style={styles.details}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.value}>{value}</Text>
+        </View>
       </View>
+      {navigateToUsers && (
+        <ArrowRight
+          color={Colors.header}
+          style={{ alignSelf: "flex-end" }}
+          onPress={handleNavigateToUsers}
+        />
+      )}
     </View>
   );
 };
@@ -121,9 +143,8 @@ const styles = StyleSheet.create({
     elevation: 4,
     padding: 16,
     display: "flex",
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "center",
+    flexDirection: "column",
+
     borderRadius: 5,
     backgroundColor: "white",
 

@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Button } from "tamagui";
+import Header from "@/components/Header";
 import {
   Plus,
   Minus,
@@ -139,86 +140,82 @@ export default function AdminStore() {
 
   return (
     <ScrollView>
-      <View style={styles.screen}>
-        <View style={styles.cartContainer}>
-          <ShoppingCart color="black" size={30} />
-          {cartCount > 0 && (
-            <View style={styles.cartBadge}>
-              <Text style={styles.cartBadgeText}>{cartCount}</Text>
-            </View>
-          )}
-        </View>
-        <Logo />
-        {companies.map((company, companyIndex) => (
-          <View style={styles.companyContainer} key={company.id}>
-            <Text style={styles.companyName}>{company.name}</Text>
+      <Header />
 
-            {company.items.map((item, itemIndex) => (
-              <View style={[styles.card, styles.shadowBox]} key={item.name}>
-                <View style={styles.itemRow}>
-                  {icons[companyIndex][itemIndex]}
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.price}>{item.price}</Text>
-                  <Text style={styles.weight}>{item.weight}</Text>
-                </View>
-
-                <View style={styles.quantityContainer}>
-                  <Button
-                    circular
-                    size={"$2"}
-                    icon={Plus}
-                    borderColor="$color"
-                    borderWidth={1.5}
-                    backgroundColor="transparent"
-                    pressStyle={{ opacity: 0.5 }}
-                    color={"black"}
-                    onPress={() => increaseWeight(companyIndex, itemIndex)}
-                  />
-
-                  <View style={styles.weightContainer}>
-                    <Text>{quantities[companyIndex][itemIndex]} KG</Text>
-                  </View>
-
-                  <Button
-                    circular
-                    size={"$2"}
-                    icon={Minus}
-                    borderColor="$color"
-                    borderWidth={1.5}
-                    backgroundColor="transparent"
-                    pressStyle={{ opacity: 0.5 }}
-                    color={"black"}
-                    onPress={() => decreaseWeight(companyIndex, itemIndex)}
-                  />
-
-                  <TouchableOpacity
-                    style={[
-                      styles.addButton,
-                      cart[companyIndex][itemIndex]
-                        ? styles.cancelButton
-                        : null,
-                    ]}
-                    onPress={() => toggleCart(companyIndex, itemIndex)}
-                  >
-                    <Text style={styles.addButtonText}>
-                      {cart[companyIndex][itemIndex] ? "Cancel" : "Add to cart"}
-                    </Text>
-                    <FontAwesome5
-                      name={
-                        cart[companyIndex][itemIndex]
-                          ? "times"
-                          : "shopping-cart"
-                      }
-                      size={16}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
+      <View style={styles.cartContainer}>
+        <ShoppingCart color="black" size={30} />
+        {cartCount > 0 && (
+          <View style={styles.cartBadge}>
+            <Text style={styles.cartBadgeText}>{cartCount}</Text>
           </View>
-        ))}
+        )}
       </View>
+
+      {companies.map((company, companyIndex) => (
+        <View style={styles.companyContainer} key={company.id}>
+          <Text style={styles.companyName}>{company.name}</Text>
+
+          {company.items.map((item, itemIndex) => (
+            <View style={[styles.card, styles.shadowBox]} key={item.name}>
+              <View style={styles.itemRow}>
+                {icons[companyIndex][itemIndex]}
+                <Text style={styles.itemName}>{item.name}</Text>
+                <Text style={styles.price}>{item.price}</Text>
+                <Text style={styles.weight}>{item.weight}</Text>
+              </View>
+
+              <View style={styles.quantityContainer}>
+                <Button
+                  circular
+                  size={"$2"}
+                  icon={Plus}
+                  borderColor="$color"
+                  borderWidth={1.5}
+                  backgroundColor="transparent"
+                  pressStyle={{ opacity: 0.5 }}
+                  color={"black"}
+                  onPress={() => increaseWeight(companyIndex, itemIndex)}
+                />
+
+                <View style={styles.weightContainer}>
+                  <Text>{quantities[companyIndex][itemIndex]} KG</Text>
+                </View>
+
+                <Button
+                  circular
+                  size={"$2"}
+                  icon={Minus}
+                  borderColor="$color"
+                  borderWidth={1.5}
+                  backgroundColor="transparent"
+                  pressStyle={{ opacity: 0.5 }}
+                  color={"black"}
+                  onPress={() => decreaseWeight(companyIndex, itemIndex)}
+                />
+
+                <TouchableOpacity
+                  style={[
+                    styles.addButton,
+                    cart[companyIndex][itemIndex] ? styles.cancelButton : null,
+                  ]}
+                  onPress={() => toggleCart(companyIndex, itemIndex)}
+                >
+                  <Text style={styles.addButtonText}>
+                    {cart[companyIndex][itemIndex] ? "Cancel" : "Add to cart"}
+                  </Text>
+                  <FontAwesome5
+                    name={
+                      cart[companyIndex][itemIndex] ? "times" : "shopping-cart"
+                    }
+                    size={16}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+        </View>
+      ))}
     </ScrollView>
   );
 }
@@ -227,13 +224,13 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#FDFDFD",
+    backgroundColor: "white",
   },
 
   cartContainer: {
     position: "absolute",
-    top: 40,
-    right: 20,
+    top: 60,
+    right: 80,
     zIndex: 1,
     flexDirection: "row",
     alignItems: "center",
@@ -253,7 +250,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   companyContainer: {
-    marginBottom: "10%",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    backgroundColor: "white",
   },
   companyName: {
     fontSize: 25,

@@ -45,9 +45,6 @@ const getIcon = (icon: string) => {
 export default function ShopScreen() {
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.header}>Shop Management</Text> */}
-      {/* <Header title="Shop Management" /> */}
-      <Logo />
       {materials.map((item) => {
         return <ShopItem key={item.id} item={item} />;
       })}
@@ -69,7 +66,7 @@ const ShopItem = ({ item }: { item: ItemType }) => {
 
       <View style={styles.secondContainer}>
         <View style={styles.badge}>
-          <Text style={styles.title}>{item.quantity}</Text>
+          <Text style={styles.title}>{item.quantity} KG</Text>
         </View>
         <TouchableOpacity
           onPress={() => console.log("edit")}
@@ -85,9 +82,8 @@ const ShopItem = ({ item }: { item: ItemType }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 35,
     paddingHorizontal: 20,
-    backgroundColor: "#F7F8FA",
+    backgroundColor: "white",
   },
   header: {
     fontSize: 28,

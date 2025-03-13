@@ -7,11 +7,31 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import Toast from "react-native-toast-message";
 
 export default function AddScreen() {
   const [category, setCategory] = useState("");
   const [weight, setWeight] = useState("");
   const [price, setPrice] = useState("");
+
+  const handleSave = () => {
+    setCategory("");
+    setWeight("");
+    setPrice("");
+    Toast.show({
+      type: "success",
+      text1: "Item added to Inventory successfully!",
+    });
+  };
+
+  // const handleDelete = () => {
+  //   setCategory('')
+  //   setWeight('')
+  //   setPrice('')
+  //   Toast.show({
+  //     type: 'success', text1: 'Item Removed to Inventory successfully!'
+  //   })
+  // }
 
   return (
     <>
@@ -48,13 +68,13 @@ export default function AddScreen() {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.saveButton}>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.saveButtonText}>Save</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.deleteButton}>
+          {/* <TouchableOpacity style={styles.deleteButton}>
             <Text style={styles.deleteButtonText}>Delete</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </>

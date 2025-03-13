@@ -17,8 +17,8 @@ export default function WalletScreen() {
           />
         </View>
         <Text style={styles.balanceText}>Balance: 85 EGP</Text>
-        <CardInfoSheet />
       </View>
+      <CardInfoSheet />
     </>
   );
 }
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // paddingTop: 35,
     backgroundColor: "white",
   },
   header: {

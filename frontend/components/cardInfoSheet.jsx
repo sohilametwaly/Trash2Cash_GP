@@ -2,7 +2,7 @@ import { CaseUpper, CreditCard } from "lucide-react-native";
 import { Sheet } from "@tamagui/sheet";
 import React, { useState, useEffect } from "react";
 import { Button, H2, Input, Label, XStack } from "tamagui";
-import { View, Keyboard, KeyboardAvoidingView } from "react-native";
+import { View, Keyboard } from "react-native";
 import { Colors } from "@/constants/Colors";
 
 export const CardInfoSheet = () => {
@@ -54,7 +54,10 @@ export const CardInfoSheet = () => {
         style={{
           color: Colors.header,
           width: "75%",
-          alignmentBaseline: "center",
+          alignSelf: "center",
+          bottom: "40%",
+          position: "absolute",
+          // alignmentBaseline: "center",
         }}
       >
         <Button.Text fontSize={20}> Enter card Details</Button.Text>
@@ -78,12 +81,12 @@ export const CardInfoSheet = () => {
           position="absolute"
         />
 
-        <Sheet.Handle position="relative" top={keyboardVisible ? 50 : 190} />
+        <Sheet.Handle position="relative" top={keyboardVisible ? 50 : 175} />
         <Sheet.Frame
           padding="$4"
           alignItems="center"
           gap="$5"
-          maxHeight={430}
+          maxHeight={470}
           position="absolute"
           bottom={-70}
         >

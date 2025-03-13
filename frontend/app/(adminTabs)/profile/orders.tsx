@@ -49,13 +49,12 @@ const DUMMY_ORDERS = [
 export default function OrdersScreen() {
   return (
     <View style={styles.container}>
-      <YStack alignSelf="center">
-        {/* <H2 style={styles.header}>All Orders</H2> */}
-        <Logo />
-      </YStack>
+      <YStack alignSelf="center"></YStack>
       <FlatList
         data={DUMMY_ORDERS}
-        renderItem={({ item }) => <HistoryCard order={item} role={"admin"} />}
+        renderItem={({ item }) => (
+          <HistoryCard order={item} role={"admin"} pending={false} />
+        )}
         keyExtractor={(item) => item.id}
       />
     </View>
@@ -66,9 +65,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 35,
+
     justifyContent: "center",
-    backgroundColor: "#F7F8FA",
+    backgroundColor: "white",
   },
   header: {
     color: Colors.header,

@@ -1,5 +1,4 @@
 import Container from "@/components/Container";
-import Header from "@/components/Header";
 import { Save } from "lucide-react-native";
 import { Button, Input, Label, YStack } from "tamagui";
 import { useAuth } from "@/store/context";

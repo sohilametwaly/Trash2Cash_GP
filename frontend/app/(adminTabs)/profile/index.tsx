@@ -7,7 +7,6 @@ import { Button, Dialog, Image, Unspaced, View, XStack } from "tamagui";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/store/context";
-import Logo from "@/components/Logo";
 import * as FileSystem from "expo-file-system";
 
 export default function ProfileScreen() {
@@ -15,44 +14,49 @@ export default function ProfileScreen() {
   const { logout } = useAuth();
 
   return (
-    <ScrollView>
-      <Container>
-        {/* <Header title="Profile" /> */}
-        <Logo />
-        <DialogInstance />
-        <Btn
-          title="Account Settings"
-          color="black"
-          onPress={() => router.push("/profile/account-settings")}
-        />
-        <Btn
-          title="Change Address"
-          color="black"
-          onPress={() => router.push("/profile/change-address")}
-        />
-        <Btn
-          title="Dashboard"
-          color="black"
-          onPress={() => router.push("/profile/dashboard")}
-        />
-        <Btn
-          title="Orders"
-          color="black"
-          onPress={() => router.push("/profile/orders")}
-        />
-        <Btn
-          title="Inventory"
-          color="black"
-          onPress={() => router.push("/profile/shop")}
-        />
-        <Btn
-          title="FAQs"
-          color="black"
-          onPress={() => router.push("/profile/FAQs")}
-        />
-        <Btn title="Logout" color="red" onPress={async () => await logout()} />
-      </Container>
-    </ScrollView>
+    <>
+      <Header />
+      <DialogInstance />
+      <ScrollView>
+        <Container>
+          <Btn
+            title="Account Settings"
+            color="black"
+            onPress={() => router.push("/profile/account-settings")}
+          />
+          <Btn
+            title="Change Address"
+            color="black"
+            onPress={() => router.push("/profile/change-address")}
+          />
+          <Btn
+            title="Dashboard"
+            color="black"
+            onPress={() => router.push("/profile/dashboard")}
+          />
+          <Btn
+            title="Orders"
+            color="black"
+            onPress={() => router.push("/profile/orders")}
+          />
+          <Btn
+            title="Inventory"
+            color="black"
+            onPress={() => router.push("/profile/shop")}
+          />
+          <Btn
+            title="FAQs"
+            color="black"
+            onPress={() => router.push("/profile/FAQs")}
+          />
+          <Btn
+            title="Logout"
+            color="red"
+            onPress={async () => await logout()}
+          />
+        </Container>
+      </ScrollView>
+    </>
   );
 }
 
@@ -128,7 +132,7 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
   };
   return (
     <Dialog modal>
-      <Dialog.Trigger asChild>
+      <Dialog.Trigger backgroundColor={"white"}>
         <TouchableOpacity style={styles.imageInput}>
           {image ? (
             <View style={styles.imageWrapper}>
