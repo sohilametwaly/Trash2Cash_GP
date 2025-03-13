@@ -1,4 +1,4 @@
-import Logo from "@/components/Logo";
+import Header from "@/components/Header";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -6,7 +6,6 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  ScrollView,
 } from "react-native";
 
 export default function AddScreen() {
@@ -15,50 +14,50 @@ export default function AddScreen() {
   const [price, setPrice] = useState("");
 
   return (
-    <View style={styles.container}>
-      <Logo />
-      {/* <Text style={styles.heading}>Add</Text> */}
+    <>
+      <Header />
+      <View style={styles.container}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Category</Text>
+          <TextInput
+            style={styles.input}
+            value={category}
+            onChangeText={setCategory}
+            placeholder="Plastic"
+          />
 
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Category</Text>
-        <TextInput
-          style={styles.input}
-          value={category}
-          onChangeText={setCategory}
-          placeholder="Plastic"
-        />
+          <View style={styles.row}>
+            <View style={styles.column}>
+              <Text style={styles.label}>Weight</Text>
+              <TextInput
+                style={styles.input}
+                value={weight}
+                onChangeText={setWeight}
+                placeholder="2.5"
+              />
+            </View>
 
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text style={styles.label}>Weight</Text>
-            <TextInput
-              style={styles.input}
-              value={weight}
-              onChangeText={setWeight}
-              placeholder="2.5"
-            />
+            <View style={styles.column}>
+              <Text style={styles.label}>Price</Text>
+              <TextInput
+                style={styles.input}
+                value={price}
+                onChangeText={setPrice}
+                placeholder="10.99"
+              />
+            </View>
           </View>
 
-          <View style={styles.column}>
-            <Text style={styles.label}>Price</Text>
-            <TextInput
-              style={styles.input}
-              value={price}
-              onChangeText={setPrice}
-              placeholder="10.99"
-            />
-          </View>
+          <TouchableOpacity style={styles.saveButton}>
+            <Text style={styles.saveButtonText}>Save</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.deleteButton}>
+            <Text style={styles.deleteButtonText}>Delete</Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Save</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.deleteButton}>
-          <Text style={styles.deleteButtonText}>Delete</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </>
   );
 }
 
@@ -66,9 +65,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-
-    marginTop: 35,
     paddingHorizontal: "5%",
+    backgroundColor: "white",
   },
   heading: {
     fontSize: 40,
@@ -79,12 +77,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
 
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowColor: "#000000",
+    shadowOffset: { width: 4, height: 6 },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
 
-    elevation: 2,
+    elevation: 6,
 
     borderRadius: 10,
     width: "100%",

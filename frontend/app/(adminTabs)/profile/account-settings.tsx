@@ -8,17 +8,31 @@ export default function account() {
   return (
     <Container>
       <YStack marginBottom={40}>
-        {/* <Header title="Account Settings" /> */}
-        <Label>Full Name</Label>
+        <Label color={"#2B4B40"} fontSize={18}>
+          Full Name
+        </Label>
         <Input value={authUser?.name} disabled />
-        <Label>Email</Label>
+        <Label color={"#2B4B40"} fontSize={18}>
+          Email
+        </Label>
         <Input value={authUser?.email} disabled />
-        <Label>Old Password</Label>
+        <Label color={"#2B4B40"} fontSize={18}>
+          Old Password
+        </Label>
         <Input placeholder="Enter Your Old Password" />
-        <Label>New Password</Label>
+        <Label color={"#2B4B40"} fontSize={18}>
+          New Password
+        </Label>
         <Input placeholder="Enter Your New Password" />
       </YStack>
-      <Button backgroundColor={"#2B4B40"} color={"white"} iconAfter={<Save />}>
+      <Button
+        backgroundColor={"#2B4B40"}
+        color={"white"}
+        iconAfter={<Save size={15} />}
+        fontSize={20}
+        width={180}
+        alignSelf="center"
+      >
         Save
       </Button>
     </Container>

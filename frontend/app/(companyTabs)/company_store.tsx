@@ -16,9 +16,10 @@ import {
   Wine,
   Book,
   Package,
-  ShoppingCart
+  ShoppingCart,
 } from "lucide-react-native";
 import Logo from "@/components/Logo";
+import Header from "@/components/Header";
 type Company = {
   id: string;
   name: string;
@@ -81,15 +82,13 @@ export default function CompanyStore() {
   );
 
   const [icons, setIcons] = useState<JSX.Element[][]>(
-    companies.map((company) =>
-      company.items.map(() => <Milk color="black" />)
-    )
+    companies.map((company) => company.items.map(() => <Milk color="black" />))
   );
 
   const [cart, setCart] = useState<boolean[][]>(
     companies.map((company) => company.items.map(() => false))
   );
-  const [cartCount, setCartCount] = useState(0); 
+  const [cartCount, setCartCount] = useState(0);
   useEffect(() => {
     const updatedIcons = companies.map((company) =>
       company.items.map((item) => {
@@ -136,98 +135,109 @@ export default function CompanyStore() {
       const currentItemInCart = updatedCart[companyIndex][itemIndex];
 
       if (currentItemInCart) {
-       
         setCartCount((prevCount) => Math.max(prevCount - 1, 0));
       } else {
-        
         setCartCount((prevCount) => prevCount + 1);
       }
 
-      updatedCart[companyIndex][itemIndex] = !updatedCart[companyIndex][itemIndex];
+      updatedCart[companyIndex][itemIndex] =
+        !updatedCart[companyIndex][itemIndex];
       return updatedCart;
     });
   };
 
   return (
-    <ScrollView style={styles.container}>
-       <View style={styles.cartContainer}>
-              <ShoppingCart color="black" size={30} />
-              {cartCount > 0 && (<View style={styles.cartBadge}>
-                  <Text style={styles.cartBadgeText}>{cartCount}</Text>
-                </View>
-              )}
-        </View>
-      <Logo/>
-      {companies.map((company, companyIndex) => (
-        <View style={styles.companyContainer} key={company.id}>
-          {company.items.map((item, itemIndex) => (
-            <View style={[styles.card, styles.shadowBox]} key={item.name}>
-              <View style={styles.itemRow}>
-                {icons[companyIndex][itemIndex]}
-                <Text style={styles.itemName}>{item.name}</Text>
-                <Text style={styles.price}>{item.price}</Text>
-                <Text style={styles.weight}>{item.weight}</Text>
-              </View>
+    <>
+      <ScrollView style={styles.container}>
+        <Header />
 
-              <View style={styles.quantityContainer}>
-                <Button
-                  circular
-                  size={"$2"}
-                  icon={Plus}
-                  borderColor="$color"
-                  borderWidth={1.5}
-                  backgroundColor="transparent"
-                  pressStyle={{ opacity: 0.5 }}
-                  color={"black"}
-                  onPress={() => increaseWeight(companyIndex, itemIndex)}
-                />
-
-                <View>
-                  <Text>{quantities[companyIndex][itemIndex]} KG</Text>
-                </View>
-
-                <Button
-                  circular
-                  size={"$2"}
-                  icon={Minus}
-                  borderColor="$color"
-                  borderWidth={1.5}
-                  backgroundColor="transparent"
-                  pressStyle={{ opacity: 0.5 }}
-                  color={"black"}
-                  onPress={() => decreaseWeight(companyIndex, itemIndex)}
-                />
-
-                <TouchableOpacity
-                  style={[
-                    styles.addButton,
-                    cart[companyIndex][itemIndex] ? styles.cancelButton : null,
-                  ]}
-                  onPress={() => toggleCart(companyIndex, itemIndex)}
-                >
-                  <Text style={styles.addButtonText}>
-                    {cart[companyIndex][itemIndex] ? "Cancel" : "Add to cart"}
-                  </Text>
-                  <FontAwesome5
-                    name={cart[companyIndex][itemIndex] ? "times" : "shopping-cart"}
-                    size={16}
-                    color="white"
-                  />
-                </TouchableOpacity>
-              </View>
+        <View style={styles.cartContainer}>
+          <ShoppingCart color="black" size={30} />
+          {cartCount > 0 && (
+            <View style={styles.cartBadge}>
+              <Text style={styles.cartBadgeText}>{cartCount}</Text>
             </View>
-          ))}
+          )}
         </View>
-      ))}
-    </ScrollView>
+
+        {companies.map((company, companyIndex) => (
+          <View style={styles.companyContainer} key={company.id}>
+            {company.items.map((item, itemIndex) => (
+              <View style={[styles.card, styles.shadowBox]} key={item.name}>
+                <View style={styles.itemRow}>
+                  {icons[companyIndex][itemIndex]}
+                  <Text style={styles.itemName}>{item.name}</Text>
+                  <Text style={styles.price}>{item.price}</Text>
+                  <Text style={styles.weight}>{item.weight}</Text>
+                </View>
+
+                <View style={styles.quantityContainer}>
+                  <Button
+                    circular
+                    size={"$2"}
+                    icon={Plus}
+                    borderColor="$color"
+                    borderWidth={1.5}
+                    backgroundColor="transparent"
+                    pressStyle={{ opacity: 0.5 }}
+                    color={"black"}
+                    onPress={() => increaseWeight(companyIndex, itemIndex)}
+                  />
+
+                  <View>
+                    <Text>{quantities[companyIndex][itemIndex]} KG</Text>
+                  </View>
+
+                  <Button
+                    circular
+                    size={"$2"}
+                    icon={Minus}
+                    borderColor="$color"
+                    borderWidth={1.5}
+                    backgroundColor="transparent"
+                    pressStyle={{ opacity: 0.5 }}
+                    color={"black"}
+                    onPress={() => decreaseWeight(companyIndex, itemIndex)}
+                  />
+
+                  <TouchableOpacity
+                    style={[
+                      styles.addButton,
+                      cart[companyIndex][itemIndex]
+                        ? styles.cancelButton
+                        : null,
+                    ]}
+                    onPress={() => toggleCart(companyIndex, itemIndex)}
+                  >
+                    <Text style={styles.addButtonText}>
+                      {cart[companyIndex][itemIndex] ? "Cancel" : "Add to cart"}
+                    </Text>
+                    <FontAwesome5
+                      name={
+                        cart[companyIndex][itemIndex]
+                          ? "times"
+                          : "shopping-cart"
+                      }
+                      size={16}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+          </View>
+        ))}
+      </ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 0,
     padding: 16,
-    backgroundColor:"#FDFDFD"
+    backgroundColor: "#FDFDFD",
   },
   header: {
     fontSize: 40,
@@ -243,7 +253,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     padding: 16,
-    
+
     marginBottom: 10,
   },
   shadowBox: {
@@ -304,8 +314,8 @@ const styles = StyleSheet.create({
   },
   cartContainer: {
     position: "absolute",
-    top: 40,
-    right: 20,
+    top: 60,
+    right: 80,
     zIndex: 1,
     flexDirection: "row",
     alignItems: "center",
@@ -313,7 +323,7 @@ const styles = StyleSheet.create({
   cartBadge: {
     position: "absolute",
     top: -15,
-    right:0 ,
+    right: 0,
     backgroundColor: "#E74C3C",
     borderRadius: 10,
     paddingHorizontal: 6,
