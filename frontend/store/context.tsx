@@ -33,7 +33,7 @@ interface AuthContextType {
   signUp: (data: NewUser) => Promise<void>;
   login: (data: LoginData) => Promise<void>;
   logout: () => Promise<void>;
-  changeProfileImg: (profileImg: FormData) => Promise<void>;
+  changeProfileImg: (profileImg: ImgPayload) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);

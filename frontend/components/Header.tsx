@@ -43,11 +43,11 @@ export default function Header() {
         }}
       >
         <Image
-          source={{
-            uri: authUser?.img
-              ? authUser.img
-              : require("../assets/images/Default_pfp.jpg"),
-          }}
+          source={
+            authUser?.img
+              ? { uri: authUser.img }
+              : require("../assets/images/Default_pfp.jpg")
+          }
           style={{
             width: 50,
             height: 50,

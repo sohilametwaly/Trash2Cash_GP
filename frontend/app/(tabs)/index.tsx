@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { Button, View } from "tamagui";
+import { Button, Input, Label, View, XStack, YStack } from "tamagui";
 import { Text } from "react-native";
 import { Camera, Trash2, Upload, X } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
@@ -85,7 +85,29 @@ export default function CameraScreen() {
             <Camera size={30} color={"#E0E0E0"} />
           )}
         </TouchableOpacity>
-        <Text style={styles.result}>20 KG Plastic</Text>
+        {/* <Text style={styles.result}>20 KG Plastic</Text> */}
+
+        {image && (
+          <XStack marginBottom={40} gap={5} alignSelf="center">
+            <YStack>
+              <Label color={"#2B4B40"} fontSize={14}>
+                Weight
+              </Label>
+              <Input
+                // value={"Plastic"}
+                keyboardType="number-pad"
+                placeholder="2.7 KG"
+              />
+            </YStack>
+            <YStack>
+              <Label color={"#2B4B40"} fontSize={14}>
+                Material
+              </Label>
+              <Input value={"Plastic"} disabled width={180} />
+            </YStack>
+          </XStack>
+        )}
+
         <View style={styles.actionsContainer}>
           <Button
             iconAfter={Upload}
