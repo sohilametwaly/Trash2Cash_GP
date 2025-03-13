@@ -3,6 +3,7 @@ import { User } from "../models/user.js";
 
 export const validateUser = async (req, res, next) => {
   const token = req.header("token");
+  // console.log("Middleware Validate token: ", token);
   if (!token) {
     return res.status(401).json({ msg: "No token, authorization denied" });
   }
@@ -19,6 +20,7 @@ export const validateUser = async (req, res, next) => {
     }
 
     req.user = user;
+    // console.log("middleware User: ", user);
     next();
   } catch (error) {
     console.log("validation error: " + error);

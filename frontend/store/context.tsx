@@ -4,11 +4,17 @@ import Toast from "react-native-toast-message";
 
 import { getToken, saveToken, removeToken } from "../utils/tokenHandlers";
 
-const BASE_URL = "http://192.168.1.104:3000/api/user";
+// const BASE_URL = "http://192.168.1.104:3000/api/user";
+const BASE_URL = "http://192.168.1.7:3000/api/user";
+// const BASE_URL = "http://192.168.1.104:3000/api/user";
 
 interface LoginData {
   email: string;
   password: string;
+}
+
+interface ImgPayload {
+  profileImg: string;
 }
 
 interface NewUser {
@@ -129,16 +135,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const changeProfileImg = async (profileImg: FormData) => {
+  const changeProfileImg = async (profileImg: ImgPayload) => {
     setIsChangingImg(true);
+    console.log("here");
     try {
       const token = await getToken();
+      // console.log("Token", token);
+      // console.log(profileImg);
       const res = await axios.post(`${BASE_URL}/profileImg`, profileImg, {
         headers: {
-          token: token,
+          token,
         },
       });
-      console.log("here");
 
       Toast.show({
         type: "success",

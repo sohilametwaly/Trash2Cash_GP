@@ -3,6 +3,7 @@ import { View, Image } from "react-native";
 
 export default function Header() {
   const { authUser } = useAuth();
+  console.log(authUser?.img);
   return (
     <View
       style={{
@@ -27,22 +28,31 @@ export default function Header() {
             resizeMode: "contain",
             alignSelf: "baseline",
           }}
-          source={
-            authUser?.img
-              ? authUser?.img
-              : require("../assets/images/logoName.png")
-          }
+          source={require("../assets/images/logoName.png")}
         />
       </View>
 
-      <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 10,
+          alignItems: "center",
+          width: 50,
+          height: 50,
+          borderRadius: 100000,
+        }}
+      >
         <Image
-          source={require("../assets/images/Default_pfp.jpg")}
+          source={{
+            uri: authUser?.img
+              ? authUser.img
+              : require("../assets/images/Default_pfp.jpg"),
+          }}
           style={{
             width: 50,
             height: 50,
-            paddingRight: 20,
-            resizeMode: "contain",
+            borderRadius: 10000000,
+            resizeMode: "cover",
           }}
         />
       </View>

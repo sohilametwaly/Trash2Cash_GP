@@ -7,10 +7,11 @@ import { Button, Dialog, Image, Unspaced, View, XStack } from "tamagui";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "@/store/context";
+import * as FileSystem from "expo-file-system";
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout, authUser } = useAuth();
 
   return (
     <>
@@ -56,7 +57,7 @@ const Btn = ({
 };
 
 function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
-  const { changeProfileImg } = useAuth();
+  const { changeProfileImg, authUser } = useAuth();
   const [image, setImage] = useState(
     require("../../../assets/images/Default_pfp.jpg")
   );
@@ -90,16 +91,20 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
         quality: 1,
       });
     }
-
+    console.log("what happened");
     if (!result.canceled) {
+      console.log("result: ", result);
       setImage(result.assets[0].uri);
-      const blob = await uriToBlob(image);
+      const imageUri = result.assets[0].uri;
+      const base64Image = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
 
-      const formData = new FormData();
-      formData.append("file", blob, "profile.jpg");
-      formData.append("upload_preset", "trash2cash");
+      const payload = {
+        profileImg: `data:image/jpeg;base64,${base64Image}`,
+      };
 
-      await changeProfileImg(formData);
+      await changeProfileImg(payload);
     }
   };
 
@@ -115,7 +120,10 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
         <TouchableOpacity style={styles.imageInput}>
           {image ? (
             <View style={styles.imageWrapper}>
-              <Image source={{ uri: image }} style={styles.imagePreview} />
+              <Image
+                source={{ uri: authUser?.img ? authUser.img : image }}
+                style={styles.imagePreview}
+              />
               <Dialog.Trigger asChild>
                 <TouchableOpacity style={styles.removeButton}>
                   <Edit2 size={20} color="white" />
@@ -230,6 +238,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 75,
     backgroundColor: "white",
+    resizeMode: "cover",
   },
   imageWrapper: {
     position: "relative",
