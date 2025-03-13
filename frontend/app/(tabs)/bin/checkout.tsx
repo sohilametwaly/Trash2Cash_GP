@@ -31,7 +31,7 @@ export default function CheckoutScreen() {
   const router = useRouter();
 
   const totalPrice = DUMMY_BIN_ITEMS.reduce(
-    (sum, item) => sum + item.pricePerKg,
+    (sum, item) => sum + item.pricePerKg * item.weight,
     0
   );
   return (

@@ -5,6 +5,7 @@ import { Colors } from "@/constants/Colors";
 import { router } from "expo-router";
 import Logo from "@/components/Logo";
 import Header from "@/components/Header";
+import { useState } from "react";
 
 const DUMMY_BIN_ITEMS = [
   {
@@ -28,20 +29,35 @@ const DUMMY_BIN_ITEMS = [
 ];
 
 export default function BinScreen() {
-  const totalPrice = DUMMY_BIN_ITEMS.reduce(
-    (sum, item) => sum + item.pricePerKg,
+  const [binItems, setBinItems] = useState(DUMMY_BIN_ITEMS);
+  const totalPrice = binItems.reduce(
+    (sum, item) => sum + item.pricePerKg * item.weight,
     0
   );
+
+  const updateWeight = (id: String, change: number) => {
+    const newBinItems = setBinItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id
+          ? { ...item, weight: Math.max(0, item.weight + change) }
+          : item
+      )
+    );
+  };
   return (
     <>
       <Header />
       <View style={styles.container}>
         <View>
           <FlatList
-            data={DUMMY_BIN_ITEMS}
+            data={binItems}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <OrderCard order={item} inCheckout={false} />
+              <OrderCard
+                order={item}
+                inCheckout={false}
+                updateWeight={updateWeight}
+              />
             )}
           />
         </View>

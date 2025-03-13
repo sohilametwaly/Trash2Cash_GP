@@ -1,6 +1,6 @@
 import { Tabs, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Platform, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";

@@ -3,7 +3,6 @@ import { View, Image } from "react-native";
 
 export default function Header() {
   const { authUser } = useAuth();
-  console.log(authUser?.img);
   return (
     <View
       style={{

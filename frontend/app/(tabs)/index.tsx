@@ -9,6 +9,7 @@ import { useAuth } from "@/store/context";
 import { Colors } from "@/constants/Colors";
 import Container from "@/components/Container";
 import Header from "@/components/Header";
+import Toast from "react-native-toast-message";
 export default function CameraScreen() {
   const { authUser } = useAuth();
   const [image, setImage] = useState("");
@@ -124,7 +125,10 @@ export default function CameraScreen() {
             color={"#2B4B40"}
             onPress={() => {
               setImage("");
-              console.log("Added to Bin");
+              Toast.show({
+                text1: "Added To Cart Successfully",
+                type: "success",
+              });
             }}
           >
             Add to Bin

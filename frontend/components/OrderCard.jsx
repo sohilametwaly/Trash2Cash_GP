@@ -12,7 +12,7 @@ import {
 import { Colors } from "@/constants/Colors";
 import { Button, Card } from "tamagui";
 
-export default function OrderCard({ inCheckout, order }) {
+export default function OrderCard({ inCheckout, order, updateWeight }) {
   const [icon, setIcon] = useState(<Milk color={Colors.header} />);
   const [currentOrder, setCurrentOrder] = useState(order);
   function increaseWeight() {
@@ -20,6 +20,7 @@ export default function OrderCard({ inCheckout, order }) {
       ...prevOrder,
       weight: prevOrder.weight + 1,
     }));
+    updateWeight(currentOrder.id, 1);
   }
 
   function decreaseWeight() {
@@ -28,6 +29,7 @@ export default function OrderCard({ inCheckout, order }) {
         ...prevOrder,
         weight: prevOrder.weight - 1,
       }));
+      updateWeight(currentOrder.id, -1);
     }
   }
 
