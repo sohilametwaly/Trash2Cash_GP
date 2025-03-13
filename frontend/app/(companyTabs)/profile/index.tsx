@@ -16,8 +16,8 @@ export default function ProfileScreen() {
 
   return (
     <ScrollView>
+      <Header />
       <Container>
-        {/* <Header title="Profile" /> */}
         <Logo />
         <DialogInstance />
         <Btn
