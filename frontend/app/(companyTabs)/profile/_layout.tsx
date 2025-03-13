@@ -1,8 +1,18 @@
+import { Colors } from "@/constants/Colors";
 import { Stack } from "expo-router";
 
 export default function ProfileStackLayout() {
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerShadowVisible: false,
+        headerTintColor: Colors.header,
+        headerTitleStyle: {
+          color: Colors.header,
+          fontSize: 22,
+        },
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{ title: "Profile", headerShown: false }}

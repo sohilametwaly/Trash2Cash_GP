@@ -4,9 +4,8 @@ import Toast from "react-native-toast-message";
 
 import { getToken, saveToken, removeToken } from "../utils/tokenHandlers";
 
-// const BASE_URL = "http://192.168.1.104:3000/api/user";
-const BASE_URL = "http://192.168.1.7:3000/api/user";
-// const BASE_URL = "http://192.168.1.104:3000/api/user";
+const BASE_URL = "http://192.168.1.104:3000/api/user";
+// const BASE_URL = "http://192.168.1.7:3000/api/user";
 
 interface LoginData {
   email: string;
@@ -33,7 +32,7 @@ interface AuthContextType {
   signUp: (data: NewUser) => Promise<void>;
   login: (data: LoginData) => Promise<void>;
   logout: () => Promise<void>;
-  changeProfileImg: (profileImg: FormData) => Promise<void>;
+  changeProfileImg: (profileImg: ImgPayload) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -137,7 +136,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const changeProfileImg = async (profileImg: ImgPayload) => {
     setIsChangingImg(true);
-    console.log("here");
     try {
       const token = await getToken();
       // console.log("Token", token);
@@ -147,12 +145,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           token,
         },
       });
-
+      await checkAuth();
       Toast.show({
         type: "success",
         text1: "Image uploaded Successfully!",
       });
-      console.log("hereeee");
     } catch (err) {
       console.log("error in change profile context ", err);
     } finally {

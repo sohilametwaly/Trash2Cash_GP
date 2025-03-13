@@ -56,7 +56,7 @@ const DashboardScreen = () => {
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <Container>
-        <Logo />
+        {/* <Logo /> */}
         <View style={styles.section}>
           <Text style={styles.sectionHeader}>Overview</Text>
           <StatCard

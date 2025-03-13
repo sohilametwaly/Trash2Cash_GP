@@ -15,44 +15,49 @@ export default function ProfileScreen() {
   const { logout } = useAuth();
 
   return (
-    <ScrollView>
+    <>
       <Header />
-      <Container>
-        <Logo />
-        <DialogInstance />
-        <Btn
-          title="Account Settings"
-          color="black"
-          onPress={() => router.push("/profile/account-settings")}
-        />
-        <Btn
-          title="Change Address"
-          color="black"
-          onPress={() => router.push("/profile/change-address")}
-        />
-        <Btn
-          title="Dashboard"
-          color="black"
-          onPress={() => router.push("/profile/dashboard")}
-        />
-        <Btn
-          title="Orders"
-          color="black"
-          onPress={() => router.push("/profile/orders")}
-        />
-        <Btn
-          title="Inventory"
-          color="black"
-          onPress={() => router.push("/profile/shop")}
-        />
-        <Btn
-          title="FAQs"
-          color="black"
-          onPress={() => router.push("/profile/FAQs")}
-        />
-        <Btn title="Logout" color="red" onPress={async () => await logout()} />
-      </Container>
-    </ScrollView>
+      <DialogInstance />
+      <ScrollView>
+        <Container>
+          <Btn
+            title="Account Settings"
+            color="black"
+            onPress={() => router.push("/profile/account-settings")}
+          />
+          <Btn
+            title="Change Address"
+            color="black"
+            onPress={() => router.push("/profile/change-address")}
+          />
+          <Btn
+            title="Dashboard"
+            color="black"
+            onPress={() => router.push("/profile/dashboard")}
+          />
+          <Btn
+            title="Orders"
+            color="black"
+            onPress={() => router.push("/profile/orders")}
+          />
+          <Btn
+            title="Inventory"
+            color="black"
+            onPress={() => router.push("/profile/shop")}
+          />
+          <Btn
+            title="FAQs"
+            color="black"
+            onPress={() => router.push("/profile/FAQs")}
+          />
+          <Btn
+            title="Logout"
+            color="red"
+            onPress={async () => await logout()}
+          />
+        </Container>
+      </ScrollView>
+    </>
   );
 }
 
@@ -79,50 +84,38 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
     require("../../../assets/images/Default_pfp.jpg")
   );
 
-  const openCamera = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== "granted") {
-      alert("Permission to access camera is required!");
+  const handleImagePick = async (source: "camera" | "gallery") => {
+    let permissionResult;
+    if (source === "camera") {
+      permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    } else {
+      permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+    }
+
+    if (permissionResult.status !== "granted") {
+      alert(`Permission to access ${source} is required!`);
       return;
     }
 
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      const imageUri = result.assets[0].uri;
-      const base64Image = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
+    let result;
+    if (source === "camera") {
+      result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
       });
-
-      const payload = {
-        profileImg: `data:image/jpeg;base64,${base64Image}`,
-      };
-
-      await changeProfileImg(payload);
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
     }
-  };
-
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("Permission to access Media is required!");
-      return;
-    }
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
+    console.log("what happened");
     if (!result.canceled) {
+      console.log("result: ", result);
       setImage(result.assets[0].uri);
       const imageUri = result.assets[0].uri;
       const base64Image = await FileSystem.readAsStringAsync(imageUri, {
@@ -138,7 +131,7 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
   };
   return (
     <Dialog modal>
-      <Dialog.Trigger asChild>
+      <Dialog.Trigger backgroundColor={"white"}>
         <TouchableOpacity style={styles.imageInput}>
           {image ? (
             <View style={styles.imageWrapper}>
@@ -146,9 +139,11 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
                 source={{ uri: authUser?.img ? authUser.img : image }}
                 style={styles.imagePreview}
               />
-              <TouchableOpacity style={styles.removeButton}>
-                <Edit2 size={20} color="white" />
-              </TouchableOpacity>
+              <Dialog.Trigger asChild>
+                <TouchableOpacity style={styles.removeButton}>
+                  <Edit2 size={20} color="white" />
+                </TouchableOpacity>
+              </Dialog.Trigger>
             </View>
           ) : (
             <Camera size={30} color={"#E0E0E0"} />
@@ -190,7 +185,10 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
 
           <XStack alignSelf="flex-end" gap="$4">
             <Dialog.Close displayWhenAdapted asChild>
-              <Button iconAfter={<Upload />} onPress={pickImage}>
+              <Button
+                iconAfter={<Upload />}
+                onPress={() => handleImagePick("gallery")}
+              >
                 Upload
               </Button>
             </Dialog.Close>
@@ -199,7 +197,7 @@ function DialogInstance({ disableAdapt }: { disableAdapt?: boolean }) {
                 iconAfter={<Camera />}
                 backgroundColor={"#2B4B40"}
                 color={"white"}
-                onPress={openCamera}
+                onPress={() => handleImagePick("camera")}
               >
                 Open Camera
               </Button>

@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   companyContainer: {
-    marginBottom: "10%",
+    marginBottom: "4%",
   },
   card: {
     backgroundColor: "white",

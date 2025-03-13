@@ -45,9 +45,6 @@ const getIcon = (icon: string) => {
 export default function ShopScreen() {
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.header}>Shop Management</Text> */}
-      <Logo />
-
       {materials.map((item) => {
         return <ShopItem key={item.id} item={item} />;
       })}
@@ -87,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 35,
     paddingHorizontal: 20,
-    backgroundColor: "#F7F8FA",
+    backgroundColor: "white",
   },
   header: {
     fontSize: 28,
