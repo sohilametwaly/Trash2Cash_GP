@@ -1,4 +1,4 @@
-import { CaseUpper, CreditCard } from "lucide-react-native";
+import { CreditCard } from "lucide-react-native";
 import { Sheet } from "@tamagui/sheet";
 import React, { useState, useEffect } from "react";
 import { Button, H2, Input, Label, XStack } from "tamagui";
@@ -8,8 +8,6 @@ import { Colors } from "@/constants/Colors";
 export const CardInfoSheet = () => {
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
-  const [cardHolderName, setCardHolderName] = useState("");
-  const [expiryDate, setExpiryDate] = useState("");
   const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -28,25 +26,6 @@ export const CardInfoSheet = () => {
     };
   }, []);
 
-  const handleNameChange = (input) => {
-    const lettersOnly = input.replace(/[^a-zA-Z]/g, "");
-    setCardHolderName(lettersOnly.toUpperCase());
-  };
-
-  const handleDateChange = (input) => {
-    const numbersOnly = input.replace(/[^0-9]/g, "");
-
-    if (numbersOnly.length > 4) return;
-
-    let formattedDate = numbersOnly;
-
-    if (numbersOnly.length > 2) {
-      formattedDate = numbersOnly.slice(0, 2) + "/" + numbersOnly.slice(2);
-    }
-
-    setExpiryDate(formattedDate);
-  };
-
   return (
     <>
       <Button
@@ -57,7 +36,6 @@ export const CardInfoSheet = () => {
           alignSelf: "center",
           bottom: "40%",
           position: "absolute",
-          // alignmentBaseline: "center",
         }}
       >
         <Button.Text fontSize={20}> Enter card Details</Button.Text>
@@ -81,12 +59,12 @@ export const CardInfoSheet = () => {
           position="absolute"
         />
 
-        <Sheet.Handle position="relative" top={keyboardVisible ? 50 : 175} />
+        <Sheet.Handle position="relative" top={keyboardVisible ? 50 : 330} />
         <Sheet.Frame
           padding="$4"
           alignItems="center"
           gap="$5"
-          maxHeight={470}
+          maxHeight={310}
           position="absolute"
           bottom={-70}
         >
@@ -112,90 +90,6 @@ export const CardInfoSheet = () => {
                 maxLength={16}
               />
             </XStack>
-            <XStack
-              borderWidth={1}
-              borderColor="black"
-              borderRadius="$4"
-              padding="$2"
-              alignItems="center"
-              width={"100%"}
-              backgroundColor={"#F2F2F2"}
-            >
-              <CaseUpper size={20} color="black" />
-              <Input
-                placeholder="Card Holder Name"
-                flex={1}
-                borderWidth={0}
-                keyboardType="text"
-                autoCapitalize="characters"
-                value={cardHolderName}
-                onChangeText={handleNameChange}
-              />
-            </XStack>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                gap: 10,
-                width: "100%",
-              }}
-            >
-              <View style={{ width: "50%" }}>
-                <Label
-                  color={Colors.header}
-                  fontSize={15}
-                  fontWeight={"700"}
-                  paddingLeft={7}
-                >
-                  Expiry
-                </Label>
-                <XStack
-                  borderWidth={1}
-                  borderColor="black"
-                  borderRadius="$4"
-                  alignItems="center"
-                  width={"90%"}
-                  backgroundColor={"#F2F2F2"}
-                >
-                  <Input
-                    placeholder="DD/MM"
-                    keyboardType="numeric"
-                    maxLength={5}
-                    value={expiryDate}
-                    onChangeText={handleDateChange}
-                    width={"100%"}
-                  />
-                </XStack>
-              </View>
-              <View style={{ width: "50%" }}>
-                <Label
-                  color={Colors.header}
-                  fontSize={15}
-                  fontWeight={"700"}
-                  paddingLeft={7}
-                >
-                  CVV
-                </Label>
-                <XStack
-                  borderWidth={1}
-                  borderColor="black"
-                  borderRadius="$4"
-                  alignItems="center"
-                  paddingHorizontal={5}
-                  width={"90%"}
-                  backgroundColor={"#F2F2F2"}
-                >
-                  <CreditCard size={20} color="black" />
-                  <Input
-                    placeholder="CVV code"
-                    flex={1}
-                    borderWidth={0}
-                    keyboardType="numeric"
-                    maxLength={3}
-                  />
-                </XStack>
-              </View>
-            </View>
             <Button
               backgroundColor={Colors.header}
               width={"70%"}

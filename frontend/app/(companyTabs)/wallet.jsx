@@ -2,15 +2,18 @@ import { Colors } from "@/constants/Colors";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { CardInfoSheet } from "@/components/cardInfoSheet";
 import Header from "@/components/Header";
+import { useAuth } from "@/store/context";
 
 export default function WalletScreen() {
+  const { authUser } = useAuth();
+
   return (
     <>
       <Header />
       <View style={styles.container}>
         <View style={styles.visaContainer}>
           <Text style={styles.visaText}>1234 **** **** ****</Text>
-          <Text style={styles.visaText}>John Doe</Text>
+          <Text style={styles.visaText}>{authUser?.name}</Text>
           <Image
             source={require("../../assets/images/visa.png")}
             style={{ alignSelf: "flex-end" }}
