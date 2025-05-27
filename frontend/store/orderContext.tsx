@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext } from 'react';
 import Toast from "react-native-toast-message";
 import axios from 'axios';
 import { getToken } from "../utils/tokenHandlers";
-import { useAuth } from './context';
+// import { useAuth } from './context';
 
 interface OrderItem {
   _id: string;
@@ -10,6 +10,7 @@ interface OrderItem {
     wasteType: string;
     quantity: number;
     price: number;
+    sellerId: string;
   }[];
   totalQuantity: number;
   status: 'pending' | 'delivered' | 'cancelled';
@@ -19,7 +20,7 @@ interface OrderItem {
   pickupAddress: string;
   totalPrice: number;
   buyerId: string;
-  sellerId: string;
+  sellerIds: string[];
 }
 
 interface OrderContextType {
@@ -28,7 +29,7 @@ interface OrderContextType {
     pickupDate: Date;
     pickupTime: string;
     pickupAddress: string;
-  }) => Promise<void>;
+  }, buyerId: string, sellerIds: string[]) => Promise<void>;
   updateOrderStatus: (orderId: string, status: OrderItem['status']) => Promise<void>;
   getOrderHistory: () => Promise<void>;
   isProcessingOrder: boolean;
@@ -43,7 +44,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { authUser } = useAuth();
+  // const { authUser } = useAuth();
 
   const getOrderHistory = async () => {
     setIsLoading(true);
@@ -76,20 +77,21 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     pickupDate: Date;
     pickupTime: string;
     pickupAddress: string;
-  }) => {
+  }, buyerId: string, sellerIds: string[]) => {
     setIsProcessingOrder(true);
     try {
       const token = await getToken();
       const totalPrice = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       
-      const sellerId = authUser._id;
-      let buyerId = "";
-      if(authUser.role == "user"){
-        buyerId = "67c42cdf06be297aa9b28bd8"
-      }
+      // const sellerIds: string[] = [];
+      // sellerIds.push(authUser._id);
+      // let buyerId = "";
+      // if(authUser.role == "user"){
+      //   buyerId = "67c42cdf06be297aa9b28bd8"
+      // }
       const orderData = {
         buyerId,
-        sellerId,
+        sellerIds,
         items,
         totalPrice,
         pickupDate: pickupDetails.pickupDate.toISOString(),

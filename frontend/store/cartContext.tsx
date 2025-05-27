@@ -9,6 +9,7 @@ interface CartItem {
   wasteType: string;
   quantity: number;
   price: number;
+  sellerId: string;
 }
 
 interface CartContextType {

@@ -9,6 +9,7 @@ import { useCart } from '@/store/cartContext';
 import { useOrders } from "@/store/orderContext";
 import Toast from "react-native-toast-message";
 import React from "react";
+import { useAuth } from "@/store/context";
 
 interface CartItem {
   _id: string;
@@ -21,6 +22,7 @@ export default function CheckoutScreen() {
   const router = useRouter();
   const { cartItems, clearCart } = useCart();
   const { addOrder, isProcessingOrder } = useOrders();
+  const { authUser } = useAuth();
 
   console.log("Checkout cartItems: ", cartItems);
 
@@ -39,11 +41,13 @@ export default function CheckoutScreen() {
       const orderItems = cartItems.map(item => ({
         wasteType: item.wasteType,
         quantity: item.quantity,
-        price: item.price || 0
+        price: item.price || 0,
+        sellerId: authUser._id
       }));
       console.log("orderItems ", orderItems);
-
-      await addOrder(orderItems, pickupDetails);
+      const buyerId = "67c42cdf06be297aa9b28bd8";
+      const sellerIds = [authUser._id];
+      await addOrder(orderItems, pickupDetails, buyerId, sellerIds);
       await clearCart();
       Toast.show({
         type: 'success',

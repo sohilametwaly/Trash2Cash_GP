@@ -104,11 +104,13 @@ import { useEffect } from "react";
 import { useOrders } from "@/store/orderContext";
 import Toast from "react-native-toast-message";
 import React from "react";
+import { useAuth } from "@/store/context";
 
 export default function CheckoutScreen() {
   const router = useRouter();
   const { cartItems, getCart, clearCart } = useCart();
   const { addOrder, isProcessingOrder } = useOrders();
+  const { authUser } = useAuth();
 
   useEffect(() => {
     getCart();
@@ -129,18 +131,20 @@ export default function CheckoutScreen() {
       const orderItems = cartItems.map(item => ({
         wasteType: item.wasteType,
         quantity: item.quantity,
-        price: item.price || 0
+        price: item.price || 0,
+        sellerId: item.sellerId
       }));
       console.log("orderItems ", orderItems);
-
-      await addOrder(orderItems, pickupDetails);
-      await clearCart();
+      const buyerId = authUser._id;
+      const sellerIds = [...new Set(orderItems.map(item => item.sellerId))];
+      await addOrder(orderItems, pickupDetails, buyerId, sellerIds);
+      clearCart();
       Toast.show({
         type: 'success',
         text1: 'Order Placed Successfully',
         text2: 'Your order has been placed'
       });
-      router.push('/(tabs)');
+      router.push('/(adminTabs)');
     } catch (error) {
       Toast.show({
         type: 'error',

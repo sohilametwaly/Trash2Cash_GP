@@ -140,7 +140,6 @@ export default function BinScreen() {
   const handleCheckout = async () => {
     if (cartItems.length > 0) {
       try {
-        await clearCart();
         router.navigate("/bin/checkout");
       } catch (error) {
         console.error("Checkout failed:", error);

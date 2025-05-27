@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
   buyerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  items: [{ wasteType: String, quantity: Number, price: Number }],
+  sellerIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }],
+  items: [{ wasteType: String, quantity: Number, price: Number, sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true } }],
   totalPrice: { type: Number, required: true },
   status: { type: String, enum: ["pending", "delivered", "cancelled"], default: "pending" },
   createdAt: { type: Date, default: Date.now },

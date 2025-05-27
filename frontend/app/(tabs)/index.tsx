@@ -116,7 +116,8 @@ export default function CameraScreen() {
           _id: product.id.toString(),
           wasteType: product.Category,
           quantity: product.quantity,
-          price: 0.5 // You can set a default price here
+          price: 0.5,
+          sellerId: authUser._id
         });
       });
     }

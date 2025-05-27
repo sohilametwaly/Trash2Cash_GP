@@ -2,15 +2,15 @@ import Order from "../models/order.js";
 
 const createOrder = async (req, res) => {
     try {
-        const { buyerId, sellerId, items, totalPrice, pickupDate, pickupTime, pickupAddress } = req.body;
-        console.log("buyerId ", buyerId);
-        console.log("sellerId ", sellerId);
-        console.log("items ", items);
-        console.log("totalPrice ", totalPrice);
-        console.log("pickupDate ", pickupDate);
-        console.log("pickupTime ", pickupTime);
-        console.log("pickupAddress ", pickupAddress);
-        const order = new Order({ buyerId, sellerId, items, totalPrice, pickupDate, pickupTime, pickupAddress });
+        const { buyerId, sellerIds, items, totalPrice, pickupDate, pickupTime, pickupAddress } = req.body;
+        // console.log("buyerId ", buyerId);
+        // console.log("sellerIds ", sellerIds);
+        // console.log("items ", items);
+        // console.log("totalPrice ", totalPrice);
+        // console.log("pickupDate ", pickupDate);
+        // console.log("pickupTime ", pickupTime);
+        // console.log("pickupAddress ", pickupAddress);
+        const order = new Order({ buyerId, sellerIds, items, totalPrice, pickupDate, pickupTime, pickupAddress });
         await order.save();
         res.status(201).json(order);
     } catch (error) {
@@ -21,7 +21,7 @@ const createOrder = async (req, res) => {
 const getOrders = async (req, res) => {
     try {
         const { _id:userId } = req.user;
-        const orders = await Order.find({ $or: [{buyerId: userId}, {sellerId: userId}]});
+        const orders = await Order.find({ $or: [{buyerId: userId}, {sellerIds: userId}]});
         res.status(200).json(orders);
     } catch (error) {
         res.status(500).json({ message: error.message });
