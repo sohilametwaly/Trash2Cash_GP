@@ -8,9 +8,7 @@ const userSchema = new mongoose.Schema({
   balance: { type: Number, default: 0 },
   creditInfo: {
     type: {
-      cvv: { type: Number, maxlength: 3, minlength: 3 },
       credit_number: { type: Number, maxlength: 16, minlength: 16 },
-      expiary: { type: Number, maxlength: 4, minlength: 4 },
     },
   },
   img: { type: String, default: "" },

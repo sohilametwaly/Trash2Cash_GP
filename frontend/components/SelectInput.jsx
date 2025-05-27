@@ -1,13 +1,27 @@
 import { useEffect, useState } from "react";
 import { Check, ChevronDown, ChevronUp } from "lucide-react-native";
-
+import { useOrders } from "@/store/orderContext";
 import { Adapt, Select, Sheet, YStack, getFontSize } from "tamagui";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
+
 export function SelectItem(props) {
   const [val, setVal] = useState(props.state.toLowerCase());
   const [color, setColor] = useState("red");
+  const { updateOrderStatus } = useOrders();
+
+  const isDisabled = val === "delivered" || val === "cancelled";
+
+  const handleValueChange = (newValue) => {
+    if (isDisabled) return;
+    setVal(newValue);
+    // Only update status if it's different from current state
+    if (newValue !== props.state.toLowerCase()) {
+      updateOrderStatus(props.id, newValue);
+    }
+  };
 
   useEffect(() => {
+    // Only update color based on current state
     switch (val) {
       case "pending":
         setColor("#FBBB00");
@@ -20,10 +34,22 @@ export function SelectItem(props) {
         break;
     }
   }, [val]);
+
+  // If disabled, render a non-interactive view instead of the Select
+  if (isDisabled) {
+    return (
+      <View style={[styles.allOrdersStyle, { backgroundColor: color }]}>
+        <Text style={styles.statusText}>
+          {val.charAt(0).toUpperCase() + val.slice(1)}
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <Select
       value={val}
-      onValueChange={setVal}
+      onValueChange={handleValueChange}
       disablePreventBodyScroll
       {...props}
     >
@@ -92,7 +118,6 @@ export function SelectItem(props) {
               );
             })}
           </Select.Group>
-          {/* Native gets an extra icon */}
           {props.native && (
             <YStack
               position="absolute"
@@ -134,5 +159,13 @@ const styles = StyleSheet.create({
     color: "white",
     padding: 2,
     justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 4,
   },
+  statusText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 15,
+    padding: 8,
+  }
 });

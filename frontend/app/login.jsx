@@ -10,10 +10,15 @@ import {
 } from "react-native";
 import { Separator } from "tamagui";
 import { useAuth } from "../store/context.tsx";
+import { MaterialIcons } from '@expo/vector-icons';
+
 export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const { authUser, checkAuth, login, isLoggingIn } = useAuth();
 
   useEffect(() => {
@@ -27,6 +32,7 @@ export default function LoginScreen() {
   }, [authUser]);
 
   const navigateBasedOnRole = (role) => {
+    console.log("navigateBasedOnRole", role);
     if (role === "admin") {
       router.replace("./(adminTabs)");
     } else if (role === "user") {
@@ -36,32 +42,68 @@ export default function LoginScreen() {
     }
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      setIsEmailValid(false);
+      return "Email is required";
+    }
+    if (!emailRegex.test(email)) {
+      setIsEmailValid(false);
+      return "Please enter a valid email address";
+    }
+    setIsEmailValid(true);
+    return "";
+  };
+
+  const validatePassword = (password) => {
+    if (!password) {
+      setIsPasswordValid(false);
+      return "Password is required";
+    }
+    if (password.length < 6) {
+      setIsPasswordValid(false);
+      return "Password must be at least 6 characters";
+    }
+    setIsPasswordValid(true);
+    return "";
+  };
+
+  const handleEmailChange = (text) => {
+    setEmail(text);
+    const emailError = validateEmail(text);
+    setErrors(prev => ({ ...prev, email: emailError }));
+  };
+
+  const handlePasswordChange = (text) => {
+    setPassword(text);
+    const passwordError = validatePassword(text);
+    setErrors(prev => ({ ...prev, password: passwordError }));
+  };
+
   const handleLogin = async () => {
-    if (!email || !password) {
-      alert("Please enter both email and password.");
+    // Validate inputs
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+
+    setErrors({
+      email: emailError,
+      password: passwordError,
+    });
+
+    // If there are any errors, don't proceed with login
+    if (emailError || passwordError) {
       return;
     }
 
     try {
-      // const response = await axios.post(
-      //   "http://192.168.52.246:3000/api/user/signin",
-      //   {
-      //     email,
-      //     password,
-      //   }
-      // );
-
-      // await saveToken(response.data.token);
-
-      // if (response.data.role === "admin") {
-      //   router.replace("./(adminTabs)");
-      // } else if (response.data.role === "user") {
-      //   router.replace("./(tabs)");
-      // }
       await login({ email, password });
     } catch (error) {
       console.error("Login failed:", error.response?.data || error.message);
-      alert("Login failed. Please check your credentials.");
+      setErrors({
+        ...errors,
+        general: "Login failed. Please check your credentials.",
+      });
     }
   };
 
@@ -72,33 +114,78 @@ export default function LoginScreen() {
 
       {/* Email */}
       <Text style={styles.label}>Email</Text>
-      <View style={styles.inputContainer}>
+      <View style={[
+        styles.inputContainer,
+        errors.email ? styles.inputError : isEmailValid ? styles.inputSuccess : null
+      ]}>
         <TextInput
           style={styles.input}
           placeholder="Enter your Email"
           keyboardType="email-address"
           value={email}
-          onChangeText={setEmail} // ✅ Update state
+          onChangeText={handleEmailChange}
+          autoCapitalize="none"
         />
+        {email.length > 0 && (
+          <View style={styles.validationIcon}>
+            {isEmailValid ? (
+              <MaterialIcons name="check-circle" size={20} color="#4CAF50" />
+            ) : (
+              <MaterialIcons name="error" size={20} color="#FF5252" />
+            )}
+          </View>
+        )}
       </View>
+      {errors.email ? (
+        <Text style={styles.errorText}>{errors.email}</Text>
+      ) : null}
 
       {/* Password */}
       <Text style={styles.label}>Password</Text>
-      <View style={styles.inputContainer}>
+      <View style={[
+        styles.inputContainer,
+        errors.password ? styles.inputError : isPasswordValid ? styles.inputSuccess : null
+      ]}>
         <TextInput
           style={styles.input}
           placeholder="Enter your Password"
           secureTextEntry
           value={password}
-          onChangeText={setPassword} // ✅ Update state
+          onChangeText={handlePasswordChange}
         />
+        {password.length > 0 && (
+          <View style={styles.validationIcon}>
+            {isPasswordValid ? (
+              <MaterialIcons name="check-circle" size={20} color="#4CAF50" />
+            ) : (
+              <MaterialIcons name="error" size={20} color="#FF5252" />
+            )}
+          </View>
+        )}
       </View>
+      {errors.password ? (
+        <Text style={styles.errorText}>{errors.password}</Text>
+      ) : null}
+
+      {/* General Error Message */}
+      {errors.general ? (
+        <Text style={styles.errorText}>{errors.general}</Text>
+      ) : null}
 
       <Text style={styles.forgetPasswordLink}>Forget Password?</Text>
 
       {/* Login Button */}
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      <TouchableOpacity 
+        style={[
+          styles.button,
+          (!isEmailValid || !isPasswordValid) && styles.buttonDisabled
+        ]} 
+        onPress={handleLogin}
+        disabled={!isEmailValid || !isPasswordValid}
+      >
+        <Text style={styles.buttonText}>
+          {isLoggingIn ? "Logging in..." : "Login"}
+        </Text>
       </TouchableOpacity>
 
       {/* Social Login */}
@@ -166,8 +253,9 @@ const styles = StyleSheet.create({
     color: "#2B4B40",
   },
   input: {
-    borderColor: "#ddd",
+    flex: 1,
     padding: 10,
+    fontSize: 16,
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -186,9 +274,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     alignSelf: "center",
-    marginBottom: 20,
+    marginVertical: 20,
     width: 250,
     justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   buttonText: {
     color: "#fff",
@@ -222,15 +315,19 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     backgroundColor: "#FFF",
-    borderRadius: 3,
+    borderRadius: 8,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 5,
-    paddingHorizontal: 10,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 3,
+    paddingHorizontal: 15,
     paddingVertical: 5,
     marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   loginLink: {
     color: "#2B4B40",
@@ -244,5 +341,28 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     alignSelf: "flex-end",
+  },
+  errorText: {
+    color: '#FF5252',
+    fontSize: 12,
+    marginTop: -15,
+    marginBottom: 10,
+    marginLeft: 5,
+    fontWeight: '500',
+  },
+  inputError: {
+    borderColor: '#FF5252',
+    borderWidth: 1,
+  },
+  inputSuccess: {
+    borderColor: '#4CAF50',
+    borderWidth: 1,
+  },
+  validationIcon: {
+    padding: 10,
+  },
+  buttonDisabled: {
+    backgroundColor: '#cccccc',
+    opacity: 0.7,
   },
 });

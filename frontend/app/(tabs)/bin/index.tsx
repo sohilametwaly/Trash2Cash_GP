@@ -2,69 +2,101 @@ import { FlatList, Text, View, StyleSheet } from "react-native";
 import OrderCard from "@/components/OrderCard";
 import { Button, H2, YStack } from "tamagui";
 import { Colors } from "@/constants/Colors";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import Logo from "@/components/Logo";
 import Header from "@/components/Header";
-import { useState } from "react";
+import { useCart } from '@/store/cartContext';
+import { useOrders } from '@/store/orderContext';
+import React, { useState, useEffect } from 'react';
+import Toast from "react-native-toast-message";
 
-const DUMMY_BIN_ITEMS = [
-  {
-    id: "1",
-    category: "Paper",
-    weight: 3,
-    pricePerKg: 15,
-  },
-  {
-    id: "2",
-    category: "Plastic",
-    weight: 45,
-    pricePerKg: 41,
-  },
-  {
-    id: "3",
-    category: "Glass",
-    weight: 2,
-    pricePerKg: 12,
-  },
-];
+interface CartItem {
+  _id: string;
+  wasteType: string;
+  quantity: number;
+  price: number;
+}
 
 export default function BinScreen() {
-  const [binItems, setBinItems] = useState(DUMMY_BIN_ITEMS);
+  const { cartItems, removeFromCart, updateCartItemQuantity, clearCart, isLoading } = useCart();
+  const { isProcessingOrder } = useOrders();
+  const router = useRouter();
+  const [localCartItems, setLocalCartItems] = useState<CartItem[]>(cartItems);
 
-  const totalPrice = binItems.reduce(
-    (sum, item) => sum + item.pricePerKg * item.weight,
-    0
+  useEffect(() => {
+    setLocalCartItems(cartItems);
+  }, [cartItems]);
+
+  const totalPrice = localCartItems.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0);
+
+  const updateQuantity = (id: string, change: number) => {
+    const updatedItem = localCartItems.find(item => item._id.toString() === id);
+    if (updatedItem) {
+      const newQuantity = Math.max(0, updatedItem.quantity + change);
+      if (newQuantity === 0) {
+        removeFromCart(id);
+      } else {
+        updateCartItemQuantity(id, newQuantity);
+      }
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={[styles.container, styles.centerContent]}>
+        <Text>Loading cart...</Text>
+      </View>
+    );
+  }
+
+  const handleCheckout = async () => {
+    if (localCartItems.length > 0) {
+      try {
+        router.navigate("/bin/checkout");
+      } catch (error) {
+        console.error("Checkout failed:", error);
+        Toast.show({
+          type: 'error',
+          text1: 'Checkout failed',
+          text2: 'Please try again'
+        });
+      }
+    }
+  };
+
+  const renderItem = ({ item }: { item: CartItem }) => (
+    <OrderCard
+      key={item._id}
+      order={{
+        id: item._id.toString(),
+        category: item.wasteType,
+        quantity: item.quantity,
+        priceperunit: item.price || 0,
+      }}
+      inCheckout={false}
+      updateQuantity={updateQuantity}
+    />
   );
 
-  const updateWeight = (id: String, change: number) => {
-    const newBinItems = setBinItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id
-          ? { ...item, weight: Math.max(0, item.weight + change) }
-          : item
-      )
-    );
-  };
   return (
     <>
       <Header />
       <View style={styles.container}>
         <View>
           <FlatList
-            data={DUMMY_BIN_ITEMS}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <OrderCard
-                order={item}
-                inCheckout={false}
-                updateWeight={updateWeight}
-              />
-            )}
+            data={localCartItems}
+            renderItem={renderItem}
+            keyExtractor={(item: CartItem) => item._id.toString()}
+            extraData={localCartItems}
           />
         </View>
         <Text style={styles.totalPrice}>{totalPrice} EGP</Text>
-        <Button style={styles.btn} onPress={() => router.push("/bin/checkout")}>
-          Checkout
+        <Button 
+          style={styles.btn} 
+          onPress={handleCheckout}
+          disabled={localCartItems.length === 0}
+        >
+          {"Checkout"}
         </Button>
       </View>
     </>
@@ -94,5 +126,9 @@ const styles = StyleSheet.create({
     width: "80%",
     alignSelf: "center",
     marginTop: 30,
+  },
+  centerContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

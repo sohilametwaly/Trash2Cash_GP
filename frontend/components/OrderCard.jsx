@@ -12,24 +12,24 @@ import {
 import { Colors } from "@/constants/Colors";
 import { Button, Card } from "tamagui";
 
-export default function OrderCard({ inCheckout, order, updateWeight }) {
+export default function OrderCard({ inCheckout, order, updateQuantity }) {
   const [icon, setIcon] = useState(<Milk color={Colors.header} />);
   const [currentOrder, setCurrentOrder] = useState(order);
   function increaseWeight() {
     setCurrentOrder((prevOrder) => ({
       ...prevOrder,
-      weight: prevOrder.weight + 1,
+      quantity: prevOrder.quantity + 1,
     }));
-    updateWeight(currentOrder.id, 1);
+    updateQuantity(currentOrder.id, 1);
   }
 
   function decreaseWeight() {
-    if (currentOrder.weight > 1) {
+    if (currentOrder.quantity > 1) {
       setCurrentOrder((prevOrder) => ({
         ...prevOrder,
-        weight: prevOrder.weight - 1,
+        quantity: prevOrder.quantity - 1,
       }));
-      updateWeight(currentOrder.id, -1);
+      updateQuantity(currentOrder.id, -1);
     }
   }
 
@@ -78,11 +78,11 @@ export default function OrderCard({ inCheckout, order, updateWeight }) {
       {!inCheckout && (
         <View style={styles.weightContainer}>
           <Text>
-            {currentOrder.pricePerKg}{" "}
+            {currentOrder.priceperunit}{" "}
             <Text
               style={{ fontSize: 11, color: Colors.header, fontWeight: "500" }}
             >
-              EGP/KG
+              EGP/Unit
             </Text>
           </Text>
         </View>
@@ -103,7 +103,7 @@ export default function OrderCard({ inCheckout, order, updateWeight }) {
           />
         )}
         <View style={styles.weightContainer}>
-          <Text>{currentOrder.weight.toString().padStart(2, "0")} KG</Text>
+          <Text>{currentOrder.quantity.toString().padStart(2, "0")} Unit</Text>
         </View>
         {!inCheckout && (
           <Button

@@ -7,25 +7,33 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/store/context";
+
 export default function TabLayout() {
   const { authUser } = useAuth();
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
     if (authUser === undefined) return;
-    setIsReady(true);
+    console.log("tabs layout authUser", authUser);
 
-    if (authUser && authUser.role === "admin") {
-      router.replace("/(adminTabs)");
-    }
-    if (authUser && authUser.role === "company") {
-      router.replace("./(companyTabs)");
-    }
+    const timer = setTimeout(() => {
+      setIsReady(true);
+      
+      if (authUser?.role === "admin") {
+        router.replace("/(adminTabs)");
+      } else if (authUser?.role === "company") {
+        router.replace("/(companyTabs)");
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [authUser]);
 
   if (!isReady) {
     return null;
   }
+
   return (
     <View style={{ flex: 1 }}>
       <Tabs

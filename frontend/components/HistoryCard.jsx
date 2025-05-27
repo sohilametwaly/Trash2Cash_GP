@@ -2,11 +2,23 @@ import { Card, Paragraph, YStack, XStack, Button } from "tamagui";
 import { StyleSheet, View, Text } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
+import { format } from 'date-fns';
 
 import { Anvil, Book, Milk, Package, Wine } from "lucide-react-native";
 import { SelectItem } from "./SelectInput";
+import { useOrders } from "@/store/orderContext";
 
 export default function HistoryCard({ order, role, pending }) {
+  const { updateOrderStatus } = useOrders();
+  console.log("order ", order);
+  const formattedDate = order.pickupDate ? 
+    format(new Date(order.pickupDate), 'dd/MM/yyyy') : 
+    'Not scheduled';
+
+  const handleCancel = () => {
+    updateOrderStatus(order._id, "cancelled");
+  };
+
   return (
     <YStack $sm={{ flexDirection: "column" }}>
       <Card
@@ -24,7 +36,7 @@ export default function HistoryCard({ order, role, pending }) {
         }}
       >
         <Card.Header style={role == "admin" ? styles.header : ""}>
-          <Paragraph style={styles.date}>Pickup date: {order.date}</Paragraph>
+          <Paragraph style={styles.date}>Pickup date: {formattedDate}</Paragraph>
           {role == "admin" && (
             <Paragraph style={styles.date}>{order.user}</Paragraph>
           )}
@@ -32,10 +44,10 @@ export default function HistoryCard({ order, role, pending }) {
         {order.items.map((item) => {
           return (
             <CardRow
-              key={item.category}
-              category={item.category}
-              weight={item.weight}
-              pricePerKg={item.pricePerKg}
+              key={item.wasteType}
+              wasteType={item.wasteType}
+              quantity={item.quantity}
+              price={item.price}
             />
           );
         })}
@@ -62,14 +74,14 @@ export default function HistoryCard({ order, role, pending }) {
                 Total Price:
               </Text>
               <View style={styles.price}>
-                <Text style={styles.priceText}>{order.total} EGP</Text>
+                <Text style={styles.priceText}>{order.totalPrice} EGP</Text>
               </View>
             </View>
 
             <View>
               {role == "admin" && (
                 <SelectItem
-                  id={order.id}
+                  id={order._id}
                   label="Status"
                   state={order.status}
                   items={[
@@ -81,13 +93,14 @@ export default function HistoryCard({ order, role, pending }) {
               )}
             </View>
           </View>
-          {pending && (
+          {role == "user" && order.status === "pending" && (
             <Button
               backgroundColor={"#C83939"}
               color={"white"}
               fontSize={17}
               width={90}
               alignSelf="flex-end"
+              onPress={handleCancel}
             >
               Cancel
             </Button>
@@ -98,10 +111,10 @@ export default function HistoryCard({ order, role, pending }) {
   );
 }
 
-function CardRow({ category, weight, pricePerKg }) {
+function CardRow({ wasteType, quantity, price }) {
   const [icon, setIcon] = useState(<Milk color={Colors.header} />);
   useEffect(() => {
-    switch (category) {
+    switch (wasteType) {
       case "Plastic":
         setIcon(<Milk color={Colors.header} />);
         break;
@@ -118,28 +131,28 @@ function CardRow({ category, weight, pricePerKg }) {
         setIcon(<Package color={Colors.header} />);
         break;
     }
-  }, [category]);
+  }, [wasteType]);
 
   return (
     <View style={styles.rowContainer}>
       <View style={styles.categoryContainer}>
-        <Text style={styles.categoryText}>{icon}</Text>
-        <Text style={styles.categoryText}>{category}</Text>
+        <View style={styles.categoryText}>{icon}</View>
+        <Text style={styles.categoryText}>{wasteType}</Text>
       </View>
 
       <View style={styles.weightContainer}>
         <Text>
-          {pricePerKg}{" "}
+          {price}{" "}
           <Text
             style={{ fontSize: 11, color: Colors.header, fontWeight: "500" }}
           >
-            EGP/KG
+            EGP/Unit
           </Text>
         </Text>
       </View>
 
       <View style={styles.weightContainer}>
-        <Text>{weight.toString().padStart(2, "0")} KG</Text>
+        <Text>{quantity.toString().padStart(2, "0")} Unit</Text>
       </View>
     </View>
   );

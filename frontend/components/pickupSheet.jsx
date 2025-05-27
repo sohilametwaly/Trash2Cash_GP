@@ -8,17 +8,53 @@ import { View, StyleSheet } from "react-native";
 import DateTimePicker from "./dateTimePicker";
 import LocationPicker from "./locationPicker";
 import { MapPin, Search } from "lucide-react-native";
+import { Toast } from "react-native-toast-message";
 
-export const PickupSheet = () => {
+export const PickupSheet = ({ onConfirm, isLoading }) => {
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [isLocationPickerOpen, setIsLocationPickerOpen] = useState(false);
   const [stringLocation, setStringLocation] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
 
   const handleLocationSelect = (location) => {
     setSelectedLocation(location);
     console.log("Selected Location:", location);
+  };
+
+  // const handleDateTimeSelect = (date, time) => {
+  //   setSelectedDate(date);
+  //   setSelectedTime(time);
+  // };
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleTimeSelect = (time) => {
+    setSelectedTime(time);
+  };
+
+  const handleSubmit = () => {
+    console.log("Selected Date:", selectedDate);
+    console.log("Selected Time:", selectedTime);
+    console.log("Selected Location:", stringLocation);
+    if (!selectedDate || !selectedTime || !stringLocation) {
+      Toast.show({
+        type: 'error',
+        text1: 'Missing Information',
+        text2: 'Please select date, time and location'
+      });
+      return;
+    }
+
+    onConfirm({
+      pickupDate: selectedDate,
+      pickupTime: selectedTime,
+      pickupAddress: stringLocation
+    });
+    setOpen(false);
   };
 
   return (
@@ -76,7 +112,7 @@ export const PickupSheet = () => {
                 <Text>Pick a Date</Text>
               </Label>
               <View id="date-time-picker">
-                <DateTimePicker />
+                <DateTimePicker onDateSelect={handleDateSelect} onTimeSelect={handleTimeSelect} />
               </View>
             </View>
             <View>
@@ -115,10 +151,13 @@ export const PickupSheet = () => {
             </View>
 
             <Button
-              onPress={() => setOpen((prev) => !prev)}
+              onPress={handleSubmit}
               style={styles.sumbitBtn}
+              // disabled={isLoading || !selectedDate || !selectedTime || !Location}
             >
-              <Text style={styles.btnText}>Submit</Text>
+              <Text style={styles.btnText}>
+                {isLoading ? "Processing..." : "Submit"}
+              </Text>
             </Button>
           </View>
         </Sheet.Frame>

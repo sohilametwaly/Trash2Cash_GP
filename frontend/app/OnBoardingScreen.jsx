@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import AppIntroSlider from "react-native-app-intro-slider";
 import * as secureStore from "expo-secure-store";
@@ -88,7 +88,7 @@ const slides = [
             width: 320,
           }}
         >
-          Once classified, we’ll arrange for the collection of your recyclables.
+          Once classified, we'll arrange for the collection of your recyclables.
           No hassle—just a smarter way to recycle and earn!
         </Text>
       </View>
@@ -108,12 +108,26 @@ const OnboradingScreen = () => {
   const router = useRouter();
   const { authUser } = useAuth();
   const [isCompleted, setIsCompleted] = useState(false);
+
+  useEffect(() => {
+    checkOnboardingStatus();
+  }, []);
+
+  const checkOnboardingStatus = async () => {
+    try {
+      const hasSeenOnboarding = await secureStore.getItemAsync("hasSeenOnboarding");
+      if (hasSeenOnboarding === "true") {
+        router.replace(authUser ? "/" : "/login");
+      }
+    } catch (err) {
+      console.error("Failed to check onboarding status:", err);
+    }
+  };
+
   const completeOnboarding = async () => {
     try {
       await secureStore.setItemAsync("hasSeenOnboarding", "true");
-      if (authUser !== undefined) {
-        router.replace("/login");
-      }
+      router.replace(authUser ? "/" : "/login");
     } catch (err) {
       console.error("Failed to save onboarding status:", err);
     }

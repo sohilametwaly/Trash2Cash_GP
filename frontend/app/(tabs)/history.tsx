@@ -12,50 +12,68 @@ import {
   styled,
 } from "tamagui";
 import Header from "@/components/Header";
+import { useOrders } from '@/store/orderContext';
 
-const DUMMY_ORDERS = [
-  {
-    id: "1",
-    date: "9/2/2025",
-    total: 95,
-    items: [
-      { category: "Paper", weight: 3, pricePerKg: 10 },
-      { category: "Glass", weight: 45, pricePerKg: 5 },
-      { category: "Metal", weight: 2, pricePerKg: 12 },
-      { category: "Cardboard", weight: 2, pricePerKg: 20 },
-    ],
-    status: "Pending",
-  },
-  {
-    id: "2",
-    date: "9/2/2025",
-    total: 95,
-    items: [
-      { category: "Paper", weight: 3, pricePerKg: 10 },
-      { category: "Glass", weight: 45, pricePerKg: 5 },
-      { category: "Metal", weight: 2, pricePerKg: 12 },
-      { category: "Cardboard", weight: 2, pricePerKg: 20 },
-    ],
-    status: "Delivered",
-  },
-  {
-    id: "3",
-    date: "9/2/2025",
-    total: 95,
-    items: [
-      { category: "Paper", weight: 3, pricePerKg: 10 },
-      { category: "Glass", weight: 45, pricePerKg: 5 },
-      { category: "Metal", weight: 2, pricePerKg: 12 },
-      { category: "Cardboard", weight: 2, pricePerKg: 20 },
-    ],
-    status: "Cancelled",
-  },
-];
+// const DUMMY_ORDERS = [
+//   {
+//     id: "1",
+//     date: "9/2/2025",
+//     total: 95,
+//     items: [
+//       { category: "Paper", weight: 3, pricePerKg: 10 },
+//       { category: "Glass", weight: 45, pricePerKg: 5 },
+//       { category: "Metal", weight: 2, pricePerKg: 12 },
+//       { category: "Cardboard", weight: 2, pricePerKg: 20 },
+//     ],
+//     status: "Pending",
+//   },
+//   {
+//     id: "2",
+//     date: "9/2/2025",
+//     total: 95,
+//     items: [
+//       { category: "Paper", weight: 3, pricePerKg: 10 },
+//       { category: "Glass", weight: 45, pricePerKg: 5 },
+//       { category: "Metal", weight: 2, pricePerKg: 12 },
+//       { category: "Cardboard", weight: 2, pricePerKg: 20 },
+//     ],
+//     status: "Delivered",
+//   },
+//   {
+//     id: "3",
+//     date: "9/2/2025",
+//     total: 95,
+//     items: [
+//       { category: "Paper", weight: 3, pricePerKg: 10 },
+//       { category: "Glass", weight: 45, pricePerKg: 5 },
+//       { category: "Metal", weight: 2, pricePerKg: 12 },
+//       { category: "Cardboard", weight: 2, pricePerKg: 20 },
+//     ],
+//     status: "Cancelled",
+//   },
+// ];
 
-const TabsAdvancedUnderline: React.FC = () => {
-  const pending = DUMMY_ORDERS.filter((order) => order.status == "Pending");
-  const deliverd = DUMMY_ORDERS.filter((order) => order.status == "Delivered");
-  const cancelled = DUMMY_ORDERS.filter((order) => order.status == "Cancelled");
+const TabsAdvancedUnderline = () => {
+  const { orders, getOrderHistory, isLoading } = useOrders();
+  
+  React.useEffect(() => {
+    getOrderHistory();
+  }, []);
+
+  const pending = React.useMemo(() => 
+    orders.filter((order) => order.status === "pending"),
+    [orders]
+  );
+  
+  const delivered = React.useMemo(() => 
+    orders.filter((order) => order.status === "delivered"),
+    [orders]
+  );
+  
+  const cancelled = React.useMemo(() => 
+    orders.filter((order) => order.status === "cancelled"),
+    [orders]
+  );
 
   const [tabState, setTabState] = React.useState<{
     currentTab: string;
@@ -179,19 +197,31 @@ const TabsAdvancedUnderline: React.FC = () => {
           <FlatList
             data={pending}
             renderItem={({ item }) => (
-              <HistoryCard order={item} role={"user"} pending={true} />
+              <HistoryCard 
+                order={{
+                  ...item,
+                  pickupDate: item.pickupDate,
+                  items: item.items.map(i => ({
+                    wasteType: i.wasteType,
+                    quantity: i.quantity,
+                    price: i.price
+                  }))
+                }}
+                role="user"
+                pending={true}
+              />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item._id.toString()}
           />
         </Tabs.Content>
 
         <Tabs.Content value="delivered">
           <FlatList
-            data={deliverd}
+            data={delivered}
             renderItem={({ item }) => (
               <HistoryCard order={item} role={"user"} pending={false} />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item._id.toString()}
           />
         </Tabs.Content>
 
@@ -201,7 +231,7 @@ const TabsAdvancedUnderline: React.FC = () => {
             renderItem={({ item }) => (
               <HistoryCard order={item} role={"user"} pending={false} />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item._id.toString()}
           />
         </Tabs.Content>
         <AnimatePresence exitBeforeEnter custom={{ direction }} initial={false}>

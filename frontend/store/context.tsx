@@ -1,11 +1,14 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import Toast from "react-native-toast-message";
+import { useRouter } from "expo-router";
 
 import { getToken, saveToken, removeToken } from "../utils/tokenHandlers";
 
 // const BASE_URL = "http://192.168.1.104:3000/api/user";
-const BASE_URL = "http://192.168.1.7:3000/api/user";
+// const BASE_URL = "http://192.168.1.7:3000/api/user";
+// const BASE_URL = "http://192.168.3.246:3000/api/user";
+const BASE_URL = "http://192.168.1.4:3000/api/user";
 
 interface LoginData {
   email: string;
@@ -45,6 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isChangingImg, setIsChangingImg] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     checkAuth();
@@ -60,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const res = await axios.get(`${BASE_URL}/profile`, {
         headers: { token: `${token}` },
       });
-      // console.log("Checked successfully");
+      console.log("Checked successfully", res.data);
       setAuthUser(res.data);
     } catch (error: any) {
       console.error("Auth check failed:", error.response?.data || error);
@@ -74,17 +78,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       setIsSigningUp(true);
       const res = await axios.post(`${BASE_URL}/signup`, data);
-      console.log("Success");
       await saveToken(res.data.token);
       setAuthUser(res.data);
       Toast.show({
         text1: "Account Created Successfully",
         type: "success",
       });
-      // toast.success("Account Created Successfully");
     } catch (error: any) {
-      console.error("Signup error:", error.response?.data || error);
-      // toast.error(error.response?.data?.msg || "Failed to create account");
+      const errorMessage = error.response?.data?.msg || 
+        error.response?.data?.message || 
+        "Failed to create account. Please try again.";
+      
+      Toast.show({
+        text1: "Sign Up Error",
+        text2: errorMessage,
+        type: "error",
+        position: "bottom",
+        visibilityTime: 4000,
+      });
     } finally {
       setIsSigningUp(false);
     }
@@ -94,26 +105,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       setIsLoggingIn(true);
       const res = await axios.post(`${BASE_URL}/signin`, data);
-      // if (res.data.msg) {
-      //   toast.error(res.data.msg);
-      // }
-      console.log("Login successfully");
       await saveToken(res.data.token);
       setAuthUser(res.data);
       Toast.show({
-        text1: "Login Successfully",
+        text1: "Welcome back!",
+        text2: "Login successful",
         type: "success",
       });
-      // toast.success("Login Successfully");
     } catch (error: any) {
-      console.error("Login error:", error.response?.data || error);
+      const errorMessage = error.response?.data?.msg || 
+        error.response?.data?.message ||
+        "Invalid email or password";
 
       Toast.show({
-        text1: "Failed to login",
-
+        text1: "Login Error",
+        text2: errorMessage,
         type: "error",
+        position: "bottom",
+        visibilityTime: 4000,
       });
-      // toast.error();
     } finally {
       setIsLoggingIn(false);
     }
@@ -123,14 +133,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       await removeToken();
       setAuthUser(null);
+      router.replace("/login");
       Toast.show({
         text1: "Logged out Successfully",
         type: "success",
       });
-      // toast.success("Logged out successfully");
-    } catch (error: any) {
-      console.error("Logout error:", error.response?.data || error);
-      // toast.error("Failed to log out");
+    } catch (error) {
+      console.error('Logout error:', error);
     }
   };
 
@@ -138,8 +147,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsChangingImg(true);
     try {
       const token = await getToken();
-      // console.log("Token", token);
-      // console.log(profileImg);
       const res = await axios.post(`${BASE_URL}/profileImg`, profileImg, {
         headers: {
           token,
@@ -148,10 +155,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       await checkAuth();
       Toast.show({
         type: "success",
-        text1: "Image uploaded Successfully!",
+        text1: "Profile Image Updated",
+        text2: "Your profile image was updated successfully",
       });
-    } catch (err) {
-      console.log("error in change profile context ", err);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.msg || 
+        "Failed to update profile image. Please try again.";
+      
+      Toast.show({
+        text1: "Profile Image Error",
+        text2: errorMessage,
+        type: "error",
+        position: "bottom",
+        visibilityTime: 4000,
+      });
     } finally {
       setIsChangingImg(false);
     }

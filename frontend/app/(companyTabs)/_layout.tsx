@@ -22,14 +22,19 @@ export default function CompanyTabLayout() {
   const [isReady, setIsReady] = useState(false);
   useEffect(() => {
     if (authUser === undefined) return;
-    setIsReady(true);
+    console.log("company layout authUser", authUser);
 
-    if (authUser && authUser.role === "admin") {
-      router.replace("/(adminTabs)");
-    }
-    if (authUser && authUser.role === "user") {
-      router.replace("/(tabs)");
-    }
+    const timer = setTimeout(() => {
+      setIsReady(true);
+      
+      if (authUser?.role === "admin") {
+        router.replace("/(adminTabs)");
+      } else if (authUser?.role === "user") {
+        router.replace("/(tabs)");
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [authUser]);
 
   if (!isReady) {

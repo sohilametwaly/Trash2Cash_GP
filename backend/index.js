@@ -6,6 +6,8 @@ import { v2 as cloudinary } from "cloudinary";
 
 import connectToDB from "./config/db.js";
 import userRoute from "./routes/user.js";
+import cartRoute from "./routes/cart.routes.js";
+import orderRoute from "./routes/order.routes.js";
 
 const app = express();
 
@@ -23,6 +25,8 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/user", userRoute);
+app.use("/api/cart", cartRoute);
+app.use("/api/order", orderRoute);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

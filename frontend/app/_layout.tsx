@@ -4,75 +4,141 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Slot, useRouter } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
+import { Slot, useRouter, Redirect, SplashScreen } from "expo-router";
 import { useEffect, useState } from "react";
+import { View } from 'react-native';
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
+import { StatusBar } from "expo-status-bar";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { createTamagui, TamaguiProvider, View } from "tamagui";
+import { createTamagui, TamaguiProvider } from "tamagui";
 import { defaultConfig } from "@tamagui/config/v4";
 import { AuthProvider, useAuth } from "../store/context";
 import * as secureStore from "expo-secure-store";
+import { CartProvider } from '../store/cartContext';
+import { OrderProvider } from '../store/orderContext';
 // import OnboardingScreen from "./OnBoardingScreen";
 
 const config = createTamagui(defaultConfig);
 
-SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
-}
-
-function AppContent() {
-  const router = useRouter();
+  console.log('🚀 RootLayout rendering');
+  const [isReady, setIsReady] = useState(false);
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
   const colorScheme = useColorScheme();
-  const { authUser } = useAuth();
-
-  const [loaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     Poppins: require("../assets/fonts/Poppins-Regular.ttf"),
   });
 
-  const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean | null>(
-    null
-  );
-
   useEffect(() => {
-    const checkOnboarding = async () => {
-      //await secureStore.setItem("hasSeenOnboarding", "false");
-      const seen = await secureStore.getItemAsync("hasSeenOnboarding");
-      setHasSeenOnboarding(seen == "true");
-    };
-    checkOnboarding();
-  }, []);
-
-  useEffect(() => {
-    if (loaded && hasSeenOnboarding !== null) {
-      SplashScreen.hideAsync();
-      if (hasSeenOnboarding == false) {
-        return router.replace("/OnBoardingScreen");
-      }
-      if (!authUser) {
-        return router.replace("/login");
+    async function prepare() {
+      try {
+        console.log('🚀 Preparing RootLayout');
+        await SplashScreen.preventAutoHideAsync();
+        const status = await secureStore.getItemAsync("hasSeenOnboarding");
+        console.log('🚀 Onboarding status:', status);
+        setHasSeenOnboarding(status === "true");
+      } catch (err) {
+        console.error("Failed to check onboarding status:", err);
+      } finally {
+        setIsReady(true);
+        console.log('🚀 RootLayout is ready');
       }
     }
-  }, [loaded, hasSeenOnboarding, authUser]);
 
-  if (!loaded || hasSeenOnboarding === null) return null;
+    prepare();
+  }, []);
 
+  const isAppReady = fontsLoaded && isReady;
+
+  useEffect(() => {
+    if (isAppReady) {
+      console.log('🚀 App is ready, hiding splash screen');
+      SplashScreen.hideAsync();
+    }
+  }, [isAppReady]);
+
+  if (!isAppReady) {
+    console.log('⏳ App not ready yet');
+    return <View style={{ flex: 1 }} />;
+  }
+
+  // If user hasn't seen onboarding, show it first
+  // if (!hasSeenOnboarding) {
+  //   console.log('🔄 Redirecting to onboarding');
+  //   return (
+  //     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+  //       <TamaguiProvider config={config}>
+  //         <View style={{ flex: 1 }}>
+  //           <Redirect href="/OnBoardingScreen" />
+  //         </View>
+  //       </TamaguiProvider>
+  //     </ThemeProvider>
+  //   );
+  // }
+
+  console.log('✅ Rendering main app layout');
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <TamaguiProvider config={config}>
-        <Slot />
-        <StatusBar style="auto" />
-        <Toast />
+        <AuthProvider>
+          <CartProvider>
+            <OrderProvider>
+              <View style={{ flex: 1 }}>
+                <Slot />
+                <InitialNavigationHandler />
+                <StatusBar style="auto" />
+                <Toast />
+              </View>
+            </OrderProvider>
+          </CartProvider>
+        </AuthProvider>
       </TamaguiProvider>
     </ThemeProvider>
   );
+}
+
+function InitialNavigationHandler() {
+  const { authUser } = useAuth();
+  const router = useRouter();
+  const [hasNavigated, setHasNavigated] = useState(false);
+
+  useEffect(() => {
+    if (hasNavigated || authUser === undefined) {
+      console.log('Skip navigation:', { hasNavigated, authUserState: authUser === undefined ? 'undefined' : 'defined' });
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      console.log('Attempting navigation with auth state:', { 
+        exists: !!authUser,
+        role: authUser?.role 
+      });
+
+      setHasNavigated(true);
+
+      if (!authUser) {
+        console.log('Navigating to login');
+        router.replace("/login");
+      } else {
+        console.log('Navigating based on role:', authUser.role);
+        switch (authUser.role) {
+          case "admin":
+            router.replace("/(adminTabs)");
+            break;
+          case "company":
+            router.replace("/(companyTabs)");
+            break;
+          case "user":
+            router.replace("/(tabs)");
+            break;
+        }
+      }
+    }, 1500); // Increased delay to ensure layout is fully mounted
+
+    return () => clearTimeout(timer);
+  }, [authUser, hasNavigated]);
+
+  return null;
 }

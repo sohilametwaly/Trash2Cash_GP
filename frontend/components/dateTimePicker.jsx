@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -10,10 +10,11 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { Colors } from "@/constants/Colors";
 
-const DateTimePickerComponent = () => {
+const DateTimePickerComponent = ({ onDateSelect, onTimeSelect }) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [time, setTime] = useState('');
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
@@ -22,10 +23,9 @@ const DateTimePickerComponent = () => {
         selectedDate.getFullYear(),
         selectedDate.getMonth(),
         selectedDate.getDate(),
-        date.getHours(),
-        date.getMinutes()
       );
       setDate(newDate);
+      onDateSelect(newDate);
     }
   };
 
@@ -40,8 +40,15 @@ const DateTimePickerComponent = () => {
         selectedTime.getMinutes()
       );
       setDate(newDate);
+      onTimeSelect(newDate);
     }
   };
+
+  useEffect(() => {
+    if (date) {
+      onDateSelect(date);
+    }
+  }, [date]);
 
   return (
     <View style={styles.container}>
