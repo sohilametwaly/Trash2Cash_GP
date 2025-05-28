@@ -23,3 +23,23 @@ export const changeProfileImg = async (req, res) => {
     res.status(404).json({ error: "Server Error" });
   }
 };
+
+export const getCompanies = async (req, res) => {
+  try {
+    const companies = await User.find({ role: "company" });
+    res.status(200).json(companies);
+  } catch (error) {
+    console.log("error in get companies controller ", error);
+    res.status(404).json({ error: "Server Error" });
+  }
+};
+
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({ role: "user" });
+    res.status(200).json(users);
+  } catch (error) {
+    console.log("error in get users controller ", error);
+    res.status(404).json({ error: "Server Error" });
+  }
+};

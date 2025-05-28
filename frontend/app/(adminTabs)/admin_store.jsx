@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -19,72 +19,19 @@ import {
   Package,
   ShoppingCart,
 } from "lucide-react-native";
-import Logo from "@/components/Logo";
-const companies = [
-  {
-    id: "1",
-    name: "Company 1",
-    items: [
-      {
-        name: "Metal",
-        price: "30 EGP / kg",
-        weight: "1000 kg",
-        quantity: "100",
-        category: "Metal",
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Company 2",
-    items: [
-      {
-        name: "Glass",
-        price: "40 EGP / kg",
-        weight: "500 kg",
-        quantity: "50",
-        category: "Glass",
-      },
-    ],
-  },
-  {
-    id: "3",
-    name: "Company 3",
-    items: [
-      {
-        name: "Paper",
-        price: "35 EGP / kg",
-        weight: "800 kg",
-        quantity: "80",
-        category: "Paper",
-      },
-    ],
-  },
-];
+import { useInventory } from "@/store/InventoryContext";
 
 export default function AdminStore() {
-  const [quantities, setQuantities] = useState(
-    companies.map((company) =>
-      company.items.map((item) => Math.max(item.quantity, 100))
-    )
-  );
-
-  const [icons, setIcons] = useState(
-    companies.map((company) =>
-      company.items.map((item) => <Milk color="black" />)
-    )
-  );
-
-  const [cart, setCart] = useState(
-    companies.map((company) => company.items.map(() => false))
-  );
-
-  const [cartCount, setCartCount] = useState(0);
+  const { adminShop, getAdminShop } = useInventory();
 
   useEffect(() => {
-    const updatedIcons = companies.map((company) =>
+    getAdminShop();
+  }, [getAdminShop, adminShop]);
+
+  useEffect(() => {
+    const updatedIcons = adminShop.map((company) =>
       company.items.map((item) => {
-        switch (item.category) {
+        switch (item.name) {
           case "Metal":
             return <Anvil color="black" />;
           case "Glass":
@@ -101,7 +48,25 @@ export default function AdminStore() {
       })
     );
     setIcons(updatedIcons);
-  }, []);
+  }, [adminShop]);
+
+  const [quantities, setQuantities] = useState(
+    adminShop.map((company) =>
+      company.items.map((item) => Math.min(item.quantity, 100))
+    )
+  );
+
+  const [icons, setIcons] = useState(
+    adminShop.map((company) =>
+      company.items.map((item) => <Milk color="black" />)
+    )
+  );
+
+  const [cart, setCart] = useState(
+    adminShop.map((company) => company.items.map(() => false))
+  );
+
+  const [cartCount, setCartCount] = useState(0);
 
   const increaseWeight = (companyIndex, itemIndex) => {
     setQuantities((prevQuantities) => {
@@ -151,17 +116,17 @@ export default function AdminStore() {
         )}
       </View>
 
-      {companies.map((company, companyIndex) => (
+      {adminShop.map((company, companyIndex) => (
         <View style={styles.companyContainer} key={company.id}>
-          <Text style={styles.companyName}>{company.name}</Text>
+          <Text style={styles.companyName}>{company.userName}</Text>
 
           {company.items.map((item, itemIndex) => (
             <View style={[styles.card, styles.shadowBox]} key={item.name}>
               <View style={styles.itemRow}>
                 {icons[companyIndex][itemIndex]}
                 <Text style={styles.itemName}>{item.name}</Text>
-                <Text style={styles.price}>{item.price}</Text>
-                <Text style={styles.weight}>{item.weight}</Text>
+                <Text style={styles.price}>{item.price} EGP / Item</Text>
+                <Text style={styles.weight}>{item.quantity} Items</Text>
               </View>
 
               <View style={styles.quantityContainer}>
@@ -178,7 +143,7 @@ export default function AdminStore() {
                 />
 
                 <View style={styles.weightContainer}>
-                  <Text>{quantities[companyIndex][itemIndex]} KG</Text>
+                  <Text>{quantities[companyIndex][itemIndex]} Item</Text>
                 </View>
 
                 <Button

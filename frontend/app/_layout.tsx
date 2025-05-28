@@ -16,6 +16,7 @@ import { createTamagui, TamaguiProvider, View } from "tamagui";
 import { defaultConfig } from "@tamagui/config/v4";
 import { AuthProvider, useAuth } from "../store/context";
 import * as secureStore from "expo-secure-store";
+import { InventProvider } from "@/store/InventoryContext";
 // import OnboardingScreen from "./OnBoardingScreen";
 
 const config = createTamagui(defaultConfig);
@@ -24,9 +25,11 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <InventProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </InventProvider>
   );
 }
 

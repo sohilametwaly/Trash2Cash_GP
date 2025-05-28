@@ -18,81 +18,20 @@ import {
   Package,
   ShoppingCart,
 } from "lucide-react-native";
-import Logo from "@/components/Logo";
 import Header from "@/components/Header";
-type Company = {
-  id: string;
-  name: string;
-  items: {
-    name: string;
-    price: string;
-    weight: string;
-    quantity: number;
-    category: string;
-  }[];
-};
-
-const companies: Company[] = [
-  {
-    id: "1",
-    name: "Company 1",
-    items: [
-      {
-        name: "Metal",
-        price: "30 EGP / kg",
-        weight: "1000 kg",
-        quantity: 100,
-        category: "Metal",
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Company 2",
-    items: [
-      {
-        name: "Glass",
-        price: "40 EGP / kg",
-        weight: "500 kg",
-        quantity: 50,
-        category: "Glass",
-      },
-    ],
-  },
-  {
-    id: "3",
-    name: "Company 3",
-    items: [
-      {
-        name: "Paper",
-        price: "35 EGP / kg",
-        weight: "800 kg",
-        quantity: 80,
-        category: "Paper",
-      },
-    ],
-  },
-];
+import { useInventory } from "@/store/InventoryContext";
 
 export default function CompanyStore() {
-  const [quantities, setQuantities] = useState<number[][]>(
-    companies.map((company) =>
-      company.items.map((item) => Math.max(item.quantity, 100))
-    )
-  );
+  const { companyShop, getCompanyShop } = useInventory();
 
-  const [icons, setIcons] = useState<JSX.Element[][]>(
-    companies.map((company) => company.items.map(() => <Milk color="black" />))
-  );
-
-  const [cart, setCart] = useState<boolean[][]>(
-    companies.map((company) => company.items.map(() => false))
-  );
-  const [cartCount, setCartCount] = useState(0);
   useEffect(() => {
-    const updatedIcons = companies.map((company) =>
-      company.items.map((item) => {
-        switch (item.category) {
+    getCompanyShop();
+  }, [companyShop, getCompanyShop]);
+
+  useEffect(() => {
+    const updatedIcons =
+      companyShop?.items.map((item) => {
+        switch (item.name) {
           case "Metal":
             return <Anvil color="black" />;
           case "Glass":
@@ -106,33 +45,45 @@ export default function CompanyStore() {
           default:
             return <Milk color="black" />;
         }
-      })
-    );
+      }) || [];
     setIcons(updatedIcons);
-  }, []);
+  }, [companyShop]);
 
-  const increaseWeight = (companyIndex: number, itemIndex: number) => {
+  const [quantities, setQuantities] = useState<number[]>(
+    companyShop?.items.map((item) => Math.min(item.quantity, 100)) || []
+  );
+
+  const [icons, setIcons] = useState<JSX.Element[]>(
+    companyShop?.items.map(() => <Milk color="black" />) || []
+  );
+
+  const [cart, setCart] = useState<boolean[]>(
+    companyShop?.items.map(() => false) || []
+  );
+  const [cartCount, setCartCount] = useState(0);
+
+  const increaseWeight = (itemIndex: number) => {
     setQuantities((prevQuantities) => {
       const updatedQuantities = [...prevQuantities];
-      updatedQuantities[companyIndex][itemIndex] += 50;
+      updatedQuantities[itemIndex] += 50;
       return updatedQuantities;
     });
   };
 
-  const decreaseWeight = (companyIndex: number, itemIndex: number) => {
+  const decreaseWeight = (itemIndex: number) => {
     setQuantities((prevQuantities) => {
       const updatedQuantities = [...prevQuantities];
-      if (updatedQuantities[companyIndex][itemIndex] > 100) {
-        updatedQuantities[companyIndex][itemIndex] -= 50;
+      if (updatedQuantities[itemIndex] > 100) {
+        updatedQuantities[itemIndex] -= 50;
       }
       return updatedQuantities;
     });
   };
 
-  const toggleCart = (companyIndex: number, itemIndex: number) => {
+  const toggleCart = (itemIndex: number) => {
     setCart((prevCart) => {
       const updatedCart = [...prevCart];
-      const currentItemInCart = updatedCart[companyIndex][itemIndex];
+      const currentItemInCart = updatedCart[itemIndex];
 
       if (currentItemInCart) {
         setCartCount((prevCount) => Math.max(prevCount - 1, 0));
@@ -140,8 +91,7 @@ export default function CompanyStore() {
         setCartCount((prevCount) => prevCount + 1);
       }
 
-      updatedCart[companyIndex][itemIndex] =
-        !updatedCart[companyIndex][itemIndex];
+      updatedCart[itemIndex] = !updatedCart[itemIndex];
       return updatedCart;
     });
   };
@@ -160,73 +110,65 @@ export default function CompanyStore() {
           )}
         </View>
 
-        {companies.map((company, companyIndex) => (
-          <View style={styles.companyContainer} key={company.id}>
-            {company.items.map((item, itemIndex) => (
-              <View style={[styles.card, styles.shadowBox]} key={item.name}>
-                <View style={styles.itemRow}>
-                  {icons[companyIndex][itemIndex]}
-                  <Text style={styles.itemName}>{item.name}</Text>
-                  <Text style={styles.price}>{item.price}</Text>
-                  <Text style={styles.weight}>{item.weight}</Text>
-                </View>
-
-                <View style={styles.quantityContainer}>
-                  <Button
-                    circular
-                    size={"$2"}
-                    icon={Plus}
-                    borderColor="$color"
-                    borderWidth={1.5}
-                    backgroundColor="transparent"
-                    pressStyle={{ opacity: 0.5 }}
-                    color={"black"}
-                    onPress={() => increaseWeight(companyIndex, itemIndex)}
-                  />
-
-                  <View>
-                    <Text>{quantities[companyIndex][itemIndex]} KG</Text>
-                  </View>
-
-                  <Button
-                    circular
-                    size={"$2"}
-                    icon={Minus}
-                    borderColor="$color"
-                    borderWidth={1.5}
-                    backgroundColor="transparent"
-                    pressStyle={{ opacity: 0.5 }}
-                    color={"black"}
-                    onPress={() => decreaseWeight(companyIndex, itemIndex)}
-                  />
-
-                  <TouchableOpacity
-                    style={[
-                      styles.addButton,
-                      cart[companyIndex][itemIndex]
-                        ? styles.cancelButton
-                        : null,
-                    ]}
-                    onPress={() => toggleCart(companyIndex, itemIndex)}
-                  >
-                    <Text style={styles.addButtonText}>
-                      {cart[companyIndex][itemIndex] ? "Cancel" : "Add to cart"}
-                    </Text>
-                    <FontAwesome5
-                      name={
-                        cart[companyIndex][itemIndex]
-                          ? "times"
-                          : "shopping-cart"
-                      }
-                      size={16}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </View>
+        <View style={styles.companyContainer}>
+          {companyShop?.items.map((item, itemIndex) => (
+            <View style={[styles.card, styles.shadowBox]} key={item.name}>
+              <View style={styles.itemRow}>
+                {icons[itemIndex]}
+                <Text style={styles.itemName}>{item.name}</Text>
+                <Text style={styles.price}>{item.price} EGP / Item</Text>
+                <Text style={styles.weight}>{item.quantity} Items</Text>
               </View>
-            ))}
-          </View>
-        ))}
+
+              <View style={styles.quantityContainer}>
+                <Button
+                  circular
+                  size={"$2"}
+                  icon={Plus}
+                  borderColor="$color"
+                  borderWidth={1.5}
+                  backgroundColor="transparent"
+                  pressStyle={{ opacity: 0.5 }}
+                  color={"black"}
+                  onPress={() => increaseWeight(itemIndex)}
+                />
+
+                <View>
+                  <Text>{quantities[itemIndex]} Item</Text>
+                </View>
+
+                <Button
+                  circular
+                  size={"$2"}
+                  icon={Minus}
+                  borderColor="$color"
+                  borderWidth={1.5}
+                  backgroundColor="transparent"
+                  pressStyle={{ opacity: 0.5 }}
+                  color={"black"}
+                  onPress={() => decreaseWeight(itemIndex)}
+                />
+
+                <TouchableOpacity
+                  style={[
+                    styles.addButton,
+                    cart[itemIndex] ? styles.cancelButton : null,
+                  ]}
+                  onPress={() => toggleCart(itemIndex)}
+                >
+                  <Text style={styles.addButtonText}>
+                    {cart[itemIndex] ? "Cancel" : "Add to cart"}
+                  </Text>
+                  <FontAwesome5
+                    name={cart[itemIndex] ? "times" : "shopping-cart"}
+                    size={16}
+                    color="white"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </>
   );

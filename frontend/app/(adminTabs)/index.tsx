@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import Logo from "@/components/Logo";
+import { Picker } from "@react-native-picker/picker";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -9,14 +9,22 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Toast from "react-native-toast-message";
+import { useInventory } from "@/store/InventoryContext";
 
 export default function AddScreen() {
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Plastic");
   const [weight, setWeight] = useState("");
   const [price, setPrice] = useState("");
 
+  const { addItem } = useInventory();
+
   const handleSave = () => {
-    setCategory("");
+    addItem({
+      name: category,
+      quantity: parseInt(weight),
+      price: parseFloat(price),
+    });
+    setCategory("Plastic");
     setWeight("");
     setPrice("");
     Toast.show({
@@ -31,12 +39,19 @@ export default function AddScreen() {
       <View style={styles.container}>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Category</Text>
-          <TextInput
-            style={styles.input}
-            value={category}
-            onChangeText={setCategory}
-            placeholder="Plastic"
-          />
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={category}
+              onValueChange={(itemValue) => setCategory(itemValue)}
+              style={styles.picker}
+            >
+              <Picker.Item label="Plastic" value="Plastic" />
+              <Picker.Item label="Paper" value="Paper" />
+              <Picker.Item label="Metal" value="Metal" />
+              <Picker.Item label="Glass" value="Glass" />
+              <Picker.Item label="Cardboard" value="Cardboard" />
+            </Picker>
+          </View>
 
           <View style={styles.row}>
             <View style={styles.column}>
@@ -63,10 +78,6 @@ export default function AddScreen() {
           <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.saveButtonText}>Save</Text>
           </TouchableOpacity>
-
-          {/* <TouchableOpacity style={styles.deleteButton}>
-          <Text style={styles.deleteButtonText}>Delete</Text>
-        </TouchableOpacity> */}
         </View>
       </View>
     </>
@@ -145,5 +156,17 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: "#fff",
     fontSize: 16,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: "20%",
+    backgroundColor: "white",
+  },
+  picker: {
+    height: 50,
+    width: "100%",
+    borderRadius: 20,
   },
 });
