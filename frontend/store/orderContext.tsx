@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext } from "react";
 import Toast from "react-native-toast-message";
-import axios from 'axios';
+import axios from "axios";
 import { getToken } from "../utils/tokenHandlers";
 // import { useAuth } from './context';
 
@@ -13,7 +13,7 @@ interface OrderItem {
     sellerId: string;
   }[];
   totalQuantity: number;
-  status: 'pending' | 'delivered' | 'cancelled';
+  status: "pending" | "delivered" | "cancelled";
   createdAt: Date;
   pickupDate: Date;
   pickupTime: string;
@@ -25,22 +25,34 @@ interface OrderItem {
 
 interface OrderContextType {
   orders: OrderItem[];
-  addOrder: (items: OrderItem['items'], pickupDetails: {
-    pickupDate: Date;
-    pickupTime: string;
-    pickupAddress: string;
-  }, buyerId: string, sellerIds: string[]) => Promise<void>;
-  updateOrderStatus: (orderId: string, status: OrderItem['status']) => Promise<void>;
+  addOrder: (
+    items: OrderItem["items"],
+    pickupDetails: {
+      pickupDate: Date;
+      pickupTime: string;
+      pickupAddress: string;
+    },
+    buyerId: string,
+    sellerIds: string[]
+  ) => Promise<void>;
+  updateOrderStatus: (
+    orderId: string,
+    status: OrderItem["status"]
+  ) => Promise<void>;
   getOrderHistory: () => Promise<void>;
   isProcessingOrder: boolean;
   isLoading: boolean;
 }
 
 // const BASE_URL = "http://192.168.1.2:3000/api/order";
-const BASE_URL = "http://192.168.1.4:3000/api/order";
+// const BASE_URL = "http://192.168.1.4:3000/api/order";
+const BASE_URL = "http://192.168.1.104:3000/api/order";
+
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
-export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,18 +63,18 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       const token = await getToken();
       const response = await axios.get(BASE_URL, {
-        headers: { token }
+        headers: { token },
       });
 
       const ordersWithDates = response.data.map((order: any) => ({
         ...order,
         pickupDate: new Date(order.pickupDate),
-        createdAt: new Date(order.createdAt)
+        createdAt: new Date(order.createdAt),
       }));
 
       setOrders(ordersWithDates);
     } catch (error: any) {
-      console.error('Failed to fetch orders:', error);
+      console.error("Failed to fetch orders:", error);
       Toast.show({
         text1: "Failed to fetch order history",
         text2: error.response?.data?.message || "Please try again",
@@ -73,16 +85,24 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const addOrder = async (items: OrderItem['items'], pickupDetails: {
-    pickupDate: Date;
-    pickupTime: string;
-    pickupAddress: string;
-  }, buyerId: string, sellerIds: string[]) => {
+  const addOrder = async (
+    items: OrderItem["items"],
+    pickupDetails: {
+      pickupDate: Date;
+      pickupTime: string;
+      pickupAddress: string;
+    },
+    buyerId: string,
+    sellerIds: string[]
+  ) => {
     setIsProcessingOrder(true);
     try {
       const token = await getToken();
-      const totalPrice = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      
+      const totalPrice = items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
       // const sellerIds: string[] = [];
       // sellerIds.push(authUser._id);
       // let buyerId = "";
@@ -100,23 +120,23 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       };
 
       const response = await axios.post(`${BASE_URL}/add`, orderData, {
-        headers: { token }
+        headers: { token },
       });
 
       const orderWithDate = {
         ...response.data,
         pickupDate: new Date(response.data.pickupDate),
-        createdAt: new Date(response.data.createdAt)
+        createdAt: new Date(response.data.createdAt),
       };
 
-      setOrders(prevOrders => [...prevOrders, orderWithDate]);
+      setOrders((prevOrders) => [...prevOrders, orderWithDate]);
       Toast.show({
         text1: "Order placed successfully",
         type: "success",
       });
       return orderWithDate;
     } catch (error: any) {
-      console.error('Failed to place order:', error);
+      console.error("Failed to place order:", error);
       Toast.show({
         text1: "Failed to place order",
         text2: error.response?.data?.message || "Please try again",
@@ -128,18 +148,22 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const updateOrderStatus = async (orderId: string, status: OrderItem['status']) => {
+  const updateOrderStatus = async (
+    orderId: string,
+    status: OrderItem["status"]
+  ) => {
     try {
       console.log("orderId ", orderId);
       console.log("status ", status);
       const token = await getToken();
-      const response = await axios.patch(`${BASE_URL}/${orderId}`, 
+      const response = await axios.patch(
+        `${BASE_URL}/${orderId}`,
         { status },
         { headers: { token } }
       );
 
-      setOrders(prevOrders =>
-        prevOrders.map(order =>
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
           order._id === orderId ? response.data : order
         )
       );
@@ -149,7 +173,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         type: "success",
       });
     } catch (error: any) {
-      console.error('Failed to update order:', error);
+      console.error("Failed to update order:", error);
       Toast.show({
         text1: "Failed to update order status",
         text2: error.response?.data?.message || "Please try again",
@@ -178,7 +202,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useOrders = () => {
   const context = useContext(OrderContext);
   if (!context) {
-    throw new Error('useOrders must be used within an OrderProvider');
+    throw new Error("useOrders must be used within an OrderProvider");
   }
   return context;
-}; 
+};

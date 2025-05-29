@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Separator } from "tamagui";
 import { useAuth } from "../store/context.tsx";
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -72,13 +72,13 @@ export default function LoginScreen() {
   const handleEmailChange = (text) => {
     setEmail(text);
     const emailError = validateEmail(text);
-    setErrors(prev => ({ ...prev, email: emailError }));
+    setErrors((prev) => ({ ...prev, email: emailError }));
   };
 
   const handlePasswordChange = (text) => {
     setPassword(text);
     const passwordError = validatePassword(text);
-    setErrors(prev => ({ ...prev, password: passwordError }));
+    setErrors((prev) => ({ ...prev, password: passwordError }));
   };
 
   const handleLogin = async () => {
@@ -114,10 +114,16 @@ export default function LoginScreen() {
 
       {/* Email */}
       <Text style={styles.label}>Email</Text>
-      <View style={[
-        styles.inputContainer,
-        errors.email ? styles.inputError : isEmailValid ? styles.inputSuccess : null
-      ]}>
+      <View
+        style={[
+          styles.inputContainer,
+          errors.email
+            ? styles.inputError
+            : isEmailValid
+            ? styles.inputSuccess
+            : null,
+        ]}
+      >
         <TextInput
           style={styles.input}
           placeholder="Enter your Email"
@@ -142,10 +148,16 @@ export default function LoginScreen() {
 
       {/* Password */}
       <Text style={styles.label}>Password</Text>
-      <View style={[
-        styles.inputContainer,
-        errors.password ? styles.inputError : isPasswordValid ? styles.inputSuccess : null
-      ]}>
+      <View
+        style={[
+          styles.inputContainer,
+          errors.password
+            ? styles.inputError
+            : isPasswordValid
+            ? styles.inputSuccess
+            : null,
+        ]}
+      >
         <TextInput
           style={styles.input}
           placeholder="Enter your Password"
@@ -175,11 +187,11 @@ export default function LoginScreen() {
       <Text style={styles.forgetPasswordLink}>Forget Password?</Text>
 
       {/* Login Button */}
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[
           styles.button,
-          (!isEmailValid || !isPasswordValid) && styles.buttonDisabled
-        ]} 
+          (!isEmailValid || !isPasswordValid) && styles.buttonDisabled,
+        ]}
         onPress={handleLogin}
         disabled={!isEmailValid || !isPasswordValid}
       >
@@ -324,10 +336,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     marginBottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
   },
   loginLink: {
     color: "#2B4B40",
@@ -343,26 +355,26 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
   },
   errorText: {
-    color: '#FF5252',
+    color: "#FF5252",
     fontSize: 12,
     marginTop: -15,
     marginBottom: 10,
     marginLeft: 5,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   inputError: {
-    borderColor: '#FF5252',
+    borderColor: "#FF5252",
     borderWidth: 1,
   },
   inputSuccess: {
-    borderColor: '#4CAF50',
+    borderColor: "#4CAF50",
     borderWidth: 1,
   },
   validationIcon: {
     padding: 10,
   },
   buttonDisabled: {
-    backgroundColor: '#cccccc',
+    backgroundColor: "#cccccc",
     opacity: 0.7,
   },
 });

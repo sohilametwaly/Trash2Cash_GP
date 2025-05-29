@@ -1,8 +1,8 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect } from "react";
 import Toast from "react-native-toast-message";
 import { getToken } from "../utils/tokenHandlers";
-import axios from 'axios';
-import { useAuth } from './context';
+import axios from "axios";
+import { useAuth } from "./context";
 
 interface CartItem {
   _id: string;
@@ -24,11 +24,14 @@ interface CartContextType {
 }
 
 // const BASE_URL = "http://192.168.1.2:3000/api/cart";
-const BASE_URL = "http://192.168.1.4:3000/api/cart";
+// const BASE_URL = "http://192.168.1.4:3000/api/cart";
+const BASE_URL = "http://192.168.1.104:3000/api/cart";
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -51,19 +54,19 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addToCart = (item: CartItem) => {
     setIsAddingToCart(true);
     try {
-      setCartItems(prevItems => {
+      setCartItems((prevItems) => {
         const existingItem = prevItems.find(
-          cartItem => cartItem.wasteType === item.wasteType
+          (cartItem) => cartItem.wasteType === item.wasteType
         );
 
         if (existingItem) {
-          return prevItems.map(cartItem => 
+          return prevItems.map((cartItem) =>
             cartItem.wasteType === item.wasteType
               ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
               : cartItem
           );
         }
-        
+
         return [...prevItems, item];
       });
 
@@ -83,8 +86,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const removeFromCart = (itemId: string) => {
     try {
-      setCartItems(prevItems => {
-        const newItems = prevItems.filter(item => item._id !== itemId);
+      setCartItems((prevItems) => {
+        const newItems = prevItems.filter((item) => item._id !== itemId);
         return [...newItems];
       });
       Toast.show({
@@ -105,8 +108,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateCartItemQuantity = (itemId: string, newQuantity: number) => {
     try {
-      setCartItems(prevItems => {
-        const updatedItems = prevItems.map(item =>
+      setCartItems((prevItems) => {
+        const updatedItems = prevItems.map((item) =>
           item._id.toString() === itemId
             ? { ...item, quantity: newQuantity }
             : item
@@ -114,11 +117,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return [...updatedItems];
       });
     } catch (error) {
-      console.error('Failed to update quantity:', error);
+      console.error("Failed to update quantity:", error);
       Toast.show({
-        type: 'error',
-        text1: 'Update Failed',
-        text2: 'Failed to update quantity'
+        type: "error",
+        text1: "Update Failed",
+        text2: "Failed to update quantity",
       });
     }
   };
@@ -144,7 +147,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error("useCart must be used within a CartProvider");
   }
   return context;
-}; 
+};

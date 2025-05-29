@@ -5,10 +5,11 @@ import { useRouter } from "expo-router";
 
 import { getToken, saveToken, removeToken } from "../utils/tokenHandlers";
 
-// const BASE_URL = "http://192.168.1.104:3000/api/user";
+// const BASE_URL = "http://localhost:3000/api/user";
 // const BASE_URL = "http://192.168.1.7:3000/api/user";
 // const BASE_URL = "http://192.168.3.246:3000/api/user";
-const BASE_URL = "http://192.168.1.4:3000/api/user";
+// const BASE_URL = "http://192.168.1.4:3000/api/user";
+const BASE_URL = "http://192.168.1.104:3000/api/user";
 
 interface LoginData {
   email: string;
@@ -85,10 +86,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         type: "success",
       });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.msg || 
-        error.response?.data?.message || 
+      const errorMessage =
+        error.response?.data?.msg ||
+        error.response?.data?.message ||
         "Failed to create account. Please try again.";
-      
+
       Toast.show({
         text1: "Sign Up Error",
         text2: errorMessage,
@@ -113,7 +115,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         type: "success",
       });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.msg || 
+      const errorMessage =
+        error.response?.data?.msg ||
         error.response?.data?.message ||
         "Invalid email or password";
 
@@ -139,7 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         type: "success",
       });
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
@@ -159,9 +162,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         text2: "Your profile image was updated successfully",
       });
     } catch (error: any) {
-      const errorMessage = error.response?.data?.msg || 
+      const errorMessage =
+        error.response?.data?.msg ||
         "Failed to update profile image. Please try again.";
-      
+
       Toast.show({
         text1: "Profile Image Error",
         text2: errorMessage,
