@@ -3,7 +3,7 @@ import { User } from "../models/user.js";
 
 export const validateUser = async (req, res, next) => {
   const token = req.header("token");
-  // console.log("Middleware Validate token: ", token);
+
   if (!token) {
     return res.status(401).json({ msg: "No token, authorization denied" });
   }
@@ -12,7 +12,6 @@ export const validateUser = async (req, res, next) => {
     if (!verify) {
       return res.status(401).json({ msg: "Not authorized" });
     }
-
     const user = await User.findById(verify.userId).select("-password");
 
     if (!user) {
