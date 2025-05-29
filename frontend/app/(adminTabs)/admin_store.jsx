@@ -20,9 +20,12 @@ import {
   ShoppingCart,
 } from "lucide-react-native";
 import { useInventory } from "@/store/InventoryContext";
+import { useCart } from "@/store/cartContext";
+import Toast from "react-native-toast-message";
 
 export default function AdminStore() {
   const { adminShop, getAdminShop } = useInventory();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     getAdminShop();
@@ -71,7 +74,7 @@ export default function AdminStore() {
   const increaseWeight = (companyIndex, itemIndex) => {
     setQuantities((prevQuantities) => {
       const updatedQuantities = [...prevQuantities];
-      updatedQuantities[companyIndex][itemIndex] += 50;
+      updatedQuantities[companyIndex][itemIndex] += 5;
       return updatedQuantities;
     });
   };
@@ -79,8 +82,8 @@ export default function AdminStore() {
   const decreaseWeight = (companyIndex, itemIndex) => {
     setQuantities((prevQuantities) => {
       const updatedQuantities = [...prevQuantities];
-      if (updatedQuantities[companyIndex][itemIndex] > 100) {
-        updatedQuantities[companyIndex][itemIndex] -= 50;
+      if (updatedQuantities[companyIndex][itemIndex] >= 5) {
+        updatedQuantities[companyIndex][itemIndex] -= 5;
       }
       return updatedQuantities;
     });
@@ -103,6 +106,13 @@ export default function AdminStore() {
     });
   };
 
+  const handleAddToCart = (item) => {
+    addToCart(item);
+    Toast.show({
+      type: "success",
+      text1: `${item.quantity} items of ${item.wasteType} added to cart`,
+    });
+  }
   return (
     <ScrollView>
       <Header />
@@ -163,14 +173,15 @@ export default function AdminStore() {
                     styles.addButton,
                     cart[companyIndex][itemIndex] ? styles.cancelButton : null,
                   ]}
-                  onPress={() => toggleCart(companyIndex, itemIndex)}
+                  // onPress={() => toggleCart(companyIndex, itemIndex)}
+                  onPress={() => handleAddToCart({_id:`${companyIndex}-${itemIndex}`, wasteType: item.name, quantity: quantities[companyIndex][itemIndex], price: item.price, sellerId: company.companyId})}
                 >
                   <Text style={styles.addButtonText}>
-                    {cart[companyIndex][itemIndex] ? "Cancel" : "Add to cart"}
+                    {"Add to cart"}
                   </Text>
                   <FontAwesome5
                     name={
-                      cart[companyIndex][itemIndex] ? "times" : "shopping-cart"
+                     "shopping-cart"
                     }
                     size={16}
                     color="white"

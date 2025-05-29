@@ -24,7 +24,7 @@ import { InventProvider } from "@/store/InventoryContext";
 const config = createTamagui(defaultConfig);
 
 export default function RootLayout() {
-  console.log("🚀 RootLayout rendering");
+  // console.log("🚀 RootLayout rendering");
   const [isReady, setIsReady] = useState(false);
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
   const colorScheme = useColorScheme();
@@ -35,16 +35,16 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepare() {
       try {
-        console.log("🚀 Preparing RootLayout");
+        // console.log("🚀 Preparing RootLayout");
         await SplashScreen.preventAutoHideAsync();
         const status = await secureStore.getItemAsync("hasSeenOnboarding");
-        console.log("🚀 Onboarding status:", status);
+        // console.log("🚀 Onboarding status:", status);
         setHasSeenOnboarding(status === "true");
       } catch (err) {
         console.error("Failed to check onboarding status:", err);
       } finally {
         setIsReady(true);
-        console.log("🚀 RootLayout is ready");
+        // console.log("🚀 RootLayout is ready");
       }
     }
 
@@ -55,13 +55,13 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (isAppReady) {
-      console.log("🚀 App is ready, hiding splash screen");
+      // console.log("🚀 App is ready, hiding splash screen");
       SplashScreen.hideAsync();
     }
   }, [isAppReady]);
 
   if (!isAppReady) {
-    console.log("⏳ App not ready yet");
+    // console.log("⏳ App not ready yet");
     return <View style={{ flex: 1 }} />;
   }
 
@@ -79,7 +79,7 @@ export default function RootLayout() {
   //   );
   // }
 
-  console.log("✅ Rendering main app layout");
+  // console.log("✅ Rendering main app layout");
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <TamaguiProvider config={config}>
@@ -109,26 +109,26 @@ function InitialNavigationHandler() {
 
   useEffect(() => {
     if (hasNavigated || authUser === undefined) {
-      console.log("Skip navigation:", {
-        hasNavigated,
-        authUserState: authUser === undefined ? "undefined" : "defined",
-      });
+      // console.log("Skip navigation:", {
+      //   hasNavigated,
+      //   authUserState: authUser === undefined ? "undefined" : "defined",
+      // });
       return;
     }
 
     const timer = setTimeout(() => {
-      console.log("Attempting navigation with auth state:", {
-        exists: !!authUser,
-        role: authUser?.role,
-      });
+      // console.log("Attempting navigation with auth state:", {
+      //   exists: !!authUser,
+      //   role: authUser?.role,
+      // });
 
       setHasNavigated(true);
 
       if (!authUser) {
-        console.log("Navigating to login");
+        // console.log("Navigating to login");
         router.replace("/login");
       } else {
-        console.log("Navigating based on role:", authUser.role);
+        // console.log("Navigating based on role:", authUser.role);
         switch (authUser.role) {
           case "admin":
             router.replace("/(adminTabs)");

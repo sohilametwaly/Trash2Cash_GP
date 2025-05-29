@@ -93,6 +93,7 @@ export const getAdminShop = async (req, res) => {
           _id: 1,
           items: 1,
           userName: "$userInfo.name",
+          companyId: "$userInfo._id",
         },
       },
     ]);

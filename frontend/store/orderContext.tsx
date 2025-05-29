@@ -45,8 +45,8 @@ interface OrderContextType {
 }
 
 // const BASE_URL = "http://192.168.1.2:3000/api/order";
-// const BASE_URL = "http://192.168.1.4:3000/api/order";
-const BASE_URL = "http://192.168.1.104:3000/api/order";
+const BASE_URL = "http://192.168.1.4:3000/api/order";
+// const BASE_URL = "http://192.168.1.104:3000/api/order";
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
@@ -119,6 +119,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
         pickupAddress: pickupDetails.pickupAddress,
       };
 
+      console.log("token ", token);
       const response = await axios.post(`${BASE_URL}/add`, orderData, {
         headers: { token },
       });

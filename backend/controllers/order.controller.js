@@ -3,6 +3,7 @@ import Order from "../models/order.js";
 const createOrder = async (req, res) => {
     try {
         const { buyerId, sellerIds, items, totalPrice, pickupDate, pickupTime, pickupAddress } = req.body;
+
         // console.log("buyerId ", buyerId);
         // console.log("sellerIds ", sellerIds);
         // console.log("items ", items);

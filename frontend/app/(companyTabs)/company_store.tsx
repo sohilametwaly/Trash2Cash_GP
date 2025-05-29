@@ -20,9 +20,12 @@ import {
 } from "lucide-react-native";
 import Header from "@/components/Header";
 import { useInventory } from "@/store/InventoryContext";
+import { useCart } from "@/store/cartContext";
+import Toast from "react-native-toast-message";
 
 export default function CompanyStore() {
   const { companyShop, getCompanyShop } = useInventory();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     getCompanyShop();
@@ -50,7 +53,7 @@ export default function CompanyStore() {
   }, [companyShop]);
 
   const [quantities, setQuantities] = useState<number[]>(
-    companyShop?.items.map((item) => Math.min(item.quantity, 100)) || []
+    companyShop?.items.map((item) => Math.min(item.quantity, 100)) || [0]
   );
 
   const [icons, setIcons] = useState<JSX.Element[]>(
@@ -65,7 +68,7 @@ export default function CompanyStore() {
   const increaseWeight = (itemIndex: number) => {
     setQuantities((prevQuantities) => {
       const updatedQuantities = [...prevQuantities];
-      updatedQuantities[itemIndex] += 50;
+      updatedQuantities[itemIndex] += 5;
       return updatedQuantities;
     });
   };
@@ -73,8 +76,8 @@ export default function CompanyStore() {
   const decreaseWeight = (itemIndex: number) => {
     setQuantities((prevQuantities) => {
       const updatedQuantities = [...prevQuantities];
-      if (updatedQuantities[itemIndex] > 100) {
-        updatedQuantities[itemIndex] -= 50;
+      if (updatedQuantities[itemIndex] >= 5) {
+        updatedQuantities[itemIndex] -= 5;
       }
       return updatedQuantities;
     });
@@ -95,6 +98,14 @@ export default function CompanyStore() {
       return updatedCart;
     });
   };
+
+  const handleAddToCart = (item: any) => {
+    addToCart(item);
+    Toast.show({
+      type: "success",
+      text1: `${item.quantity} items of ${item.wasteType} added to cart`,
+    });
+  }
 
   return (
     <>
@@ -152,15 +163,15 @@ export default function CompanyStore() {
                 <TouchableOpacity
                   style={[
                     styles.addButton,
-                    cart[itemIndex] ? styles.cancelButton : null,
                   ]}
-                  onPress={() => toggleCart(itemIndex)}
+                  // onPress={() => toggleCart(itemIndex)}
+                  onPress={() => handleAddToCart({_id: itemIndex.toString(), wasteType: item.name, quantity: quantities[itemIndex], price: item.price, sellerId: "67c42cdf06be297aa9b28bd8"})}
                 >
                   <Text style={styles.addButtonText}>
                     {cart[itemIndex] ? "Cancel" : "Add to cart"}
                   </Text>
                   <FontAwesome5
-                    name={cart[itemIndex] ? "times" : "shopping-cart"}
+                    name={"shopping-cart"}
                     size={16}
                     color="white"
                   />
