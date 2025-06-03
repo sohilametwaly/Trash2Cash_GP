@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext } from "react";
 import Toast from "react-native-toast-message";
 import axios from "axios";
 import { getToken } from "../utils/tokenHandlers";
+import { useAuth } from "./context";
 // import { useAuth } from './context';
 
 interface OrderItem {
@@ -33,7 +34,8 @@ interface OrderContextType {
       pickupAddress: string;
     },
     buyerId: string,
-    sellerIds: string[]
+    sellerIds: string[],
+    prices: Record<string, number>
   ) => Promise<void>;
   updateOrderStatus: (
     orderId: string,
@@ -46,6 +48,7 @@ interface OrderContextType {
 
 // const BASE_URL = "http://192.168.1.2:3000/api/order";
 const BASE_URL = "http://192.168.1.4:3000/api/order";
+const USER_URL = "http://192.168.1.4:3000/api/user";
 // const BASE_URL = "http://192.168.1.104:3000/api/order";
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -56,7 +59,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const { authUser } = useAuth();
+  const { authUser, updateBalance } = useAuth();
 
   const getOrderHistory = async () => {
     setIsLoading(true);
@@ -93,15 +96,27 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
       pickupAddress: string;
     },
     buyerId: string,
-    sellerIds: string[]
+    sellerIds: string[],
+    prices: Record<string, number>
   ) => {
     setIsProcessingOrder(true);
     try {
+      console.log("orderContext addOrder1");
       const token = await getToken();
       const totalPrice = items.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
       );
+      prices[buyerId] = -1 * totalPrice
+      await updateBalance(prices)
+      // if(authUser.balance < totalPrice) {
+      //   Toast.show({
+      //     text1: "Insufficient balance",
+      //     type: "error",
+      //   });
+      //   return;
+      // }
+      console.log("orderContext addOrder2");
 
       // const sellerIds: string[] = [];
       // sellerIds.push(authUser._id);
@@ -118,17 +133,23 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
         pickupTime: pickupDetails.pickupTime,
         pickupAddress: pickupDetails.pickupAddress,
       };
-
-      console.log("token ", token);
+      
+      console.log("token OrderContext", token);
       const response = await axios.post(`${BASE_URL}/add`, orderData, {
         headers: { token },
       });
-
+      // console.log("orderContext addOrder3");
+      // const userResponse = await axios.post(`${USER_URL}/updateBalances`, {prices}, {
+      //   headers: { token },
+      // });
+      console.log("orderContext addOrder3");
       const orderWithDate = {
         ...response.data,
         pickupDate: new Date(response.data.pickupDate),
         createdAt: new Date(response.data.createdAt),
       };
+
+      console.log("prices OrderContext", prices);
 
       setOrders((prevOrders) => [...prevOrders, orderWithDate]);
       Toast.show({

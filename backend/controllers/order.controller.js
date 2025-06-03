@@ -4,13 +4,13 @@ const createOrder = async (req, res) => {
     try {
         const { buyerId, sellerIds, items, totalPrice, pickupDate, pickupTime, pickupAddress } = req.body;
 
-        // console.log("buyerId ", buyerId);
-        // console.log("sellerIds ", sellerIds);
-        // console.log("items ", items);
-        // console.log("totalPrice ", totalPrice);
-        // console.log("pickupDate ", pickupDate);
-        // console.log("pickupTime ", pickupTime);
-        // console.log("pickupAddress ", pickupAddress);
+        console.log("buyerId ", buyerId);
+        console.log("sellerIds ", sellerIds);
+        console.log("items ", items);
+        console.log("totalPrice ", totalPrice);
+        console.log("pickupDate ", pickupDate);
+        console.log("pickupTime ", pickupTime);
+        console.log("pickupAddress ", pickupAddress);
         const order = new Order({ buyerId, sellerIds, items, totalPrice, pickupDate, pickupTime, pickupAddress });
         await order.save();
         res.status(201).json(order);

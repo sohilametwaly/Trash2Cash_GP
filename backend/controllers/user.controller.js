@@ -43,3 +43,17 @@ export const getUsers = async (req, res) => {
     res.status(404).json({ error: "Server Error" });
   }
 };
+
+export const updateBalances = async (req, res) => {
+  try {
+    const { prices } = req.body;
+    for(const [userId, price] of Object.entries(prices)) {
+      const user = await User.updateOne({_id: userId}, {$inc: {balance: price}});
+      console.log("user ", user);
+    }
+    res.status(200).json({ message: "Balances updated successfully"});
+  } catch (error) {
+    console.log("error in update balances controller ", error);
+    res.status(404).json({ error: "Server Error" });
+  }
+};

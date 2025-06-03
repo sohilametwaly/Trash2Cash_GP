@@ -35,16 +35,13 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepare() {
       try {
-        // console.log("🚀 Preparing RootLayout");
         await SplashScreen.preventAutoHideAsync();
         const status = await secureStore.getItemAsync("hasSeenOnboarding");
-        // console.log("🚀 Onboarding status:", status);
         setHasSeenOnboarding(status === "true");
       } catch (err) {
         console.error("Failed to check onboarding status:", err);
       } finally {
         setIsReady(true);
-        // console.log("🚀 RootLayout is ready");
       }
     }
 
@@ -55,13 +52,11 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (isAppReady) {
-      // console.log("🚀 App is ready, hiding splash screen");
       SplashScreen.hideAsync();
     }
   }, [isAppReady]);
 
   if (!isAppReady) {
-    // console.log("⏳ App not ready yet");
     return <View style={{ flex: 1 }} />;
   }
 

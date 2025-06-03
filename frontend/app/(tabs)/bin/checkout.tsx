@@ -24,7 +24,7 @@ export default function CheckoutScreen() {
   const { addOrder, isProcessingOrder } = useOrders();
   const { authUser } = useAuth();
 
-  console.log("Checkout cartItems: ", cartItems);
+  // console.log("Checkout cartItems: ", cartItems);
 
   const totalPrice = React.useMemo(() => 
     cartItems.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0),
@@ -36,19 +36,25 @@ export default function CheckoutScreen() {
     pickupTime: string;
     pickupAddress: string;
   }) => {
-    console.log("pickupDetails ", pickupDetails);
+    // console.log("pickupDetails ", pickupDetails);
     try {
-      const orderItems = cartItems.map(item => ({
-        wasteType: item.wasteType,
+      const prices: Record<string, number> = {};
+      const orderItems = cartItems.map(item => {
+        if(!prices[authUser._id]) {
+          prices[authUser._id] = 0
+        }
+        prices[authUser._id] += item.price * item.quantity
+        return {wasteType: item.wasteType,
         quantity: item.quantity,
         price: item.price || 0,
-        sellerId: authUser._id
-      }));
-      console.log("orderItems ", orderItems);
+        sellerId: authUser._id}
+      });
+      console.log("prices ", prices);
+      // console.log("orderItems ", orderItems);
       const buyerId = "67c42cdf06be297aa9b28bd8";
       const sellerIds = [authUser._id];
-      await addOrder(orderItems, pickupDetails, buyerId, sellerIds);
-      await clearCart();
+      await addOrder(orderItems, pickupDetails, buyerId, sellerIds, prices);
+      clearCart();
       Toast.show({
         type: 'success',
         text1: 'Order Placed Successfully',

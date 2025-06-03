@@ -19,7 +19,7 @@ export default function WalletScreen() {
             style={{ alignSelf: "flex-end" }}
           />
         </View>
-        <Text style={styles.balanceText}>Balance: 85 EGP</Text>
+        <Text style={styles.balanceText}>Balance: {authUser?.balance} EGP</Text>
       </View>
       <CardInfoSheet />
     </>

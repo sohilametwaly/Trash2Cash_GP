@@ -37,6 +37,7 @@ interface AuthContextType {
   login: (data: LoginData) => Promise<void>;
   logout: () => Promise<void>;
   changeProfileImg: (profileImg: ImgPayload) => Promise<void>;
+  updateBalance: (prices: Record<string, number>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -178,6 +179,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const updateBalance = async (prices: Record<string, number>) => {
+    try {
+      const token = await getToken();
+      const res = await axios.post(`${BASE_URL}/updateBalances`, { prices }, {
+        headers: { token },
+      });
+      await checkAuth();
+    } catch (error: any) {
+      console.error("Update balance error:", error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -191,6 +204,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         login,
         logout,
         changeProfileImg,
+        updateBalance,
       }}
     >
       {children}

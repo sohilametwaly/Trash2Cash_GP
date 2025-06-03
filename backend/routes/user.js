@@ -6,6 +6,7 @@ import {
   changeProfileImg,
   getCompanies,
   getUsers,
+  updateBalances,
 } from "../controllers/user.controller.js";
 
 const router = Router();
@@ -21,5 +22,7 @@ router.get("/profile", validateUser, getProfile);
 router.get("/getCompanies", validateUser, getCompanies);
 
 router.get("/getUsers", validateUser, getUsers);
+
+router.post("/updateBalances", validateUser, updateBalances);
 
 export default router;

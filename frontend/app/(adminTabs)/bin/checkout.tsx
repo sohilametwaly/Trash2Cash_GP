@@ -128,16 +128,21 @@ export default function CheckoutScreen() {
   }) => {
     console.log("pickupDetails ", pickupDetails);
     try {
-      const orderItems = cartItems.map(item => ({
-        wasteType: item.wasteType,
+      const prices: Record<string, number> = {};
+      const orderItems = cartItems.map(item => {
+        if(!prices[item.sellerId]) {
+          prices[item.sellerId] = 0
+        }
+        prices[item.sellerId] += item.price * item.quantity
+        return {wasteType: item.wasteType,
         quantity: item.quantity,
         price: item.price || 0,
-        sellerId: item.sellerId
-      }));
+        sellerId: item.sellerId}
+      });
       console.log("orderItems ", orderItems);
       const buyerId = authUser._id;
       const sellerIds = [...new Set(orderItems.map(item => item.sellerId))];
-      await addOrder(orderItems, pickupDetails, buyerId, sellerIds);
+      await addOrder(orderItems, pickupDetails, buyerId, sellerIds, prices);
       clearCart();
       Toast.show({
         type: 'success',

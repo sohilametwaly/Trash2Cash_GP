@@ -3,9 +3,13 @@ import { Text, View, StyleSheet, Image } from "react-native";
 import { CardInfoSheet } from "@/components/cardInfoSheet";
 import Header from "@/components/Header";
 import { useAuth } from "@/store/context";
+import { useEffect } from "react";
 
 export default function WalletScreen() {
   const { authUser } = useAuth();
+  useEffect(() => {
+    console.log("authUser ", authUser);
+  }, [authUser?.balance]);
 
   return (
     <>
@@ -19,7 +23,7 @@ export default function WalletScreen() {
             style={{ alignSelf: "flex-end" }}
           />
         </View>
-        <Text style={styles.balanceText}>Balance: 85 EGP</Text>
+        <Text style={styles.balanceText}>Balance: {authUser?.balance} EGP</Text>
       </View>
       <CardInfoSheet />
     </>
