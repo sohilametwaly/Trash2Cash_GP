@@ -9,43 +9,6 @@ const chartConfig = {
   useShadowColorFromDataset: false, // optional
 };
 
-const data = [
-  {
-    name: "Plastic",
-    population: 21500000,
-    color: "rgba(131, 167, 234, 1)",
-    legendFontColor: "#7F7F7F",
-    legendFontSize: 15,
-  },
-  {
-    name: "Cardboard",
-    population: 11920000,
-    color: "rgb(0, 0, 255)",
-    legendFontColor: "#7F7F7F",
-    legendFontSize: 15,
-  },
-  {
-    name: "Paper",
-    population: 8538000,
-    color: "#2B4B40",
-    legendFontColor: "#7F7F7F",
-    legendFontSize: 15,
-  },
-  {
-    name: "Metal",
-    population: 2800000,
-    color: "#F00",
-    legendFontColor: "#7F7F7F",
-    legendFontSize: 15,
-  },
-  {
-    name: "Glass",
-    population: 527612,
-    color: "purple",
-    legendFontColor: "#7F7F7F",
-    legendFontSize: 15,
-  },
-];
 import { PieChart } from "react-native-chart-kit";
 import Container from "@/components/Container";
 import { ScrollView, Text, View } from "tamagui";
@@ -59,8 +22,100 @@ import {
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { useDash } from "@/store/dashBoard";
+import { useState } from "react";
 
 const DashboardScreen = () => {
+  const [data, setData] = useState([]);
+  const {
+    users,
+    companies,
+    income,
+    expenses,
+    chartData,
+    getChartData,
+    getExpenses,
+    getIncome,
+    getUsers,
+    getCompanies,
+  } = useDash();
+
+  useEffect(() => {
+    getUsers();
+    getCompanies();
+    getIncome();
+    getExpenses();
+    getChartData();
+  }, [
+    users,
+    companies,
+    getCompanies,
+    getUsers,
+    getIncome,
+    income,
+    getExpenses,
+    expenses,
+    getChartData,
+    chartData,
+  ]);
+
+  useEffect(() => {
+    const updatedData = chartData.map((item) => {
+      switch (item.name) {
+        case "Metal":
+          return {
+            color: "#F00",
+            name: item.name,
+            population: item.population,
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          };
+        case "Glass":
+          return {
+            color: "purple",
+            name: item.name,
+            population: item.population,
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          };
+        case "Paper":
+          return {
+            color: "#2B4B40",
+            name: item.name,
+            population: item.population,
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          };
+        case "Plastic":
+          return {
+            color: "rgba(131, 167, 234, 1)",
+            name: item.name,
+            population: item.population,
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          };
+        case "Cardboard":
+          return {
+            color: "rgb(0, 0, 255)",
+            name: item.name,
+            population: item.population,
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          };
+        default:
+          return {
+            color: "rgb(0, 0, 255)",
+            name: item.name,
+            population: item.population,
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          };
+      }
+    });
+    setData(updatedData);
+  }, [chartData]);
+
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <Container>
@@ -69,26 +124,30 @@ const DashboardScreen = () => {
           <StatCard
             icon={<User color={"black"} size={48} />}
             title={"Regular Users"}
-            value={"115"}
+            value={users.length}
             navigateToUsers={true}
+            data={users}
           />
           <StatCard
             icon={<Building color={"black"} size={48} />}
             title={"Companies"}
-            value={"30"}
+            value={companies.length}
             navigateToUsers={true}
+            data={companies}
           />
           <StatCard
             icon={<TrendingUp color={"green"} size={48} />}
             title={"Income"}
-            value={"2113 EGP"}
+            value={`${income} EGP`}
             navigateToUsers={false}
+            data={""}
           />
           <StatCard
             icon={<TrendingDown color={"red"} size={48} />}
             title={"Expense"}
-            value={"1520 EGP"}
+            value={`${expenses} EGP`}
             navigateToUsers={false}
+            data={""}
           />
         </View>
         <View style={styles.section}>
@@ -108,14 +167,16 @@ const DashboardScreen = () => {
   );
 };
 
-const StatCard = ({ icon, title, value, navigateToUsers }) => {
+const StatCard = ({ icon, title, value, navigateToUsers, data }) => {
   const router = useRouter();
   const handleNavigateToUsers = () => {
-    router.push(
-      `/profile/dashboard/users?type=${
-        title == "Regular Users" ? "User" : "Company"
-      }`
-    );
+    router.push({
+      pathname: `/profile/dashboard/users`,
+      params: {
+        data: JSON.stringify(data),
+        type: title == "Regular Users" ? "User" : "Company",
+      },
+    });
   };
   return (
     <View style={styles.Card}>

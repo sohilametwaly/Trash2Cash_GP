@@ -10,14 +10,15 @@ import { Colors } from "@/constants/Colors";
 import Container from "@/components/Container";
 import Header from "@/components/Header";
 import Toast from "react-native-toast-message";
-import { useCart } from '@/store/cartContext';
-import { useOrders } from '@/store/orderContext';
+import { useCart } from "@/store/cartContext";
+import { useOrders } from "@/store/orderContext";
 
-const products = [{id: 1, Category: "Plastic", quantity: 5},
-  {id: 2, Category: "Paper", quantity: 10},
-  {id: 3, Category: "Glass", quantity: 3},
-  {id: 4, Category: "Metal", quantity: 2},
-  {id: 5, Category: "Other", quantity: 1},
+const products = [
+  { id: 1, Category: "Plastic", quantity: 5 },
+  { id: 2, Category: "Paper", quantity: 10 },
+  { id: 3, Category: "Glass", quantity: 3 },
+  { id: 4, Category: "Metal", quantity: 2 },
+  { id: 5, Category: "Other", quantity: 1 },
 ];
 
 export default function CameraScreen() {
@@ -63,13 +64,8 @@ export default function CameraScreen() {
     }
   };
 
-  const renderProductItem = ({ item, index }: { item: any, index: number }) => (
-    <XStack 
-      key={index} 
-      style={styles.productRow}
-      gap={5} 
-      alignSelf="center"
-    >
+  const renderProductItem = ({ item, index }: { item: any; index: number }) => (
+    <XStack key={index} style={styles.productRow} gap={5} alignSelf="center">
       <YStack width={100}>
         <Input
           disabled
@@ -78,11 +74,7 @@ export default function CameraScreen() {
         />
       </YStack>
       <YStack width={180}>
-        <Input 
-          value={item.Category} 
-          disabled 
-          style={styles.disabledInput}
-        />
+        <Input value={item.Category} disabled style={styles.disabledInput} />
       </YStack>
     </XStack>
   );
@@ -103,21 +95,19 @@ export default function CameraScreen() {
   );
 
   const ListEmptyComponent = () => (
-    <Text style={styles.emptyText}>
-      No products available
-    </Text>
+    <Text style={styles.emptyText}>No products available</Text>
   );
 
   // Add to cart handler
   const handleAddToCart = () => {
     if (products.length > 0) {
-      products.forEach(product => {
+      products.forEach((product) => {
         addToCart({
           _id: product.id.toString(),
           wasteType: product.Category,
           quantity: product.quantity,
           price: 0.5,
-          sellerId: authUser._id
+          sellerId: authUser._id,
         });
       });
     }
@@ -158,10 +148,9 @@ export default function CameraScreen() {
           )}
         </TouchableOpacity>
         {/* <Text style={styles.result}>20 KG Plastic</Text> */}
-         
 
         {/* Products List */}
-        {products.length > 0 && (<ListHeader />)}
+        {products.length > 0 && <ListHeader />}
         <View style={styles.listContainer}>
           <FlatList
             data={products}
@@ -170,7 +159,7 @@ export default function CameraScreen() {
             // ListHeaderComponent={ListHeader}
             ListEmptyComponent={ListEmptyComponent}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.listContent} 
+            contentContainerStyle={styles.listContent}
           />
         </View>
 
@@ -206,20 +195,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     // marginBottom: 10,
     // borderRadius: 8,
-    width: '90%',
+    width: "90%",
   },
   productRow: {
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
     paddingVertical: 8,
-    width: '100%',
+    width: "100%",
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 6,
   },
   disabledInput: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#f9f9f9",
     opacity: 0.8,
   },
   header: {
@@ -273,14 +262,14 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 300, // Adjust this height based on your needs
     marginVertical: 10,
-    marginTop:0
+    marginTop: 0,
   },
   listContent: {
     paddingHorizontal: 10,
   },
   emptyText: {
-    textAlign: 'center',
-    color: '#666',
+    textAlign: "center",
+    color: "#666",
     marginTop: 20,
     fontSize: 14,
   },

@@ -47,9 +47,10 @@ interface OrderContextType {
 }
 
 // const BASE_URL = "http://192.168.1.2:3000/api/order";
-const BASE_URL = "http://192.168.1.4:3000/api/order";
-const USER_URL = "http://192.168.1.4:3000/api/user";
-// const BASE_URL = "http://192.168.1.104:3000/api/order";
+// const BASE_URL = "http://192.168.1.4:3000/api/order";
+// const USER_URL = "http://192.168.1.4:3000/api/user";
+const BASE_URL = "http://192.168.1.104:3000/api/order";
+const USER_URL = "http://192.168.1.104:3000/api/user";
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
@@ -107,8 +108,8 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
         (sum, item) => sum + item.price * item.quantity,
         0
       );
-      prices[buyerId] = -1 * totalPrice
-      await updateBalance(prices)
+      prices[buyerId] = -1 * totalPrice;
+      await updateBalance(prices);
       // if(authUser.balance < totalPrice) {
       //   Toast.show({
       //     text1: "Insufficient balance",
@@ -133,7 +134,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({
         pickupTime: pickupDetails.pickupTime,
         pickupAddress: pickupDetails.pickupAddress,
       };
-      
+
       console.log("token OrderContext", token);
       const response = await axios.post(`${BASE_URL}/add`, orderData, {
         headers: { token },

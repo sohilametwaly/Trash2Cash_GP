@@ -3,8 +3,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import { getToken } from "../utils/tokenHandlers";
 
-// const BASE_URL = "http://192.168.1.104:3000/api/inventory";
-const BASE_URL = "http://192.168.1.4:3000/api/inventory";
+const BASE_URL = "http://192.168.1.104:3000/api/inventory";
+// const BASE_URL = "http://192.168.1.4:3000/api/inventory";
 //const BASE_URL = 'http://192.168.1.7:3000/api/inventory'
 
 interface Inventory {

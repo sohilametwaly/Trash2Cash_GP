@@ -2,7 +2,7 @@ import { Card, Paragraph, YStack, XStack, Button } from "tamagui";
 import { StyleSheet, View, Text } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 import { Anvil, Book, Milk, Package, Wine } from "lucide-react-native";
 import { SelectItem } from "./SelectInput";
@@ -10,10 +10,10 @@ import { useOrders } from "@/store/orderContext";
 
 export default function HistoryCard({ order, role, pending }) {
   const { updateOrderStatus } = useOrders();
-  console.log("order ", order);
-  const formattedDate = order.pickupDate ? 
-    format(new Date(order.pickupDate), 'dd/MM/yyyy') : 
-    'Not scheduled';
+  // console.log("order ", order);
+  const formattedDate = order.pickupDate
+    ? format(new Date(order.pickupDate), "dd/MM/yyyy")
+    : "Not scheduled";
 
   const handleCancel = () => {
     updateOrderStatus(order._id, "cancelled");
@@ -36,9 +36,18 @@ export default function HistoryCard({ order, role, pending }) {
         }}
       >
         <Card.Header style={role == "admin" ? styles.header : ""}>
-          <Paragraph style={styles.date}>Pickup date: {formattedDate}</Paragraph>
+          <Paragraph style={styles.date}>
+            Pickup date: {formattedDate}
+          </Paragraph>
           {role == "admin" && (
-            <Paragraph style={styles.date}>{order.user}</Paragraph>
+            <View style={{ flexDirection: "column" }}>
+              <Paragraph style={styles.date}>
+                Buyer: {order.buyerInfo.name}
+              </Paragraph>
+              <Paragraph style={styles.date}>
+                Seller: {order.sellerInfo.name}
+              </Paragraph>
+            </View>
           )}
         </Card.Header>
         {order.items.map((item) => {
@@ -146,13 +155,13 @@ function CardRow({ wasteType, quantity, price }) {
           <Text
             style={{ fontSize: 11, color: Colors.header, fontWeight: "500" }}
           >
-            EGP/Unit
+            EGP/ Item
           </Text>
         </Text>
       </View>
 
       <View style={styles.weightContainer}>
-        <Text>{quantity.toString().padStart(2, "0")} Unit</Text>
+        <Text>{quantity.toString().padStart(2, "0")} Item</Text>
       </View>
     </View>
   );
