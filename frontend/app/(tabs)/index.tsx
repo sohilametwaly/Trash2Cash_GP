@@ -12,6 +12,7 @@ import Header from "@/components/Header";
 import Toast from "react-native-toast-message";
 import { useCart } from "@/store/cartContext";
 import { useOrders } from "@/store/orderContext";
+import { useModel } from "@/store/modelContext";
 
 const products = [
   { id: 1, Category: "Plastic", quantity: 5 },
@@ -25,6 +26,7 @@ export default function CameraScreen() {
   const { authUser } = useAuth();
   const [image, setImage] = useState("");
   const { addToCart, isAddingToCart } = useCart();
+  const { predictionResult, isPredicting, error, predictFromImage, clearPrediction } = useModel();
 
   const openCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -41,6 +43,8 @@ export default function CameraScreen() {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      // TODO--> Uncomment this when the model is ready
+      predictFromImage(result.assets[0].uri);
     }
   };
 
@@ -61,6 +65,8 @@ export default function CameraScreen() {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      // TODO--> Uncomment this when the model is ready
+      predictFromImage(result.assets[0].uri);
     }
   };
 
@@ -138,7 +144,11 @@ export default function CameraScreen() {
               <Image source={{ uri: image }} style={styles.imagePreview} />
               <TouchableOpacity
                 style={styles.removeButton}
-                onPress={() => setImage("")}
+                onPress={() => {
+                  setImage("")
+                  // TODO--> Uncomment this when the model is ready
+                  // clearPrediction()
+                }}
               >
                 <X size={24} color="white" />
               </TouchableOpacity>
@@ -147,13 +157,21 @@ export default function CameraScreen() {
             <CameraIcon size={30} color={"#E0E0E0"} />
           )}
         </TouchableOpacity>
-        {/* <Text style={styles.result}>20 KG Plastic</Text> */}
 
+        {/* {isPredicting && (
+          <View style={{
+            padding: 20,
+            alignItems: 'center',
+          }}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={{ marginTop: 10 }}>Analyzing image...</Text>
+          </View>
+        )} */}
         {/* Products List */}
-        {products.length > 0 && <ListHeader />}
+        {predictionResult && predictionResult.length > 0 && <ListHeader />}
         <View style={styles.listContainer}>
           <FlatList
-            data={products}
+            data={predictionResult}
             renderItem={renderProductItem}
             keyExtractor={(item) => item.id.toString()}
             // ListHeaderComponent={ListHeader}
