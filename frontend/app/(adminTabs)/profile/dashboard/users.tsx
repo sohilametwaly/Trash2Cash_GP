@@ -1,54 +1,67 @@
 import Logo from "@/components/Logo";
 import { Colors } from "@/constants/Colors";
+import { useDash } from "@/store/dashBoard";
 import { useLocalSearchParams } from "expo-router";
 import { Edit3, X } from "lucide-react-native";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { View } from "tamagui";
 
-type UserType = "User" | "Company";
-
-interface User {
-  name: string;
-  type: UserType;
-}
-
-const users: User[] = [
-  { name: "Ahmed", type: "User" },
-  { name: "Ezz steel", type: "Company" },
-  { name: "Mansour group", type: "Company" },
-  { name: "Hashim", type: "User" },
-  { name: "Nazly", type: "User" },
-  { name: "Farida", type: "User" },
-  { name: "Khaled", type: "User" },
-];
-
 export default function UsersScreen() {
   const { type } = useLocalSearchParams();
-  const filteredUsers = users.filter((user) => user.type == type);
+  const { users, companies, deleteUser } = useDash();
+
+  const handleDeleteUser = async (id: any) => {
+    await deleteUser(id);
+  };
 
   return (
     <View style={styles.container}>
       <Logo />
-      {filteredUsers.map((user) => {
-        return (
-          <View key={user.name} style={[styles.listItem, styles.shadowBox]}>
-            <Text style={styles.title}>{user.name}</Text>
-            <View style={styles.secondContainer}>
-              <View style={styles.badge}>
-                <Text style={styles.title}>{user.type}</Text>
+      {type == "User"
+        ? users.map((user: any) => {
+            return (
+              <View key={user._id} style={[styles.listItem, styles.shadowBox]}>
+                <Text style={styles.title}>{user.name}</Text>
+                <View style={styles.secondContainer}>
+                  <View style={styles.badge}>
+                    <Text style={styles.title}>{user.role}</Text>
+                  </View>
+                  <View style={styles.actionsContainer}>
+                    <TouchableOpacity onPress={() => console.log("edit")}>
+                      <Edit3 color={"black"} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => handleDeleteUser(user._id)}
+                    >
+                      <X color={"red"} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
-              <View style={styles.actionsContainer}>
-                <TouchableOpacity onPress={() => console.log("edit")}>
-                  <Edit3 color={"black"} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => console.log("delete")}>
-                  <X color={"red"} />
-                </TouchableOpacity>
+            );
+          })
+        : companies.map((company: any) => {
+            return (
+              <View
+                key={company._id}
+                style={[styles.listItem, styles.shadowBox]}
+              >
+                <Text style={styles.title}>{company.name}</Text>
+                <View style={styles.secondContainer}>
+                  <View style={styles.badge}>
+                    <Text style={styles.title}>{company.role}</Text>
+                  </View>
+                  <View style={styles.actionsContainer}>
+                    <TouchableOpacity
+                      onPress={() => handleDeleteUser(company._id)}
+                    >
+                      <X color={"red"} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
-        );
-      })}
+            );
+          })}
     </View>
   );
 }

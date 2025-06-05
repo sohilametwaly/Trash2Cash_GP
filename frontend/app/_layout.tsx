@@ -19,6 +19,7 @@ import * as secureStore from "expo-secure-store";
 import { CartProvider } from "../store/cartContext";
 import { OrderProvider } from "../store/orderContext";
 import { InventProvider } from "@/store/InventoryContext";
+import { DashProvider } from "@/store/dashBoard";
 // import OnboardingScreen from "./OnBoardingScreen";
 
 const config = createTamagui(defaultConfig);
@@ -78,20 +79,22 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <TamaguiProvider config={config}>
-        <InventProvider>
-          <AuthProvider>
-            <CartProvider>
-              <OrderProvider>
-                <View style={{ flex: 1 }}>
-                  <Slot />
-                  <InitialNavigationHandler />
-                  <StatusBar style="auto" />
-                  <Toast />
-                </View>
-              </OrderProvider>
-            </CartProvider>
-          </AuthProvider>
-        </InventProvider>
+        <DashProvider>
+          <InventProvider>
+            <AuthProvider>
+              <CartProvider>
+                <OrderProvider>
+                  <View style={{ flex: 1 }}>
+                    <Slot />
+                    <InitialNavigationHandler />
+                    <StatusBar style="auto" />
+                    <Toast />
+                  </View>
+                </OrderProvider>
+              </CartProvider>
+            </AuthProvider>
+          </InventProvider>
+        </DashProvider>
       </TamaguiProvider>
     </ThemeProvider>
   );

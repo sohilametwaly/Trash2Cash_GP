@@ -11,28 +11,27 @@ import {
   YStack,
   styled,
 } from "tamagui";
-import Header from "@/components/Header";
-import { useOrders } from '@/store/orderContext';
+import { useOrders } from "@/store/orderContext";
 
 const TabsAdvancedUnderline = () => {
   const { orders, getOrderHistory, isLoading } = useOrders();
-  
+
   React.useEffect(() => {
     getOrderHistory();
   }, []);
 
-  const pending = React.useMemo(() => 
-    orders.filter((order) => order.status === "pending"),
+  const pending = React.useMemo(
+    () => orders.filter((order) => order.status === "pending"),
     [orders]
   );
-  
-  const delivered = React.useMemo(() => 
-    orders.filter((order) => order.status === "delivered"),
+
+  const delivered = React.useMemo(
+    () => orders.filter((order) => order.status === "delivered"),
     [orders]
   );
-  
-  const cancelled = React.useMemo(() => 
-    orders.filter((order) => order.status === "cancelled"),
+
+  const cancelled = React.useMemo(
+    () => orders.filter((order) => order.status === "cancelled"),
     [orders]
   );
 
@@ -74,7 +73,7 @@ const TabsAdvancedUnderline = () => {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <Tabs
         value={currentTab}
         onValueChange={setCurrentTab}
@@ -156,21 +155,21 @@ const TabsAdvancedUnderline = () => {
           <FlatList
             data={pending}
             renderItem={({ item }) => (
-              <HistoryCard 
+              <HistoryCard
                 order={{
                   ...item,
                   pickupDate: item.pickupDate,
-                  items: item.items.map(i => ({
+                  items: item.items.map((i) => ({
                     wasteType: i.wasteType,
                     quantity: i.quantity,
-                    price: i.price
-                  }))
+                    price: i.price,
+                  })),
                 }}
                 role="admin"
                 pending={true}
               />
             )}
-            keyExtractor={(item) => item._id.toString()}
+            keyExtractor={(item, index) => index.toString()}
           />
         </Tabs.Content>
 
@@ -180,7 +179,7 @@ const TabsAdvancedUnderline = () => {
             renderItem={({ item }) => (
               <HistoryCard order={item} role="admin" pending={false} />
             )}
-            keyExtractor={(item) => item._id.toString()}
+            keyExtractor={(item, index) => index.toString()}
           />
         </Tabs.Content>
 
@@ -190,7 +189,7 @@ const TabsAdvancedUnderline = () => {
             renderItem={({ item }) => (
               <HistoryCard order={item} role="admin" pending={false} />
             )}
-            keyExtractor={(item) => item._id.toString()}
+            keyExtractor={(item, index) => index.toString()}
           />
         </Tabs.Content>
         <AnimatePresence exitBeforeEnter custom={{ direction }} initial={false}>
