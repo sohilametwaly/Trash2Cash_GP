@@ -57,38 +57,23 @@ class WasteYOLOModel:
         try:
             img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
             results = self.model(img)
-            # results.show()
-
             detections = results.pandas().xyxy[0]
 
-            # predictions = []
             label_count = {}
             for _, row in detections.iterrows():
                 class_name = str(row['name']) if 'name' in row and row['name'] else str(
                     self.model.names[int(row['class'])])
+                label_count[class_name] = label_count.get(class_name, 0) + 1
 
-                # predictions.append({
-                #     "label": class_name,
-                #     "confidence": float(row['confidence']),
-                #     "bbox": [
-                #         float(row['xmin']),
-                #         float(row['ymin']),
-                #         float(row['xmax']) - float(row['xmin']),  # width
-                #         float(row['ymax']) - float(row['ymin'])  # height
-                #     ]
-                # })
-                if class_name in label_count:
-                    label_count[class_name] = label_count[class_name] + 1
-                else:
-                    label_count[class_name] = 1
-            # results.save(save_dir="images",)
-            # result_image_path = "image0.jpg"
+            response = []
+            for idx, (category, count) in enumerate(label_count.items(), start=1):
+                response.append({
+                    "id": idx,
+                    "Category": category,
+                    "quantity": count
+                })
 
-            return {
-                # "resultImage": result_image_path,
-                "labelCounts": label_count
-            }
-            # return predictions
+            return response
         except Exception as e:
             print(f"Error during prediction: {e}")
             return [{"error": f"Prediction error: {str(e)}"}]
@@ -131,7 +116,7 @@ def predict_route():
             #     return jsonify({"error": "Prediction failed",
             #                     "details": error_detail}), 500
 
-            return jsonify({"predictions": predictions}), 200
+            return jsonify(predictions), 200
         except Exception as e:
             app.logger.error(f"Error processing image in route: {e}")
             return jsonify({"error": "Error processing image", "details": str(e)}), 500
